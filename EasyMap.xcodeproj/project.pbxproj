@@ -14,6 +14,7 @@
 		1F43EE212E06C9A300D00794 /* EasyMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F43EE202E06C9A300D00794 /* EasyMapTests.swift */; };
 		1F43EE2B2E06C9A300D00794 /* EasyMapUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F43EE2A2E06C9A300D00794 /* EasyMapUITests.swift */; };
 		1F43EE2D2E06C9A300D00794 /* EasyMapUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F43EE2C2E06C9A300D00794 /* EasyMapUITestsLaunchTests.swift */; };
+		1F43EE3A2E06CA0C00D00794 /* CampusMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F43EE392E06CA0C00D00794 /* CampusMapView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		1F43EE262E06C9A300D00794 /* EasyMapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EasyMapUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F43EE2A2E06C9A300D00794 /* EasyMapUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyMapUITests.swift; sourceTree = "<group>"; };
 		1F43EE2C2E06C9A300D00794 /* EasyMapUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyMapUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		1F43EE392E06CA0C00D00794 /* CampusMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampusMapView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 			children = (
 				1F43EE0F2E06C9A000D00794 /* EasyMapApp.swift */,
 				1F43EE112E06C9A000D00794 /* ContentView.swift */,
+				1F43EE392E06CA0C00D00794 /* CampusMapView.swift */,
 				1F43EE132E06C9A300D00794 /* Assets.xcassets */,
 				1F43EE152E06C9A300D00794 /* Preview Content */,
 			);
@@ -259,6 +262,7 @@
 			files = (
 				1F43EE122E06C9A000D00794 /* ContentView.swift in Sources */,
 				1F43EE102E06C9A000D00794 /* EasyMapApp.swift in Sources */,
+				1F43EE3A2E06CA0C00D00794 /* CampusMapView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
