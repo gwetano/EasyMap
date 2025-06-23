@@ -46,6 +46,7 @@
 		1F43EE2A2E06C9A300D00794 /* EasyMapUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyMapUITests.swift; sourceTree = "<group>"; };
 		1F43EE2C2E06C9A300D00794 /* EasyMapUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyMapUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1F43EE392E06CA0C00D00794 /* CampusMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampusMapView.swift; sourceTree = "<group>"; };
+		ED98B4662E09846C0024E3D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +97,7 @@
 		1F43EE0E2E06C9A000D00794 /* EasyMap */ = {
 			isa = PBXGroup;
 			children = (
+				ED98B4662E09846C0024E3D2 /* Info.plist */,
 				1F43EE0F2E06C9A000D00794 /* EasyMapApp.swift */,
 				1F43EE112E06C9A000D00794 /* ContentView.swift */,
 				1F43EE392E06CA0C00D00794 /* CampusMapView.swift */,
@@ -426,12 +428,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"EasyMap/Preview Content\"";
+				DEVELOPMENT_TEAM = ZU82SK9HYB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "";
+				INFOPLIST_FILE = EasyMap/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "ho bisogno della tua posizione";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "ho bisogno della tua posizione";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "L'app ha bisogno della tua posizione per mostrarti dove sei sulla mappa del campus.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -456,12 +460,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"EasyMap/Preview Content\"";
+				DEVELOPMENT_TEAM = ZU82SK9HYB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "";
+				INFOPLIST_FILE = EasyMap/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "ho bisogno della tua posizione";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "ho bisogno della tua posizione";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "L'app ha bisogno della tua posizione per mostrarti dove sei sulla mappa del campus.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

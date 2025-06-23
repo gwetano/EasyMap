@@ -67,7 +67,7 @@ struct CampusMapView: View {
         .onAppear {
             locationManager.startTracking()
         }
-        .edgesIgnoringSafeArea(.all)
+        .edgesIgnoringSafeArea(.bottom)
     }
 }
 
