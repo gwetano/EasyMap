@@ -60,10 +60,10 @@ struct CampusMapView: View {
             
             UserAnnotation()
         }
-        /*.mapControls {
+        .mapControls {
             MapUserLocationButton()
             MapCompass()
-        }*/
+        }
         .onAppear {
             locationManager.startTracking()
         }
