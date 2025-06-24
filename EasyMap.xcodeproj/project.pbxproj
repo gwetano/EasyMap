@@ -16,6 +16,8 @@
 		1F43EE2D2E06C9A300D00794 /* EasyMapUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F43EE2C2E06C9A300D00794 /* EasyMapUITestsLaunchTests.swift */; };
 		1F43EE3A2E06CA0C00D00794 /* CampusMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F43EE392E06CA0C00D00794 /* CampusMapView.swift */; };
 		1F803B582E0AFA4300415689 /* AnnuncioStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F803B572E0AFA4300415689 /* AnnuncioStore.swift */; };
+		99CE50FC2E0B027600A4819B /* NuovoAnnuncioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CE50FB2E0B027600A4819B /* NuovoAnnuncioView.swift */; };
+		99CE50FE2E0B02A100A4819B /* BachecaTikTokView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CE50FD2E0B02A100A4819B /* BachecaTikTokView.swift */; };
 		ED2CE41F2E09E45500A62C8E /* prenotazioni.json in Resources */ = {isa = PBXBuildFile; fileRef = ED2CE41E2E09E45500A62C8E /* prenotazioni.json */; };
 		ED2CE4462E09E5AB00A62C8E /* ListaAule.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2CE4452E09E5AB00A62C8E /* ListaAule.swift */; };
 /* End PBXBuildFile section */
@@ -50,6 +52,8 @@
 		1F43EE2C2E06C9A300D00794 /* EasyMapUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyMapUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1F43EE392E06CA0C00D00794 /* CampusMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampusMapView.swift; sourceTree = "<group>"; };
 		1F803B572E0AFA4300415689 /* AnnuncioStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnuncioStore.swift; sourceTree = "<group>"; };
+		99CE50FB2E0B027600A4819B /* NuovoAnnuncioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuovoAnnuncioView.swift; sourceTree = "<group>"; };
+		99CE50FD2E0B02A100A4819B /* BachecaTikTokView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BachecaTikTokView.swift; sourceTree = "<group>"; };
 		ED2CE41E2E09E45500A62C8E /* prenotazioni.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = prenotazioni.json; sourceTree = "<group>"; };
 		ED2CE4452E09E5AB00A62C8E /* ListaAule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaAule.swift; sourceTree = "<group>"; };
 		ED98B4662E09846C0024E3D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -111,6 +115,8 @@
 				1F43EE392E06CA0C00D00794 /* CampusMapView.swift */,
 				1F43EE132E06C9A300D00794 /* Assets.xcassets */,
 				ED2CE4452E09E5AB00A62C8E /* ListaAule.swift */,
+				99CE50FB2E0B027600A4819B /* NuovoAnnuncioView.swift */,
+				99CE50FD2E0B02A100A4819B /* BachecaTikTokView.swift */,
 				1F43EE152E06C9A300D00794 /* Preview Content */,
 			);
 			path = EasyMap;
@@ -273,10 +279,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F43EE122E06C9A000D00794 /* ContentView.swift in Sources */,
+				99CE50FC2E0B027600A4819B /* NuovoAnnuncioView.swift in Sources */,
 				1F43EE102E06C9A000D00794 /* EasyMapApp.swift in Sources */,
 				1F803B582E0AFA4300415689 /* AnnuncioStore.swift in Sources */,
 				ED2CE4462E09E5AB00A62C8E /* ListaAule.swift in Sources */,
 				1F43EE3A2E06CA0C00D00794 /* CampusMapView.swift in Sources */,
+				99CE50FE2E0B02A100A4819B /* BachecaTikTokView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

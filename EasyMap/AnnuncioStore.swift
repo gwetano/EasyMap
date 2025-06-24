@@ -5,14 +5,13 @@
 //  Created by Francesco Apicella on 24/06/25.
 //
 
+import Foundation
 import SwiftUI
 
-struct AnnuncioStore: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+class AnnuncioStore: ObservableObject {
+    @Published var annunci: [Annuncio] = []
+    
+    func aggiungi(_ annuncio: Annuncio) {
+        annunci.insert(annuncio, at: 0)
     }
-}
-
-#Preview {
-    AnnuncioStore()
 }
