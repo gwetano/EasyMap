@@ -92,7 +92,7 @@ struct Giornata: Codable{
 // -> Legge dal JSON restituendo Giornata
 // Giornata -> Aula -> Prenotazione
 func leggiJSONDaURL() async -> Giornata? {
-    guard let url = URL(string: "https://gwetano.github.io/prenotazioni.json") else {
+    guard let url = URL(string: "https://giotto.pythonanywhere.com/www/prenotazioni.json") else {
         print("URL non valido")
         return nil
     }
