@@ -54,7 +54,8 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
 struct CampusMapView: View {
     @StateObject private var locationManager = LocationManager()
-    
+    @State private var selectedBuilding: String? = nil
+
     @StateObject var store = AnnuncioStore()
     @State private var mostraCreazione = false
     @State private var mostraBacheca = false
@@ -65,8 +66,155 @@ struct CampusMapView: View {
 
     var body: some View {
         ZStack {
-            Map(position: $locationManager.cameraPosition, bounds: locationManager.cameraBounds) {
-                UserAnnotation()
+            MapReader { reader in
+                Map(position: $locationManager.cameraPosition, bounds: locationManager.cameraBounds) {
+                    
+                    UserAnnotation()
+                    
+                    MapPolygon(coordinates: edificioECoordinates)
+                        .foregroundStyle(.blue.opacity(0.3))
+                        .stroke(.blue, lineWidth: 2)
+                    
+                    MapPolygon(coordinates: edificioE1Coordinates)
+                        .foregroundStyle(.blue.opacity(0.3))
+                        .stroke(.blue, lineWidth: 2)
+                    
+                    MapPolygon(coordinates: edificioE2Coordinates)
+                        .foregroundStyle(.blue.opacity(0.3))
+                        .stroke(.blue, lineWidth: 2)
+                    
+                    MapPolygon(coordinates: edificioDCoordinates)
+                        .foregroundStyle(.red.opacity(0.3))
+                        .stroke(.red, lineWidth: 2)
+                    
+                    MapPolygon(coordinates: edificioD3Coordinates)
+                        .foregroundStyle(.red.opacity(0.3))
+                        .stroke(.red, lineWidth: 2)
+                    
+                    MapPolygon(coordinates: edificioD2Coordinates)
+                        .foregroundStyle(.red.opacity(0.3))
+                        .stroke(.red, lineWidth: 2)
+                    
+                    MapPolygon(coordinates: edificioD1Coordinates)
+                        .foregroundStyle(.red.opacity(0.3))
+                        .stroke(.red, lineWidth: 2)
+                    
+                    // Annotazioni con i titoli degli edifici
+                    Annotation("E", coordinate: centroEdificioE) {
+                        Text("E")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.blue)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.blue, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
+                    
+                    Annotation("E1", coordinate: centroEdificioE1) {
+                        Text("E1")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.blue)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.blue, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
+                    
+                    Annotation("E2", coordinate: centroEdificioE2) {
+                        Text("E2")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.blue)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.blue, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
+                    Annotation("D", coordinate: centroEdificioD) {
+                        Text("D")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.red)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.red, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
+                    
+                    Annotation("D1", coordinate: centroEdificioD1) {
+                        Text("D1")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.red)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.red, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
+                    
+                    Annotation("D2", coordinate: centroEdificioD2) {
+                        Text("D2")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.red)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.red, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
+                    Annotation("D3", coordinate: centroEdificioD3) {
+                        Text("D3")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.red)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.red, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
+                }
+                .onTapGesture { screenCoordinate in
+                    if let coordinate = reader.convert(screenCoordinate, from: .local) {
+                        handleTap(at: coordinate)
+                    }
+                }
             }
             .mapControls {
                 MapUserLocationButton()
@@ -75,46 +223,214 @@ struct CampusMapView: View {
             .onAppear {
                 locationManager.startTracking()
             }
-            .edgesIgnoringSafeArea(.all)
-
+            .edgesIgnoringSafeArea(.bottom)
+            .sheet(item: Binding<IdentifiableString?>(
+                get: { selectedBuilding.map(IdentifiableString.init) },
+                set: { selectedBuilding = $0?.value }
+            )) { building in
+                BuildingDetailView(buildingName: building.value)
+            }
+            // ✅ Pulsanti in basso
             VStack {
+                Spacer() // Spinge tutto in basso
                 
-                Spacer()
-
                 HStack {
-                    // Bottone BACHECA
+                    // Pulsante in basso a sinistra
                     Button(action: {
                         mostraBacheca = true
                     }) {
-                        Image(systemName: "list.bullet.clipboard.fill")
+                        Image("bacheca")
                             .resizable()
-                            .frame(width: 40, height: 50)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 60)
                             .padding()
-                            .background(Color.white.opacity(0.8))
-                            .clipShape(RoundedRectangle(cornerRadius: 15))
                     }
-
+                    
                     Spacer()
-
-                    // Bottone PROFILO
                     Button(action: {
-                        print("Profilo non ancora implementato")
+                        print("profilo")
                     }) {
-                        Image(systemName: "person.crop.circle")
+                        Image("login")
                             .resizable()
-                            .frame(width: 50, height: 50)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 70)
                             .padding()
-                            .background(Color.white.opacity(0.8))
-                            .clipShape(Circle())
                     }
                 }
-                .padding(.horizontal, 30)
-                .padding(.bottom, 40)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 10)
+            }
+            .sheet(isPresented: $mostraBacheca) {
+                BachecaTikTokView(store: store)
             }
         }
-        .sheet(isPresented: $mostraBacheca) {
-            BachecaTikTokView(store: store)
+    }
+    private func handleTap(at coordinate: CLLocationCoordinate2D) {
+        if isPointInPolygon(point: coordinate, polygon: edificioECoordinates) {
+            selectedBuilding = "E"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioE1Coordinates) {
+            selectedBuilding = "E1"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioE2Coordinates) {
+            selectedBuilding = "E2"
+        }else if isPointInPolygon(point: coordinate, polygon: edificioDCoordinates) {
+            selectedBuilding = "D"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioD1Coordinates) {
+            selectedBuilding = "D1"
+        }else if isPointInPolygon(point: coordinate, polygon: edificioD2Coordinates) {
+            selectedBuilding = "D2"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioD3Coordinates) {
+            selectedBuilding = "D3"
         }
+    }
+}
+
+
+private let edificioECoordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.77213, longitude: 14.79143),
+    CLLocationCoordinate2D(latitude: 40.77377, longitude: 14.79024),
+    CLLocationCoordinate2D(latitude: 40.77364, longitude: 14.78992),
+    CLLocationCoordinate2D(latitude: 40.77200, longitude: 14.79117),
+    CLLocationCoordinate2D(latitude: 40.77213, longitude: 14.79143)
+]
+
+private let edificioE1Coordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.773061, longitude: 14.790224),
+    CLLocationCoordinate2D(latitude: 40.772896, longitude: 14.789840),
+    CLLocationCoordinate2D(latitude: 40.772602, longitude: 14.790060),
+    CLLocationCoordinate2D(latitude: 40.772760, longitude: 14.790438),
+    CLLocationCoordinate2D(latitude: 40.773061, longitude: 14.790224)
+]
+
+private let edificioE2Coordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.77206, longitude: 14.79136),
+    CLLocationCoordinate2D(latitude: 40.77211, longitude: 14.79146),
+    CLLocationCoordinate2D(latitude: 40.77227, longitude: 14.79136),
+    CLLocationCoordinate2D(latitude: 40.77239, longitude: 14.79161),
+    CLLocationCoordinate2D(latitude: 40.77210, longitude: 14.79182),
+    CLLocationCoordinate2D(latitude: 40.77193, longitude: 14.79144),
+    CLLocationCoordinate2D(latitude: 40.77206, longitude: 14.79136)
+]
+
+private let edificioDCoordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.77200, longitude: 14.79127),
+    CLLocationCoordinate2D(latitude: 40.77122, longitude: 14.79183),
+    CLLocationCoordinate2D(latitude: 40.77111, longitude: 14.79155),
+    CLLocationCoordinate2D(latitude: 40.77194, longitude: 14.79091),
+    CLLocationCoordinate2D(latitude: 40.77203, longitude: 14.79111),
+    CLLocationCoordinate2D(latitude: 40.77198, longitude: 14.79116),
+    CLLocationCoordinate2D(latitude: 40.77200, longitude: 14.79127)
+]
+
+private let edificioD3Coordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.77171, longitude: 14.79048),
+    CLLocationCoordinate2D(latitude: 40.77142, longitude: 14.79068),
+    CLLocationCoordinate2D(latitude: 40.77158, longitude: 14.79109),
+    CLLocationCoordinate2D(latitude: 40.77176, longitude: 14.79097),
+    CLLocationCoordinate2D(latitude: 40.77180, longitude: 14.79069),
+    CLLocationCoordinate2D(latitude: 40.77171, longitude: 14.79048)
+]
+
+private let edificioD2Coordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.77126, longitude: 14.79138),
+    CLLocationCoordinate2D(latitude: 40.77111, longitude: 14.79101),
+    CLLocationCoordinate2D(latitude: 40.77075, longitude: 14.79126),
+    CLLocationCoordinate2D(latitude: 40.77092, longitude: 14.79169),
+    CLLocationCoordinate2D(latitude: 40.77126, longitude: 14.79138)
+]
+
+private let edificioD1Coordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.77112, longitude: 14.79201),
+    CLLocationCoordinate2D(latitude: 40.77131, longitude: 14.79242),
+    CLLocationCoordinate2D(latitude: 40.77161, longitude: 14.79219),
+    CLLocationCoordinate2D(latitude: 40.77151, longitude: 14.79200),
+    CLLocationCoordinate2D(latitude: 40.77128, longitude: 14.79191),
+    CLLocationCoordinate2D(latitude: 40.77112, longitude: 14.79201)
+]
+
+private let centroEdificioE = CLLocationCoordinate2D(latitude: 40.772885, longitude: 14.790675)
+private let centroEdificioE1 = CLLocationCoordinate2D(latitude: 40.772832, longitude: 14.790132)
+private let centroEdificioE2 = CLLocationCoordinate2D(latitude: 40.772135, longitude: 14.791490)
+private let centroEdificioD = CLLocationCoordinate2D(latitude: 40.77156, longitude: 14.79138)
+private let centroEdificioD1 = CLLocationCoordinate2D(latitude: 40.77135, longitude: 14.79216)
+private let centroEdificioD2 = CLLocationCoordinate2D(latitude: 40.77105, longitude: 14.79137)
+private let centroEdificioD3 = CLLocationCoordinate2D(latitude: 40.77164, longitude: 14.79077)
+
+
+struct IdentifiableString: Identifiable {
+    let id = UUID()
+    let value: String
+}
+
+func isPointInPolygon(point: CLLocationCoordinate2D, polygon: [CLLocationCoordinate2D]) -> Bool {
+    let x = point.latitude
+    let y = point.longitude
+    var inside = false
+    
+    var j = polygon.count - 1
+    for i in 0..<polygon.count {
+        let xi = polygon[i].latitude
+        let yi = polygon[i].longitude
+        let xj = polygon[j].latitude
+        let yj = polygon[j].longitude
+        
+        if ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi) {
+            inside.toggle()
+        }
+        
+        j = i
+    }
+    return inside
+
+}
+
+struct BuildingDetailView: View {
+    let buildingName: String
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 20) {
+                Text("Edificio \(buildingName)")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(.gray.opacity(0.2))
+                    .frame(height: 300)
+                    .overlay(
+                        VStack {
+                            Image(systemName: "building.2")
+                                .font(.system(size: 60))
+                                .foregroundColor(.gray)
+                            Text("Pianta Edificio \(buildingName)")
+                                .font(.headline)
+                                .foregroundColor(.gray)
+                            Text("Sostituisci con la tua immagine")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
+                    )
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Informazioni:")
+                        .font(.headline)
+                    Text("• Piano terra: Aule e laboratori")
+                    Text("• Primo piano: Uffici docenti")
+                    Text("• Secondo piano: Sale riunioni")
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
+                Spacer()
+                
+                Button("Chiudi") {
+                    dismiss()
+                }
+                .buttonStyle(.borderedProminent)
+            }
+            .padding()
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarHidden(true)
+        }
+        .edgesIgnoringSafeArea(.bottom)
     }
 }
 
