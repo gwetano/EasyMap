@@ -8,32 +8,42 @@
 import SwiftUI
 
 struct ListaAule: View {
-    
-    var giornata: Giornata? = leggiJSON()
+    @State private var giornata: Giornata? = nil
     
     var body: some View {
-        NavigationStack{
-            List{
-                if var aule = giornata?.aule{
-                    ForEach(aule.indices, id:\.self) { i in
-                        var aula = aule[i]
-                        if aula.edificio == "E" || aula.edificio == "E2" ||
-                            aula.edificio == "E1"{
+        NavigationStack {
+            List {
+                if let aule = giornata?.aule {
+                    ForEach(aule.indices, id: \.self) { i in
+                        let aula = aule[i]
+                        if aula.edificio == "E" || aula.edificio == "E1" || aula.edificio == "E2" {
                             VStack(alignment: .leading) {
+                                HStack {
                                     Text(aula.nome)
-                                   .font(.headline)
-                               Text("Edificio: \(aula.edificio)")
-                                   .font(.subheadline)
-                           }
+                                        .font(.headline)
+                                    Spacer()
+                                    Circle()
+                                        .fill(aula.isOccupiedNow() ? .red : .green)
+                                        .frame(width: 12, height: 12)
+                                }
+                                Text("Edificio: \(aula.edificio)")
+                                    .font(.subheadline)
+                            }
                         }
                     }
                 } else {
-                    Text("Nessuna aula trovata").foregroundColor(.red)
+                    Text("Caricamento in corso o nessuna aula trovata").foregroundColor(.gray)
                 }
-            }.navigationTitle("lista aule")
+            }
+            .navigationTitle("Lista Aule")
+            .task {
+                self.giornata = await leggiJSONDaURL()
+                print("Aule caricate: \(giornata?.aule.count ?? 0)")
+            }
         }
     }
 }
+
 
 // Definizione delle strutture
 
@@ -51,6 +61,26 @@ struct Aula: Codable{
     var edificio     : String
     var posti        : Int
     var prenotazioni : [Prenotazione]
+    
+    // Funzione per controllare se l'aula è occupata ora
+    func isOccupiedNow() -> Bool {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        let now = dateFormatter.string(from: Date())
+        
+        for prenotazione in prenotazioni {
+            let parts = prenotazione.orario.components(separatedBy: " - ")
+            if parts.count == 2,
+               let start = dateFormatter.date(from: parts[0].trimmingCharacters(in: .whitespaces)),
+               let end = dateFormatter.date(from: parts[1].trimmingCharacters(in: .whitespaces)),
+               let current = dateFormatter.date(from: now) {
+                if current >= start && current <= end {
+                    return true
+                }
+            }
+        }
+        return false
+    }
 }
 
 // -> DATA ODIERNA <-
@@ -61,25 +91,25 @@ struct Giornata: Codable{
 
 // -> Legge dal JSON restituendo Giornata
 // Giornata -> Aula -> Prenotazione
-func leggiJSON() -> Giornata?{
-    //Ricerca file nella directory
-    guard let url = Bundle.main.url(forResource: "prenotazioni", withExtension: "json") else {
-        print("File non Trovato")
+func leggiJSONDaURL() async -> Giornata? {
+    guard let url = URL(string: "https://gwetano.github.io/prenotazioni.json") else {
+        print("URL non valido")
         return nil
     }
     
-    do{
-        //Decodifica il JSON
-        var data = try Data(contentsOf: url)
-        var decoder = JSONDecoder()
-        //Inserisce in
-        var giornata = try decoder.decode(Giornata.self, from: data)
+    do {
+        let (data, _) = try await URLSession.shared.data(from: url)
+        print("Dati JSON grezzi: \(String(data: data, encoding: .utf8) ?? "N/D")")
+        let decoder = JSONDecoder()
+        let giornata = try decoder.decode(Giornata.self, from: data)
         return giornata
     } catch {
-        print("Errore nella lettura")
+        print("Errore nel caricamento JSON: \(error)")
         return nil
     }
 }
+
+
 
 #Preview {
     ListaAule()
