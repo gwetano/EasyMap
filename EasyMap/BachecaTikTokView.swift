@@ -30,7 +30,7 @@ struct BachecaTikTokView: View {
                     }
                 }
                 .ignoresSafeArea()
-            }
+            }.scrollTargetBehavior(.paging)
 
             
             Button {
