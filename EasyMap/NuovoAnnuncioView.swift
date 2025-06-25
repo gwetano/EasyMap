@@ -13,6 +13,26 @@ struct NuovoAnnuncioView: View {
     @State private var immagini: [UIImage] = []
     @State private var mostraGalleria = false
     @State private var mostraFotocamera = false
+    @State private var isEvento: Bool = true
+
+    
+    @State private var categoriaSelezionata: CategoriaAnnuncio? = .evento
+    @State private var mostraPicker: Bool = false
+
+    
+    
+    
+    enum CategoriaAnnuncio: String, CaseIterable, Identifiable {
+        case evento = "Evento"
+        case annuncio = "Annuncio"
+        case spott = "Spott"
+        case lavoro = "Lavoro"
+        case info = "Info"
+        case smarrimenti = "Smarrimenti"
+
+        var id: String { rawValue }
+    }
+
 
     var body: some View {
         NavigationStack {
@@ -42,45 +62,80 @@ struct NuovoAnnuncioView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
 
-                Menu {
-                    Button {
-                        mostraGalleria = true
-                    } label: {
-                        Label("Scegli dalla galleria", systemImage: "photo")
-                    }
-                    if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                if immagini.isEmpty {
+                    Menu {
                         Button {
-                            mostraFotocamera = true
+                            mostraGalleria = true
                         } label: {
-                            Label("Scatta foto", systemImage: "camera")
+                            Label("Scegli dalla galleria", systemImage: "photo")
+                        }
+                        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                            Button {
+                                mostraFotocamera = true
+                            } label: {
+                                Label("Scatta foto", systemImage: "camera")
+                            }
+                        }
+                    } label: {
+                        VStack(spacing: 8) {
+                            Image(systemName: "plus")
+                                .font(.largeTitle)
+                            Text("Aggiungi Foto")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 180)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(12)
+                        .padding(.horizontal)
+                    }
+                } else {
+                    if let immagine = immagini.first {
+                        ZStack(alignment: .bottomTrailing) {
+                            Image(uiImage: immagine)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(height: 180)
+                                .cornerRadius(12)
+                                .padding(.horizontal)
+
+                            Button(action: {
+                                immagini = [] // Rimuove l'immagine corrente
+                            }) {
+                                Image(systemName: "arrow.triangle.2.circlepath.circle.fill")
+                                    .font(.system(size: 30))
+                                    .foregroundColor(.white)
+                                    .background(Circle().fill(Color.blue).frame(width: 40, height: 40))
+                                    .padding(12)
+                            }
                         }
                     }
-                } label: {
-                    VStack(spacing: 8) {
-                        Image(systemName: "plus")
-                            .font(.largeTitle)
-                        Text("Aggiungi Foto")
+                }
+
+                VStack(alignment: .leading) {
+                    Text("Categoria")
+                        .font(.headline)
+                        .padding(.horizontal)
+
+                    Picker("Categoria", selection: $categoriaSelezionata) {
+                        ForEach(CategoriaAnnuncio.allCases) { categoria in
+                            Text(categoria.rawValue).tag(Optional(categoria))
+                        }
                     }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 180)
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(12)
+                    .pickerStyle(.wheel)
+                    .frame(height: mostraPicker ? 150 : 60)
+                    .clipped()
+                    .onTapGesture {
+                        // Toggle apertura picker
+                        withAnimation {
+                            mostraPicker.toggle()
+                        }
+                    }
                     .padding(.horizontal)
                 }
 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(immagini, id: \.self) { img in
-                            Image(uiImage: img)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 100, height: 100)
-                                .clipped()
-                                .cornerRadius(10)
-                        }
-                    }
-                    .padding(.horizontal)
-                }
+
+
+
 
                 VStack(spacing: 16) {
                     TextField("Titolo", text: $titolo)
@@ -94,16 +149,20 @@ struct NuovoAnnuncioView: View {
                         .background(Color(.systemGray6))
                         .cornerRadius(10)
 
-                    DatePicker("Data e Ora", selection: $dataEvento, displayedComponents: [.date, .hourAndMinute])
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .cornerRadius(10)
+                    if categoriaSelezionata == .evento  {
+                        DatePicker("Data e Ora", selection: $dataEvento, displayedComponents: [.date, .hourAndMinute])
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(10)
 
-                    TextField("Luogo", text: $luogo)
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .cornerRadius(10)
+                        TextField("Luogo", text: $luogo)
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(10)
+                    }
+
                 }
+
                 .padding(.horizontal)
 
                 Spacer()
