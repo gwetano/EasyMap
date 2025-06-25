@@ -127,9 +127,22 @@ struct CampusMapView: View {
                         .foregroundStyle(.yellow.opacity(0.3))
                         .stroke(.yellow, lineWidth: 2)
                     
+                    MapPolygon(coordinates: edificioBCoordinates)
+                        .foregroundStyle(.orange.opacity(0.3))
+                        .stroke(.orange, lineWidth: 2)
                     
+                    MapPolygon(coordinates: edificioB1Coordinates)
+                        .foregroundStyle(.orange.opacity(0.3))
+                        .stroke(.orange, lineWidth: 2)
                     
-                    // Annotazioni con i titoli degli edifici
+                    MapPolygon(coordinates: edificioB2Coordinates)
+                        .foregroundStyle(.orange.opacity(0.3))
+                        .stroke(.orange, lineWidth: 2)
+                    
+                    //Marker("E", coordinate: centroEdificioE)
+                    //    .tint(.blue)
+                    
+                
                     Annotation("E", coordinate: centroEdificioE) {
                         Text("E")
                             .font(.caption)
@@ -347,8 +360,53 @@ struct CampusMapView: View {
                             .scaleEffect(0.8)
                     }
                     .annotationTitles(.hidden)
-                    
+                    Annotation("B", coordinate: centroEdificioB) {
+                        Text("B")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.orange)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.orange, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
+                    Annotation("B1", coordinate: centroEdificioB1) {
+                        Text("B1")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.orange)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.orange, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
+                    Annotation("B2", coordinate: centroEdificioB2) {
+                        Text("B2")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.orange)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.orange, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
                 }
+                .mapStyle(.hybrid(elevation: .realistic))
                 .onTapGesture { screenCoordinate in
                     if let coordinate = reader.convert(screenCoordinate, from: .local) {
                         handleTap(at: coordinate)
@@ -358,6 +416,7 @@ struct CampusMapView: View {
             .mapControls {
                 MapUserLocationButton()
                 MapCompass()
+                MapScaleView()
             }
             .onAppear {
                 locationManager.startTracking()
@@ -369,13 +428,12 @@ struct CampusMapView: View {
             )) { building in
                 BuildingDetailView(buildingName: building.value)
             }
-            // ✅ Pulsanti in basso
+
             VStack {
-                Spacer() // Spinge tutto in basso
+                Spacer()
                 
                 HStack {
-                    // Pulsante in basso a sinistra
-                    Button(action: {
+                     Button(action: {
                         mostraBacheca = true
                     }) {
                         Image("bacheca")
@@ -544,6 +602,33 @@ private let edificioF3Coordinates: [CLLocationCoordinate2D] = [
     CLLocationCoordinate2D(latitude: 40.77533, longitude: 14.78925)
 ]
 
+private let edificioBCoordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.77051, longitude: 14.79319),
+    CLLocationCoordinate2D(latitude: 40.76974, longitude: 14.79377),
+    CLLocationCoordinate2D(latitude: 40.76960, longitude: 14.79352),
+    CLLocationCoordinate2D(latitude: 40.77045, longitude: 14.79286),
+    CLLocationCoordinate2D(latitude: 40.77055, longitude: 14.79306),
+    CLLocationCoordinate2D(latitude: 40.77050, longitude: 14.79311),
+    CLLocationCoordinate2D(latitude: 40.77051, longitude: 14.79319)
+]
+
+private let edificioB1Coordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.76978, longitude: 14.79333),
+    CLLocationCoordinate2D(latitude: 40.76946, longitude: 14.79362),
+    CLLocationCoordinate2D(latitude: 40.76926, longitude: 14.79318),
+    CLLocationCoordinate2D(latitude: 40.76962, longitude: 14.79295),
+    CLLocationCoordinate2D(latitude: 40.76978, longitude: 14.79333)
+]
+
+private let edificioB2Coordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.77019, longitude: 14.79222),
+    CLLocationCoordinate2D(latitude: 40.77040, longitude: 14.79271),
+    CLLocationCoordinate2D(latitude: 40.77002, longitude: 14.79302),
+    CLLocationCoordinate2D(latitude: 40.76980, longitude: 14.79251),
+    CLLocationCoordinate2D(latitude: 40.77019, longitude: 14.79222)
+]
+
+
 
 private let centroEdificioE = CLLocationCoordinate2D(latitude: 40.772885, longitude: 14.790675)
 private let centroEdificioE1 = CLLocationCoordinate2D(latitude: 40.772832, longitude: 14.790132)
@@ -559,8 +644,9 @@ private let centroEdificioF = CLLocationCoordinate2D(latitude: 40.77457, longitu
 private let centroEdificioF1 = CLLocationCoordinate2D(latitude: 40.77363, longitude: 14.78893)
 private let centroEdificioF2 = CLLocationCoordinate2D(latitude: 40.77449, longitude: 14.78972)
 private let centroEdificioF3 = CLLocationCoordinate2D(latitude: 40.77510, longitude: 14.78919)
-
-
+private let centroEdificioB = CLLocationCoordinate2D(latitude: 40.77014, longitude: 14.79328)
+private let centroEdificioB1 = CLLocationCoordinate2D(latitude: 40.76954, longitude: 14.79329)
+private let centroEdificioB2 = CLLocationCoordinate2D(latitude: 40.77007, longitude: 14.79259)
 
 
 struct IdentifiableString: Identifiable {
