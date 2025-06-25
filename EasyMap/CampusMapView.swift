@@ -99,6 +99,36 @@ struct CampusMapView: View {
                         .foregroundStyle(.red.opacity(0.3))
                         .stroke(.red, lineWidth: 2)
                     
+                    MapPolygon(coordinates: edificioCCoordinates)
+                        .foregroundStyle(.green.opacity(0.3))
+                        .stroke(.green, lineWidth: 2)
+                    
+                    MapPolygon(coordinates: edificioC1Coordinates)
+                        .foregroundStyle(.green.opacity(0.3))
+                        .stroke(.green, lineWidth: 2)
+                    
+                    MapPolygon(coordinates: edificioC2Coordinates)
+                        .foregroundStyle(.green.opacity(0.3))
+                        .stroke(.green, lineWidth: 2)
+                    
+                    MapPolygon(coordinates: edificioFCoordinates)
+                        .foregroundStyle(.yellow.opacity(0.3))
+                        .stroke(.yellow, lineWidth: 2)
+                    
+                    MapPolygon(coordinates: edificioF1Coordinates)
+                        .foregroundStyle(.yellow.opacity(0.3))
+                        .stroke(.yellow, lineWidth: 2)
+                    
+                    MapPolygon(coordinates: edificioF2Coordinates)
+                        .foregroundStyle(.yellow.opacity(0.3))
+                        .stroke(.yellow, lineWidth: 2)
+                    
+                    MapPolygon(coordinates: edificioF3Coordinates)
+                        .foregroundStyle(.yellow.opacity(0.3))
+                        .stroke(.yellow, lineWidth: 2)
+                    
+                    
+                    
                     // Annotazioni con i titoli degli edifici
                     Annotation("E", coordinate: centroEdificioE) {
                         Text("E")
@@ -209,6 +239,115 @@ struct CampusMapView: View {
                             .scaleEffect(0.8)
                     }
                     .annotationTitles(.hidden)
+                    Annotation("C", coordinate: centroEdificioC) {
+                        Text("C")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.green)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.green, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
+                    
+                    Annotation("C1", coordinate: centroEdificioC1) {
+                        Text("C1")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.green)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.green, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
+                    
+                    Annotation("C2", coordinate: centroEdificioC2) {
+                        Text("C2")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.green)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.green, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
+                    
+                    Annotation("F", coordinate: centroEdificioF) {
+                        Text("F")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.yellow)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.yellow, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
+                    Annotation("F1", coordinate: centroEdificioF1) {
+                        Text("F1")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.yellow)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.yellow, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
+                    Annotation("F2", coordinate: centroEdificioF2) {
+                        Text("F2")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.yellow)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.yellow, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
+                    Annotation("F3", coordinate: centroEdificioF3) {
+                        Text("F3")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.yellow)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.yellow, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
+                    
                 }
                 .onTapGesture { screenCoordinate in
                     if let coordinate = reader.convert(screenCoordinate, from: .local) {
@@ -242,7 +381,7 @@ struct CampusMapView: View {
                         Image("bacheca")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 60)
+                            .frame(width: 50)
                             .padding()
                     }
                     
@@ -347,6 +486,65 @@ private let edificioD1Coordinates: [CLLocationCoordinate2D] = [
     CLLocationCoordinate2D(latitude: 40.77112, longitude: 14.79201)
 ]
 
+private let edificioCCoordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.77214, longitude: 14.79188),
+    CLLocationCoordinate2D(latitude: 40.77228, longitude: 14.79219),
+    CLLocationCoordinate2D(latitude: 40.77062, longitude: 14.79340),
+    CLLocationCoordinate2D(latitude: 40.77051, longitude: 14.79311),
+    CLLocationCoordinate2D(latitude: 40.77214, longitude: 14.79188)
+]
+
+private let edificioC1Coordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.77063, longitude: 14.79384),
+    CLLocationCoordinate2D(latitude: 40.77049, longitude: 14.79348),
+    CLLocationCoordinate2D(latitude: 40.77067, longitude: 14.79337),
+    CLLocationCoordinate2D(latitude: 40.77086, longitude: 14.79346),
+    CLLocationCoordinate2D(latitude: 40.77093, longitude: 14.79365),
+    CLLocationCoordinate2D(latitude: 40.77063, longitude: 14.79384)
+]
+
+private let edificioC2Coordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.77194, longitude: 14.79298),
+    CLLocationCoordinate2D(latitude: 40.77159, longitude: 14.79324),
+    CLLocationCoordinate2D(latitude: 40.77142, longitude: 14.79288),
+    CLLocationCoordinate2D(latitude: 40.77176, longitude: 14.79262),
+    CLLocationCoordinate2D(latitude: 40.77194, longitude: 14.79298)
+]
+
+private let edificioFCoordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.77557, longitude: 14.78834),
+    CLLocationCoordinate2D(latitude: 40.77361, longitude: 14.78977),
+    CLLocationCoordinate2D(latitude: 40.77347, longitude: 14.78946),
+    CLLocationCoordinate2D(latitude: 40.77542, longitude: 14.78800),
+    CLLocationCoordinate2D(latitude: 40.77557, longitude: 14.78834)
+]
+
+private let edificioF1Coordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.77386, longitude: 14.78900),
+    CLLocationCoordinate2D(latitude: 40.77356, longitude: 14.78923),
+    CLLocationCoordinate2D(latitude: 40.77339, longitude: 14.78882),
+    CLLocationCoordinate2D(latitude: 40.77368, longitude: 14.78859),
+    CLLocationCoordinate2D(latitude: 40.77386, longitude: 14.78900)
+]
+
+private let edificioF2Coordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.77476, longitude: 14.78981),
+    CLLocationCoordinate2D(latitude: 40.77439, longitude: 14.79008),
+    CLLocationCoordinate2D(latitude: 40.77418, longitude: 14.78957),
+    CLLocationCoordinate2D(latitude: 40.77456, longitude: 14.78931),
+    CLLocationCoordinate2D(latitude: 40.77476, longitude: 14.78981)
+]
+
+private let edificioF3Coordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.77533, longitude: 14.78925),
+    CLLocationCoordinate2D(latitude: 40.77503, longitude: 14.78948),
+    CLLocationCoordinate2D(latitude: 40.77486, longitude: 14.78908),
+    CLLocationCoordinate2D(latitude: 40.77506, longitude: 14.78893),
+    CLLocationCoordinate2D(latitude: 40.77523, longitude: 14.78901),
+    CLLocationCoordinate2D(latitude: 40.77533, longitude: 14.78925)
+]
+
+
 private let centroEdificioE = CLLocationCoordinate2D(latitude: 40.772885, longitude: 14.790675)
 private let centroEdificioE1 = CLLocationCoordinate2D(latitude: 40.772832, longitude: 14.790132)
 private let centroEdificioE2 = CLLocationCoordinate2D(latitude: 40.772135, longitude: 14.791490)
@@ -354,6 +552,15 @@ private let centroEdificioD = CLLocationCoordinate2D(latitude: 40.77156, longitu
 private let centroEdificioD1 = CLLocationCoordinate2D(latitude: 40.77135, longitude: 14.79216)
 private let centroEdificioD2 = CLLocationCoordinate2D(latitude: 40.77105, longitude: 14.79137)
 private let centroEdificioD3 = CLLocationCoordinate2D(latitude: 40.77164, longitude: 14.79077)
+private let centroEdificioC = CLLocationCoordinate2D(latitude: 40.77136, longitude: 14.79265)
+private let centroEdificioC1 = CLLocationCoordinate2D(latitude: 40.77070, longitude: 14.79360)
+private let centroEdificioC2 = CLLocationCoordinate2D(latitude: 40.77168, longitude: 14.79295)
+private let centroEdificioF = CLLocationCoordinate2D(latitude: 40.77457, longitude: 14.78887)
+private let centroEdificioF1 = CLLocationCoordinate2D(latitude: 40.77363, longitude: 14.78893)
+private let centroEdificioF2 = CLLocationCoordinate2D(latitude: 40.77449, longitude: 14.78972)
+private let centroEdificioF3 = CLLocationCoordinate2D(latitude: 40.77510, longitude: 14.78919)
+
+
 
 
 struct IdentifiableString: Identifiable {
