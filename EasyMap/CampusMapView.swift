@@ -53,6 +53,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 }
 
 struct CampusMapView: View {
+    
     @StateObject private var locationManager = LocationManager()
     @State private var selectedBuilding: String? = nil
 
@@ -467,7 +468,7 @@ struct CampusMapView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 10)
             }
-            .sheet(isPresented: $mostraBacheca) {
+            .fullScreenCover(isPresented: $mostraBacheca) {
                 BachecaTikTokView(store: store)
             }
         }

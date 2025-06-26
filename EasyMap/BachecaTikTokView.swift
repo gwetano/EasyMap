@@ -14,11 +14,13 @@ struct Annuncio: Identifiable, Hashable {
 
 
 struct BachecaTikTokView: View {
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject var store: AnnuncioStore
     @State private var mostraCreazione = false
 
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
+        ZStack {
+            // Scroll verticale degli annunci
             ScrollViewReader { proxy in
                 ScrollView(.vertical, showsIndicators: false) {
                     LazyVStack(spacing: 0) {
@@ -30,20 +32,46 @@ struct BachecaTikTokView: View {
                     }
                 }
                 .ignoresSafeArea()
-            }.scrollTargetBehavior(.paging)
+            }
+            .scrollTargetBehavior(.paging)
 
-            
-            Button {
-                mostraCreazione = true
-            } label: {
-                Image(systemName: "plus.circle.fill")
-                    .resizable()
-                    .frame(width: 60, height: 60)
-                    .padding()
-                    .foregroundColor(.blue)
+            // Pulsante indietro in alto a sinistra
+            VStack {
+                HStack {
+                    Button(action: {
+                        dismiss()  // Torna alla CampusMapView
+                    }) {
+                        Image(systemName: "chevron.backward")
+                            .font(.title2)
+                            .padding(10)
+                            .background(Color.white.opacity(0.8))
+                            .clipShape(Circle())
+                    }
+                    .padding(.leading, 16)
+                    .padding(.top, 50)
+                    Spacer()
+                }
+                Spacer()
+            }
+
+            // Pulsante "+" in basso a destra
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Button {
+                        mostraCreazione = true
+                    } label: {
+                        Image(systemName: "plus.circle.fill")
+                            .resizable()
+                            .frame(width: 60, height: 60)
+                            .padding()
+                            .foregroundColor(.blue)
+                    }
+                }
             }
         }
-        .sheet(isPresented: $mostraCreazione) {
+        .fullScreenCover(isPresented: $mostraCreazione) {
             NuovoAnnuncioView { nuovo in
                 store.aggiungi(nuovo)
                 mostraCreazione = false
@@ -51,6 +79,7 @@ struct BachecaTikTokView: View {
         }
     }
 }
+
 
 
 
