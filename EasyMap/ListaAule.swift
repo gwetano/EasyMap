@@ -45,9 +45,6 @@ struct ListaAule: View {
 }
 
 
-// Definizione delle strutture
-
-//  -> PRENOTAZIONE <-
 struct Prenotazione: Codable{
     var orario  : String
     var corso   : String
@@ -55,14 +52,12 @@ struct Prenotazione: Codable{
     var tipo    : String
 }
 
-// -> AULA <-
 struct Aula: Codable{
     var nome         : String
     var edificio     : String
     var posti        : Int
     var prenotazioni : [Prenotazione]
     
-    // Funzione per controllare se l'aula è occupata ora
     func isOccupiedNow() -> Bool {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm"
@@ -83,14 +78,11 @@ struct Aula: Codable{
     }
 }
 
-// -> DATA ODIERNA <-
 struct Giornata: Codable{
     var data: String
     var aule: [Aula]
 }
 
-// -> Legge dal JSON restituendo Giornata
-// Giornata -> Aula -> Prenotazione
 func leggiJSONDaURL() async -> Giornata? {
     guard let url = URL(string: "https://giotto.pythonanywhere.com/www/prenotazioni.json") else {
         print("URL non valido")

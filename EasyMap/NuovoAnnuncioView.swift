@@ -1,11 +1,20 @@
-// NuovoAnnuncioView.swift
+//
+//  EasyMapApp.swift
+//  EasyMap
+//
+//  Created by Studente on 21/06/25.
+//
+
 import SwiftUI
 import PhotosUI
 
 struct NuovoAnnuncioView: View {
     var onSalva: (Annuncio) -> Void
-
+    
     @Environment(\.dismiss) private var dismiss
+    @State private var currentStep: Step = .categoria
+    @State private var animationDirection: AnimationDirection = .forward
+    @State private var categoriaSelezionata: CategoriaAnnuncio = .evento
     @State private var titolo: String = ""
     @State private var descrizione: String = ""
     @State private var dataEvento: Date = Date()
@@ -13,169 +22,449 @@ struct NuovoAnnuncioView: View {
     @State private var immagini: [UIImage] = []
     @State private var mostraGalleria = false
     @State private var mostraFotocamera = false
-    @State private var isEvento: Bool = true
 
     
-    @State private var categoriaSelezionata: CategoriaAnnuncio? = .evento
-    @State private var mostraPicker: Bool = false
-
+    enum Step: Int, CaseIterable {
+        case categoria = 0
+        case titolo = 1
+        case descrizione = 2
+        case foto = 3
+        case dettagli = 4
+        case recap = 5
+        
+        var title: String {
+            switch self {
+            case .categoria: return "Che tipo di annuncio vuoi creare?"
+            case .titolo: return "Come vuoi intitolare il tuo annuncio?"
+            case .descrizione: return "Descrivi il tuo annuncio"
+            case .foto: return "Aggiungi una foto (opzionale)"
+            case .dettagli: return "Aggiungi i dettagli"
+            case .recap: return "Riepilogo"
+            }
+        }
+    }
     
-    
+    enum AnimationDirection {
+        case forward, backward
+    }
     
     enum CategoriaAnnuncio: String, CaseIterable, Identifiable {
         case evento = "Evento"
         case annuncio = "Annuncio"
-        case spott = "Spott"
+        case spot = "Spot"
         case lavoro = "Lavoro"
         case info = "Info"
         case smarrimenti = "Smarrimenti"
-
+        
         var id: String { rawValue }
+        
+        var icon: String {
+            switch self {
+            case .evento: return "calendar"
+            case .annuncio: return "megaphone"
+            case .spot: return "location"
+            case .lavoro: return "briefcase"
+            case .info: return "info.circle"
+            case .smarrimenti: return "questionmark.circle"
+            }
+        }
+        
+        var color: Color {
+            switch self {
+            case .evento: return .blue
+            case .annuncio: return .orange
+            case .spot: return .green
+            case .lavoro: return .purple
+            case .info: return .cyan
+            case .smarrimenti: return .red
+            }
+        }
     }
-
-
+    
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
+            VStack(spacing: 0) {
+                VStack(spacing: 8) {
                     HStack {
                         Button("Annulla") {
                             dismiss()
                         }
+                        .foregroundColor(.secondary)
+                        
                         Spacer()
-                        Button("Pubblica") {
-                            let nuovo = Annuncio(
-                                titolo: titolo,
-                                descrizione: descrizione,
-                                data: dataEvento,
-                                luogo: luogo,
-                                immagini: immagini,
-                                autore: "Utente anonimo"
-                            )
-                            onSalva(nuovo)
-                            dismiss()
-                        }.bold()
-                    }
-                    .padding(.horizontal)
-
-                    Text("Nuovo Annuncio")
-                        .font(.largeTitle.bold())
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal)
-
-                    if immagini.isEmpty {
-                        Menu {
-                            Button {
-                                mostraGalleria = true
-                            } label: {
-                                Label("Scegli dalla galleria", systemImage: "photo")
+                        
+                        HStack(spacing: 4) {
+                            ForEach(0..<Step.allCases.count, id: \.self) { index in
+                                Circle()
+                                    .fill(index <= currentStep.rawValue ? Color.blue : Color.gray.opacity(0.3))
+                                    .frame(width: 8, height: 8)
                             }
-                            if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                                Button {
-                                    mostraFotocamera = true
-                                } label: {
-                                    Label("Scatta foto", systemImage: "camera")
-                                }
-                            }
-                        } label: {
-                            VStack(spacing: 8) {
-                                Image(systemName: "plus")
-                                    .font(.largeTitle)
-                                Text("Aggiungi Foto")
-                            }
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 180)
-                            .background(Color.gray.opacity(0.1))
-                            .cornerRadius(12)
-                            .padding(.horizontal)
                         }
-                    } else {
-                        if let immagine = immagini.first {
-                            ZStack(alignment: .bottomTrailing) {
-                                Image(uiImage: immagine)
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(height: 180)
-                                    .cornerRadius(12)
-                                    .padding(.horizontal)
-
-                                Button(action: {
-                                    immagini = []
-                                }) {
-                                    Image(systemName: "arrow.triangle.2.circlepath.circle.fill")
-                                        .font(.system(size: 30))
-                                        .foregroundColor(.white)
-                                        .background(Circle().fill(Color.blue).frame(width: 40, height: 40))
-                                        .padding(12)
-                                }
+                        
+                        Spacer()
+                        
+                        if currentStep != .recap {
+                            Button("Salta") {
+                                prossimoStep()
                             }
+                            .foregroundColor(.secondary)
                         }
                     }
-
-                    VStack(alignment: .leading) {
-                        Text("Categoria")
-                            .font(.headline)
-                            .padding(.horizontal)
-
-                        Picker("Categoria", selection: $categoriaSelezionata) {
-                            ForEach(CategoriaAnnuncio.allCases) { categoria in
-                                Text(categoria.rawValue).tag(Optional(categoria))
-                            }
-                        }
-                        .pickerStyle(.wheel)
-                        .frame(height: mostraPicker ? 150 : 60)
-                        .clipped()
-                        .onTapGesture {
-                            withAnimation {
-                                mostraPicker.toggle()
-                            }
-                        }
-                        .padding(.horizontal)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 10)
+                    
+                    VStack(spacing: 4) {
+                        Text(currentStep.title)
+                            .font(.title2.bold())
+                            .multilineTextAlignment(.center)
                     }
-
-                    VStack(spacing: 16) {
-                        TextField("Titolo", text: $titolo)
-                            .padding()
-                            .background(Color(.systemGray6))
-                            .cornerRadius(10)
-
-                        TextField("Descrizione", text: $descrizione, axis: .vertical)
-                            .lineLimit(4...8)
-                            .padding()
-                            .background(Color(.systemGray6))
-                            .cornerRadius(10)
-
-                        if categoriaSelezionata == .evento {
-                            DatePicker("Data e Ora", selection: $dataEvento, displayedComponents: [.date, .hourAndMinute])
-                                .padding()
-                                .background(Color(.systemGray6))
-                                .cornerRadius(10)
-
-                            TextField("Luogo", text: $luogo)
-                                .padding()
-                                .background(Color(.systemGray6))
-                                .cornerRadius(10)
-                        }
-                    }
-                    .padding(.horizontal)
-
-                    Spacer()
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 20)
                 }
-                .padding(.bottom, 100) // Per evitare taglio da tastiera
-                .padding(.top, 20)
-                .padding(.bottom, 20)
+                .background(Color(.systemBackground))
+                
+                ScrollView {
+                    VStack {
+                        stepContent
+                            .padding(.horizontal, 20)
+                            .padding(.top, 20)
+                    }
+                }
+                .background(Color(.systemGray6))
+                
+                VStack(spacing: 0) {
+                    Divider()
+                    
+                    HStack {
+                        if currentStep.rawValue > 0 {
+                            Button("Indietro") {
+                                stepIndietro()
+                            }
+                            .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer()
+                        
+                        Button(currentStep == .recap ? "Pubblica" : "Continua") {
+                            if currentStep == .recap {
+                                pubblicaAnnuncio()
+                            } else {
+                                prossimoStep()
+                            }
+                        }
+                        .bold()
+                        .disabled(!canProceed)
+                    }
+                    .padding(20)
+                }
+                .background(Color(.systemBackground))
             }
-            .ignoresSafeArea(.keyboard) // Tastiera non sovrappone contenuti
-            .background(Color.white)
-            .sheet(isPresented: $mostraGalleria) {
-                ImagePicker(immagini: $immagini)
-            }
-            .sheet(isPresented: $mostraFotocamera) {
-                CameraPicker(immagini: $immagini)
+        }
+        .gesture(
+             DragGesture()
+                 .onEnded { value in
+                     if value.translation.width > 100 && currentStep.rawValue > 0 {
+                         stepIndietro()
+                     } else if value.translation.width < -100 && canProceed {
+                         prossimoStep()
+                     }
+                 }
+         )
+    }
+    
+    @ViewBuilder
+    private var stepContent: some View {
+        switch currentStep {
+        case .categoria:
+            categoriaView
+        case .titolo:
+            titoloView
+        case .descrizione:
+            descrizioneView
+        case .foto:
+            fotoView
+        case .dettagli:
+            dettagliView
+        case .recap:
+            recapView
+        }
+    }
+    
+    private var categoriaView: some View {
+        LazyVGrid(columns: [
+            GridItem(.flexible()),
+            GridItem(.flexible())
+        ], spacing: 16) {
+            ForEach(CategoriaAnnuncio.allCases) { categoria in
+                Button {
+                    categoriaSelezionata = categoria
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        prossimoStep()
+                    }
+                } label: {
+                    VStack(spacing: 12) {
+                        Image(systemName: categoria.icon)
+                            .font(.system(size: 32))
+                            .foregroundColor(categoria.color)
+                        
+                        Text(categoria.rawValue)
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 120)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color(.systemBackground))
+                            .shadow(color: .black.opacity(0.1), radius: 2)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(categoriaSelezionata == categoria ? categoria.color : Color.clear, lineWidth: 2)
+                    )
+                }
+                .buttonStyle(PlainButtonStyle())
             }
         }
     }
+    
+    private var titoloView: some View {
+        VStack(spacing: 20) {
+            TextField("Inserisci il titolo...", text: $titolo)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .font(.title3)
+                .onSubmit {
+                    if !titolo.isEmpty {
+                        prossimoStep()
+                    }
+                }
+            Spacer()
+        }
+    }
+    
+    private var descrizioneView: some View {
+        VStack(spacing: 20) {
+            TextField("Descrivi il tuo annuncio...", text: $descrizione, axis: .vertical)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .lineLimit(5...10)
+            
+            Spacer()
+        }
+    }
+    
+    private var fotoView: some View {
+        VStack(spacing: 20) {
+            if immagini.isEmpty {
+                VStack(spacing: 16) {
+                    Button {
+                        mostraGalleria = true
+                    } label: {
+                        VStack(spacing: 12) {
+                            Image(systemName: "photo.badge.plus")
+                                .font(.system(size: 48))
+                                .foregroundColor(.blue)
+                            
+                            Text("Aggiungi una foto")
+                                .font(.headline)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 200)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Color(.systemBackground))
+                                .strokeBorder(style: StrokeStyle(lineWidth: 2, dash: [8]))
+                        )
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    
+                    Button {
+                        mostraFotocamera = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "camera")
+                            Text("Scatta una foto")
+                        }
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                    }
+                }
 
+            } else {
+                VStack(spacing: 16) {
+                    if let immagine = immagini.first {
+                        Image(uiImage: immagine)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(height: 200)
+                            .cornerRadius(16)
+                            .clipped()
+                    }
+                    
+                    Button("Cambia foto") {
+                        immagini.removeAll()
+                    }
+                    .foregroundColor(.blue)
+                }
+            }
+
+            Spacer()
+        }
+        .sheet(isPresented: $mostraGalleria){
+            ImagePicker(immagini: $immagini)
+        }
+        .sheet(isPresented: $mostraFotocamera){
+            CameraPicker(immagini: $immagini)
+        }
+    }
+    
+    private var dettagliView: some View {
+        VStack(spacing: 20) {
+            if categoriaSelezionata == .evento {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Quando?")
+                        .font(.headline)
+                    
+                    DatePicker("", selection: $dataEvento, displayedComponents: [.date, .hourAndMinute])
+                        .datePickerStyle(CompactDatePickerStyle())
+                        .labelsHidden()
+                    
+                    Text("Dove?")
+                        .font(.headline)
+                        .padding(.top)
+                    
+                    TextField("Inserisci il luogo...", text: $luogo)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                }
+            } else {
+                VStack(spacing: 16) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 48))
+                        .foregroundColor(.green)
+                    
+                    Text("Perfetto!")
+                        .font(.title2.bold())
+                    
+                    Text("Il tuo annuncio è stato creato con successo!")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+            }
+            
+            Spacer()
+        }
+    }
+    
+    private var recapView: some View {
+        VStack(spacing: 20) {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack {
+                    Image(systemName: categoriaSelezionata.icon)
+                        .foregroundColor(categoriaSelezionata.color)
+                    Text(categoriaSelezionata.rawValue)
+                        .font(.headline)
+                        .foregroundColor(categoriaSelezionata.color)
+                    Spacer()
+                }
+                Text(titolo)
+                    .font(.title2.bold())
+                
+                Text(descrizione)
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                
+                if !immagini.isEmpty, let immagine = immagini.first {
+                    Image(uiImage: immagine)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 150)
+                        .cornerRadius(12)
+                        .clipped()
+                }
+                
+                if categoriaSelezionata == .evento || categoriaSelezionata == .annuncio || categoriaSelezionata == .spot {
+                    HStack {
+                        Image(systemName: "calendar")
+                            .foregroundColor(.blue)
+                        Text(dataEvento.formatted(date: .abbreviated, time: .shortened))
+                    }
+                    
+                    if !luogo.isEmpty {
+                        HStack {
+                            Image(systemName: "location")
+                                .foregroundColor(.blue)
+                            Text(luogo)
+                        }
+                    }
+                }
+            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(.systemBackground))
+                    .shadow(color: .black.opacity(0.1), radius: 2)
+            )
+            
+            Spacer()
+        }
+    }
+    
+    private var canProceed: Bool {
+        switch currentStep {
+        case .categoria:
+            return true
+        case .titolo:
+            return !titolo.isEmpty
+        case .descrizione:
+            return true
+        case .foto:
+            return true
+        case .dettagli:
+            if categoriaSelezionata == .evento {
+                return !luogo.isEmpty
+            }
+            return true
+        case .recap:
+            return true
+        }
+    }
+    
+    private func prossimoStep() {
+        guard canProceed else {
+            return
+        }
+        
+        withAnimation(.easeInOut(duration: 0.3)) {
+            if currentStep.rawValue < Step.allCases.count - 1 {
+                animationDirection = .forward
+                currentStep = Step(rawValue: currentStep.rawValue + 1) ?? currentStep
+            }
+        }
+    }
+    
+    private func stepIndietro() {
+        withAnimation(.easeInOut(duration: 0.3)) {
+            if currentStep.rawValue > 0 {
+                animationDirection = .backward
+                currentStep = Step(rawValue: currentStep.rawValue - 1) ?? currentStep
+            }
+        }
+    }
+    
+    private func pubblicaAnnuncio() {
+        let nuovo = Annuncio(
+            titolo: titolo,
+            descrizione: descrizione,
+            data: dataEvento,
+            luogo: luogo,
+            immagini: immagini,
+            autore: "Anonymous"
+        )
+        onSalva(nuovo)
+        dismiss()
+    }
 }
 
 struct ImagePicker: UIViewControllerRepresentable {
