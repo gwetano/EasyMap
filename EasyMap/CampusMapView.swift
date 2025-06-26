@@ -60,10 +60,8 @@ struct CampusMapView: View {
     @StateObject var store = AnnuncioStore()
     @State private var mostraCreazione = false
     @State private var mostraBacheca = false
-    @State private var annunci: [Annuncio] = [
-        Annuncio(titolo: "Torneo di Scacchi", descrizione: "Benvenuti al torneo!", data: Date(), luogo: "UNISA", immagini: [], autore: "Francesco"),
-        Annuncio(titolo: "Hackathon", descrizione: "Coding no stop", data: Date(), luogo: "Biblioteca", immagini: [], autore: "Lucia")
-    ]
+    @State private var mostraProfilo = false
+    @State private var isAuthenticated = UserSessionManager.shared.isLoggedIn()
 
     var body: some View {
         ZStack {
@@ -456,13 +454,20 @@ struct CampusMapView: View {
                     
                     Spacer()
                     Button(action: {
-                        print("profilo")
+                        mostraProfilo = true
                     }) {
                         Image("login")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 70)
                             .padding()
+                    }
+                    .fullScreenCover(isPresented: $mostraProfilo) {
+                        if isAuthenticated {
+                            Profilo()
+                        } else {
+                            LoginRegistrazione(isAuthenticated: $isAuthenticated)
+                        }
                     }
                 }
                 .padding(.horizontal, 20)
