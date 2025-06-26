@@ -36,137 +36,136 @@ struct NuovoAnnuncioView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20) {
-                HStack {
-                    Button("Annulla") {
-                        dismiss()
+            ScrollView {
+                VStack(spacing: 20) {
+                    HStack {
+                        Button("Annulla") {
+                            dismiss()
+                        }
+                        Spacer()
+                        Button("Pubblica") {
+                            let nuovo = Annuncio(
+                                titolo: titolo,
+                                descrizione: descrizione,
+                                data: dataEvento,
+                                luogo: luogo,
+                                immagini: immagini,
+                                autore: "Utente anonimo"
+                            )
+                            onSalva(nuovo)
+                            dismiss()
+                        }.bold()
                     }
-                    Spacer()
-                    Button("Pubblica") {
-                        let nuovo = Annuncio(
-                            titolo: titolo,
-                            descrizione: descrizione,
-                            data: dataEvento,
-                            luogo: luogo,
-                            immagini: immagini,
-                            autore: "Utente anonimo"
-                        )
-                        onSalva(nuovo)
-                        dismiss()
-                    }.bold()
-                }
-                .padding(.horizontal)
-
-                Text("Nuovo Annuncio")
-                    .font(.largeTitle.bold())
-                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
 
-                if immagini.isEmpty {
-                    Menu {
-                        Button {
-                            mostraGalleria = true
-                        } label: {
-                            Label("Scegli dalla galleria", systemImage: "photo")
-                        }
-                        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                    Text("Nuovo Annuncio")
+                        .font(.largeTitle.bold())
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
+
+                    if immagini.isEmpty {
+                        Menu {
                             Button {
-                                mostraFotocamera = true
+                                mostraGalleria = true
                             } label: {
-                                Label("Scatta foto", systemImage: "camera")
+                                Label("Scegli dalla galleria", systemImage: "photo")
+                            }
+                            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                                Button {
+                                    mostraFotocamera = true
+                                } label: {
+                                    Label("Scatta foto", systemImage: "camera")
+                                }
+                            }
+                        } label: {
+                            VStack(spacing: 8) {
+                                Image(systemName: "plus")
+                                    .font(.largeTitle)
+                                Text("Aggiungi Foto")
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 180)
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(12)
+                            .padding(.horizontal)
+                        }
+                    } else {
+                        if let immagine = immagini.first {
+                            ZStack(alignment: .bottomTrailing) {
+                                Image(uiImage: immagine)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(height: 180)
+                                    .cornerRadius(12)
+                                    .padding(.horizontal)
+
+                                Button(action: {
+                                    immagini = []
+                                }) {
+                                    Image(systemName: "arrow.triangle.2.circlepath.circle.fill")
+                                        .font(.system(size: 30))
+                                        .foregroundColor(.white)
+                                        .background(Circle().fill(Color.blue).frame(width: 40, height: 40))
+                                        .padding(12)
+                                }
                             }
                         }
-                    } label: {
-                        VStack(spacing: 8) {
-                            Image(systemName: "plus")
-                                .font(.largeTitle)
-                            Text("Aggiungi Foto")
-                        }
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 180)
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(12)
-                        .padding(.horizontal)
                     }
-                } else {
-                    if let immagine = immagini.first {
-                        ZStack(alignment: .bottomTrailing) {
-                            Image(uiImage: immagine)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(height: 180)
-                                .cornerRadius(12)
-                                .padding(.horizontal)
 
-                            Button(action: {
-                                immagini = [] // Rimuove l'immagine corrente
-                            }) {
-                                Image(systemName: "arrow.triangle.2.circlepath.circle.fill")
-                                    .font(.system(size: 30))
-                                    .foregroundColor(.white)
-                                    .background(Circle().fill(Color.blue).frame(width: 40, height: 40))
-                                    .padding(12)
+                    VStack(alignment: .leading) {
+                        Text("Categoria")
+                            .font(.headline)
+                            .padding(.horizontal)
+
+                        Picker("Categoria", selection: $categoriaSelezionata) {
+                            ForEach(CategoriaAnnuncio.allCases) { categoria in
+                                Text(categoria.rawValue).tag(Optional(categoria))
                             }
                         }
-                    }
-                }
-
-                VStack(alignment: .leading) {
-                    Text("Categoria")
-                        .font(.headline)
-                        .padding(.horizontal)
-
-                    Picker("Categoria", selection: $categoriaSelezionata) {
-                        ForEach(CategoriaAnnuncio.allCases) { categoria in
-                            Text(categoria.rawValue).tag(Optional(categoria))
+                        .pickerStyle(.wheel)
+                        .frame(height: mostraPicker ? 150 : 60)
+                        .clipped()
+                        .onTapGesture {
+                            withAnimation {
+                                mostraPicker.toggle()
+                            }
                         }
+                        .padding(.horizontal)
                     }
-                    .pickerStyle(.wheel)
-                    .frame(height: mostraPicker ? 150 : 60)
-                    .clipped()
-                    .onTapGesture {
-                        // Toggle apertura picker
-                        withAnimation {
-                            mostraPicker.toggle()
+
+                    VStack(spacing: 16) {
+                        TextField("Titolo", text: $titolo)
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(10)
+
+                        TextField("Descrizione", text: $descrizione, axis: .vertical)
+                            .lineLimit(4...8)
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(10)
+
+                        if categoriaSelezionata == .evento {
+                            DatePicker("Data e Ora", selection: $dataEvento, displayedComponents: [.date, .hourAndMinute])
+                                .padding()
+                                .background(Color(.systemGray6))
+                                .cornerRadius(10)
+
+                            TextField("Luogo", text: $luogo)
+                                .padding()
+                                .background(Color(.systemGray6))
+                                .cornerRadius(10)
                         }
                     }
                     .padding(.horizontal)
+
+                    Spacer()
                 }
-
-
-
-
-
-                VStack(spacing: 16) {
-                    TextField("Titolo", text: $titolo)
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .cornerRadius(10)
-
-                    TextField("Descrizione", text: $descrizione, axis: .vertical)
-                        .lineLimit(4...8)
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .cornerRadius(10)
-
-                    if categoriaSelezionata == .evento  {
-                        DatePicker("Data e Ora", selection: $dataEvento, displayedComponents: [.date, .hourAndMinute])
-                            .padding()
-                            .background(Color(.systemGray6))
-                            .cornerRadius(10)
-
-                        TextField("Luogo", text: $luogo)
-                            .padding()
-                            .background(Color(.systemGray6))
-                            .cornerRadius(10)
-                    }
-
-                }
-
-                .padding(.horizontal)
-
-                Spacer()
+                .padding(.bottom, 100) // Per evitare taglio da tastiera
+                .padding(.top, 20)
+                .padding(.bottom, 20)
             }
+            .ignoresSafeArea(.keyboard) // Tastiera non sovrappone contenuti
             .background(Color.white)
             .sheet(isPresented: $mostraGalleria) {
                 ImagePicker(immagini: $immagini)
@@ -176,6 +175,7 @@ struct NuovoAnnuncioView: View {
             }
         }
     }
+
 }
 
 struct ImagePicker: UIViewControllerRepresentable {
