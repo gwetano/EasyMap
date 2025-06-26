@@ -17,7 +17,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
     @Published var cameraPosition: MapCameraPosition = .camera(
         MapCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 40.772705, longitude: 14.791365),
-                  distance: 500, heading: 62, pitch: 0)
+                  distance: 1500, heading: 62, pitch: 0)
     )
 
     let cameraBounds = MapCameraBounds(
@@ -39,10 +39,10 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         manager.requestWhenInUseAuthorization()
         manager.startUpdatingLocation()
     }
-
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.first else { return }
-
+    
+    func centerOnUserLocation() {
+        guard let location = manager.location else { return }
+        
         DispatchQueue.main.async {
             self.cameraPosition = .camera(
                 MapCamera(centerCoordinate: location.coordinate,
@@ -138,10 +138,6 @@ struct CampusMapView: View {
                     MapPolygon(coordinates: edificioB2Coordinates)
                         .foregroundStyle(.orange.opacity(0.3))
                         .stroke(.orange, lineWidth: 2)
-                    
-                    //Marker("E", coordinate: centroEdificioE)
-                    //    .tint(.blue)
-                    
                 
                     Annotation("E", coordinate: centroEdificioE) {
                         Text("E")
@@ -406,7 +402,7 @@ struct CampusMapView: View {
                     }
                     .annotationTitles(.hidden)
                 }
-                .mapStyle(.hybrid(elevation: .realistic))
+                .mapStyle(.imagery(elevation: .realistic))
                 .onTapGesture { screenCoordinate in
                     if let coordinate = reader.convert(screenCoordinate, from: .local) {
                         handleTap(at: coordinate)
@@ -417,6 +413,20 @@ struct CampusMapView: View {
                 MapUserLocationButton()
                 MapCompass()
                 MapScaleView()
+                
+                VStack {
+                    Button(action: {
+                        locationManager.centerOnUserLocation()
+                    }) {
+                        Image(systemName: "location.fill")
+                            .foregroundColor(.blue)
+                            .padding(8)
+                            .background(Circle().fill(.white))
+                            .shadow(radius: 2)
+                    }
+                    Spacer()
+                }
+                .padding(.leading, 8)
             }
             .onAppear {
                 locationManager.startTracking()
