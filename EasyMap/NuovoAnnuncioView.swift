@@ -48,39 +48,6 @@ struct NuovoAnnuncioView: View {
         case forward, backward
     }
     
-    enum CategoriaAnnuncio: String, CaseIterable, Identifiable {
-        case evento = "Evento"
-        case annuncio = "Annuncio"
-        case spot = "Spot"
-        case lavoro = "Lavoro"
-        case info = "Info"
-        case smarrimenti = "Smarrimenti"
-        
-        var id: String { rawValue }
-        
-        var icon: String {
-            switch self {
-            case .evento: return "calendar"
-            case .annuncio: return "megaphone"
-            case .spot: return "location"
-            case .lavoro: return "briefcase"
-            case .info: return "info.circle"
-            case .smarrimenti: return "questionmark.circle"
-            }
-        }
-        
-        var color: Color {
-            switch self {
-            case .evento: return .blue
-            case .annuncio: return .orange
-            case .spot: return .green
-            case .lavoro: return .purple
-            case .info: return .cyan
-            case .smarrimenti: return .red
-            }
-        }
-    }
-    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -95,9 +62,9 @@ struct NuovoAnnuncioView: View {
                         
                         HStack(spacing: 4) {
                             ForEach(0..<Step.allCases.count, id: \.self) { index in
-                                Circle()
+                                Rectangle()
                                     .fill(index <= currentStep.rawValue ? Color.blue : Color.gray.opacity(0.3))
-                                    .frame(width: 8, height: 8)
+                                    .frame(width: 16, height: 8)
                             }
                         }
                         
@@ -202,10 +169,11 @@ struct NuovoAnnuncioView: View {
                         prossimoStep()
                     }
                 } label: {
-                    VStack(spacing: 12) {
-                        Image(systemName: categoria.icon)
-                            .font(.system(size: 32))
-                            .foregroundColor(categoria.color)
+                    VStack(spacing: 8) {
+                        Image(categoria.icon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 75, height: 75)
                         
                         Text(categoria.rawValue)
                             .font(.headline)
@@ -233,6 +201,7 @@ struct NuovoAnnuncioView: View {
             TextField("Inserisci il titolo...", text: $titolo)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .font(.title3)
+                .padding(20)
                 .onSubmit {
                     if !titolo.isEmpty {
                         prossimoStep()
@@ -321,7 +290,7 @@ struct NuovoAnnuncioView: View {
     
     private var dettagliView: some View {
         VStack(spacing: 20) {
-            if categoriaSelezionata == .evento {
+            if categoriaSelezionata == .evento || categoriaSelezionata == .annuncio || categoriaSelezionata == .spot || categoriaSelezionata == .smarrimenti{
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Quando?")
                         .font(.headline)
@@ -337,6 +306,7 @@ struct NuovoAnnuncioView: View {
                     TextField("Inserisci il luogo...", text: $luogo)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             } else {
                 VStack(spacing: 16) {
                     Image(systemName: "checkmark.circle.fill")
@@ -351,18 +321,23 @@ struct NuovoAnnuncioView: View {
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
                 }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 40)
             }
             
             Spacer()
         }
+        .frame(maxWidth: .infinity)
     }
     
     private var recapView: some View {
         VStack(spacing: 20) {
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
-                    Image(systemName: categoriaSelezionata.icon)
-                        .foregroundColor(categoriaSelezionata.color)
+                    Image(categoriaSelezionata.icon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50, height: 50)
                     Text(categoriaSelezionata.rawValue)
                         .font(.headline)
                         .foregroundColor(categoriaSelezionata.color)
@@ -384,7 +359,7 @@ struct NuovoAnnuncioView: View {
                         .clipped()
                 }
                 
-                if categoriaSelezionata == .evento || categoriaSelezionata == .annuncio || categoriaSelezionata == .spot {
+                if categoriaSelezionata == .evento || categoriaSelezionata == .annuncio || categoriaSelezionata == .spot || categoriaSelezionata == .smarrimenti {
                     HStack {
                         Image(systemName: "calendar")
                             .foregroundColor(.blue)
@@ -460,7 +435,8 @@ struct NuovoAnnuncioView: View {
             data: dataEvento,
             luogo: luogo,
             immagini: immagini,
-            autore: "Anonymous"
+            autore: "Anonymous",
+            categoria: categoriaSelezionata
         )
         onSalva(nuovo)
         dismiss()

@@ -62,6 +62,7 @@ struct CampusMapView: View {
     @State private var mostraBacheca = false
     @State private var mostraProfilo = false
     @State private var isAuthenticated = UserSessionManager.shared.isLoggedIn()
+    @State private var isMap3D = false
 
     var body: some View {
         ZStack {
@@ -411,32 +412,23 @@ struct CampusMapView: View {
             .mapControls {
                 MapUserLocationButton()
                 MapCompass()
-                MapScaleView()
-                
-                VStack {
-                    Button(action: {
-                        locationManager.centerOnUserLocation()
-                    }) {
-                        Image(systemName: "location.fill")
-                            .foregroundColor(.blue)
-                            .padding(8)
-                            .background(Circle().fill(.white))
-                            .shadow(radius: 2)
-                    }
-                    Spacer()
-                }
-                .padding(.leading, 8)
             }
             .onAppear {
                 locationManager.startTracking()
             }
             .edgesIgnoringSafeArea(.bottom)
-            .sheet(item: Binding<IdentifiableString?>(
+            /*.sheet(item: Binding<IdentifiableString?>(
                 get: { selectedBuilding.map(IdentifiableString.init) },
                 set: { selectedBuilding = $0?.value }
             )) { building in
                 BuildingDetailView(buildingName: building.value)
-            }
+            }*/
+            .fullScreenCover(item: Binding<IdentifiableString?>(
+                   get: { selectedBuilding.map(IdentifiableString.init) },
+                   set: { selectedBuilding = $0?.value }
+               )) { building in
+                   FloorPlanView(buildingName: building.value)
+               }
 
             VStack {
                 Spacer()
@@ -485,14 +477,6 @@ struct CampusMapView: View {
             selectedBuilding = "E1"
         } else if isPointInPolygon(point: coordinate, polygon: edificioE2Coordinates) {
             selectedBuilding = "E2"
-        }else if isPointInPolygon(point: coordinate, polygon: edificioDCoordinates) {
-            selectedBuilding = "D"
-        } else if isPointInPolygon(point: coordinate, polygon: edificioD1Coordinates) {
-            selectedBuilding = "D1"
-        }else if isPointInPolygon(point: coordinate, polygon: edificioD2Coordinates) {
-            selectedBuilding = "D2"
-        } else if isPointInPolygon(point: coordinate, polygon: edificioD3Coordinates) {
-            selectedBuilding = "D3"
         }
     }
 }
@@ -692,6 +676,7 @@ func isPointInPolygon(point: CLLocationCoordinate2D, polygon: [CLLocationCoordin
 
 }
 
+ /*
 struct BuildingDetailView: View {
     let buildingName: String
     @Environment(\.dismiss) private var dismiss
@@ -741,7 +726,7 @@ struct BuildingDetailView: View {
         }
         .edgesIgnoringSafeArea(.bottom)
     }
-}
+}*/
 
 
 #Preview {

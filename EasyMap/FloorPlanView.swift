@@ -22,6 +22,15 @@ struct FloorPlanView: View {
         switch buildingName {
         case "E1":
             return [
+                FloorData(floor: -1, imageName: "edificio_e1_piano_1", rooms: [
+                    RoomInfo(id: "E101", name: "Aula delle Lauree", position: CGPoint(x: 150, y: 300), size: CGSize(width: 90, height: 200)),
+                    RoomInfo(id: "E102", name: "E002", position: CGPoint(x: 200, y: 150), size: CGSize(width: 60, height: 40)),
+                    RoomInfo(id: "E103", name: "Aula N", position: CGPoint(x: 260, y: 400), size: CGSize(width: 90, height: 40))
+                ]),
+                FloorData(floor: 0, imageName: "edificio_e1_piano_1", rooms: [
+                    RoomInfo(id: "E102", name: "E002", position: CGPoint(x: 200, y: 150), size: CGSize(width: 60, height: 40)),
+                    RoomInfo(id: "E103", name: "Aula N", position: CGPoint(x: 260, y: 400), size: CGSize(width: 90, height: 40))
+                ]),
                 FloorData(floor: 1, imageName: "edificio_e1_piano_1", rooms: [
                     RoomInfo(id: "E101", name: "Aula infografica", position: CGPoint(x: 150, y: 300), size: CGSize(width: 90, height: 200)),
                     RoomInfo(id: "E102", name: "E002", position: CGPoint(x: 200, y: 150), size: CGSize(width: 60, height: 40)),

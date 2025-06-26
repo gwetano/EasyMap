@@ -1,15 +1,5 @@
 import SwiftUI
 
-struct Annuncio: Identifiable, Hashable {
-    let id = UUID()
-    let titolo: String
-    let descrizione: String
-    let data: Date
-    let luogo: String
-    let immagini: [UIImage]
-    let autore: String
-}
-
 struct BachecaTikTokView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var store: AnnuncioStore
@@ -51,7 +41,6 @@ struct BachecaTikTokView: View {
                             annuncio: annuncio,
                             availableSize: CGSize(width: availableWidth, height: availableHeight)
                         )
-                        .frame(width: availableWidth, height: availableHeight)
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
@@ -103,31 +92,54 @@ struct AnnuncioCardView: View {
             let availableHeight = screenHeight - safeAreaTop - 60
             
             VStack(alignment: .leading, spacing: 0) {
-                Group {
-                    if let immagine = annuncio.immagini.first {
-                        Image(uiImage: immagine)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(
-                                width: screenWidth - (padding * 2),
-                                height: availableHeight * 0.3
-                            )
-                            .clipped()
-                            .cornerRadius(20)
-                    } else {
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.3))
-                            .frame(
-                                width: screenWidth - (padding * 2),
-                                height: availableHeight * 0.3
-                            )
-                            .cornerRadius(20)
-                            .overlay(
-                                Image(systemName: "photo")
-                                    .font(.system(size: min(screenWidth, availableHeight) * 0.08))
-                                    .foregroundColor(.gray)
-                            )
+                ZStack(alignment: .topLeading) {
+                    Group {
+                        if let immagine = annuncio.immagini.first {
+                            Image(uiImage: immagine)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(
+                                    width: screenWidth - (padding * 2),
+                                    height: availableHeight * 0.5
+                                )
+                                .clipped()
+                                .cornerRadius(20)
+                        } else {
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.3))
+                                .frame(
+                                    width: screenWidth - (padding * 2),
+                                    height: availableHeight * 0.5
+                                )
+                                .cornerRadius(20)
+                                .overlay(
+                                    Image(systemName: "photo")
+                                        .font(.system(size: min(screenWidth, availableHeight) * 0.08))
+                                        .foregroundColor(.gray)
+                                )
+                        }
                     }
+                    
+                    HStack(spacing: 8) {
+                        Image(annuncio.categoria.icon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 16, height: 16)
+                            .foregroundColor(.white)
+                        
+                        Text(annuncio.categoria.rawValue)
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(.white)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(
+                        Capsule()
+                            .fill(annuncio.categoria.color)
+                            .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+                    )
+                    .padding(.top, 12)
+                    .padding(.leading, 12)
                 }
                 .padding(.horizontal, padding)
                 .padding(.top, padding)
