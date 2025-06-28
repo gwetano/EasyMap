@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct EasyMapApp: App {
+    @StateObject private var authManager = AuthManager()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CampusMapView()
+                .environmentObject(authManager)
         }
     }
 }

@@ -61,7 +61,7 @@ struct CampusMapView: View {
     @State private var mostraCreazione = false
     @State private var mostraBacheca = false
     @State private var mostraProfilo = false
-    @State private var isAuthenticated = UserSessionManager.shared.isLoggedIn()
+    @EnvironmentObject var authManager: AuthManager
     @State private var isMap3D = false
 
     var body: some View {
@@ -455,10 +455,10 @@ struct CampusMapView: View {
                             .padding()
                     }
                     .fullScreenCover(isPresented: $mostraProfilo) {
-                        if isAuthenticated {
+                        if authManager.isAuthenticated {
                             Profilo()
                         } else {
-                            LoginRegistrazione(isAuthenticated: $isAuthenticated)
+                            LoginRegistrazione()
                         }
                     }
                 }

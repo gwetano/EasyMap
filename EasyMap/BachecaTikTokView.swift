@@ -4,6 +4,11 @@ struct BachecaTikTokView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var store: AnnuncioStore
     @State private var mostraCreazione = false
+    
+    @State private var showLoginAlert = false
+    @State private var mostraLoginView = false
+    
+    @EnvironmentObject var authManager: AuthManager
 
     var body: some View {
         GeometryReader { geometry in
@@ -24,7 +29,11 @@ struct BachecaTikTokView: View {
                         }
                         Spacer()
                         Button {
-                            mostraCreazione = true
+                            if authManager.isAuthenticated {
+                                mostraCreazione = true
+                            } else {
+                                showLoginAlert = true
+                            }
                         } label: {
                             Image(systemName: "square.and.pencil")
                                 .font(.title3)
@@ -52,6 +61,26 @@ struct BachecaTikTokView: View {
             NuovoAnnuncioView { nuovo in
                 store.aggiungi(nuovo)
                 mostraCreazione = false
+            }
+        }.alert("Accesso richiesto", isPresented: $showLoginAlert) {
+            Button("Login") {
+                mostraLoginView = true
+            }
+            Button("Annulla", role: .cancel) {}
+        } message: {
+            Text("Per aggiungere un post devi effettuare il login.")
+        }.fullScreenCover(isPresented: $mostraLoginView){
+            LoginRegistrazione()
+                            .environmentObject(authManager)
+        }.onChange(of: authManager.isAuthenticated) { isAuthenticated in
+            
+            if isAuthenticated && mostraLoginView {
+                
+                mostraLoginView = false
+                // Piccolo delay per assicurarsi che la schermata di login si chiuda prima di aprire quella di creazione
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    mostraCreazione = true
+                }
             }
         }
     }

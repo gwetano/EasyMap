@@ -12,6 +12,13 @@ struct Profilo: View {
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var profileImage: Image? = nil
     @State private var user = UserSessionManager.shared.leggiSessione()
+    
+    @State private var mostraCamera = false
+    @State private var mostraGalleria = false
+    @State private var immaginiProfilo: [UIImage] = []
+    
+    @State private var showImageSourceDialog : Bool = false
+    
     @Environment(\.dismiss) var dismiss
     
     // Picker stato per mostrare Salvati o Medaglie
@@ -44,59 +51,68 @@ struct Profilo: View {
                     .foregroundColor(.blue)
             }
             // Bottone modifica immagine
-            PhotosPicker("Modifica immagine", selection: $selectedItem, matching: .images)
-                .onChange(of: selectedItem) { newItem in
-                    guard let newItem = newItem else { return }
-
-                    Task {
-                        if let data = try? await newItem.loadTransferable(type: Data.self),
-                           let uiImage = UIImage(data: data) {
-
-                            let fileName = "profile.png"
-                            let url = getDocumentsDirectory().appendingPathComponent(fileName)
-                            if let imageData = uiImage.pngData() {
-                                try? imageData.write(to: url)
-                            }
-
-                            UserSessionManager.shared.salvaImmagineProfilo(nomeFile: fileName)
-                            profileImage = Image(uiImage: uiImage)
-                        }
-                    }
+            Button("Modifica Foto") {
+                // Mostra un dialogo di scelta
+                showImageSourceDialog = true
+            }
+            .confirmationDialog("Aggiungi da", isPresented: $showImageSourceDialog, titleVisibility: .visible) {
+                Button("Camera") {
+                    mostraCamera = true
                 }
-
-            // Nome utente
+                Button("Foto") {
+                    mostraGalleria = true
+                }
+                Button("Annulla", role: .cancel) {}
+            }
+            
+            /* Mostra nome utente */
             if let nome = user?.nome {
                 Text(nome)
                     .font(.title)
                     .bold()
             }
-
+            
             // Picker segmentato per categorie
             Picker("Categoria", selection: $selectedTab) {
                 ForEach(tabs, id: \.self) { Text($0) }
             }
             .pickerStyle(SegmentedPickerStyle())
             .padding(.top, 10)
-
-            // Vista condizionata
+            
+            /* Sezione post-missioni*/
             if selectedTab == "Salvati" {
                 salvatiView()
             } else if selectedTab == "Missioni" {
                 missioniView()
             }
-
+            
             Spacer()
         }
         .padding()
         .onAppear {
-            if let imageName = user?.immagineProfilo {
+            if let imageName = user?.immagineProfilo, !imageName.isEmpty{
                 let path = getDocumentsDirectory().appendingPathComponent(imageName)
                 if let uiImage = UIImage(contentsOfFile: path.path) {
                     profileImage = Image(uiImage: uiImage)
+                }else {
+                    profileImage = Image(systemName: "person.crop.circle")
                 }
+            }else{
+                profileImage = Image(systemName: "person.crop.circle")
             }
         }
         .navigationBarBackButtonHidden(true)
+        .sheet(isPresented: $mostraCamera) {
+            CameraPicker(immagini: $immaginiProfilo)
+                .onDisappear{
+                    aggiornaFoto()
+                }
+        }.sheet(isPresented: $mostraGalleria){
+            ImagePicker(immagini: $immaginiProfilo)
+                .onDisappear{
+                    aggiornaFoto()
+                }
+        }
     }
 
     func salvatiView() -> some View {
@@ -119,5 +135,18 @@ struct Profilo: View {
 
     func getDocumentsDirectory() -> URL {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    }
+        
+    func aggiornaFoto() {
+        guard let nuovaImmagine = immaginiProfilo.first else { return }
+
+        let fileName = "profile.png"
+        let url = getDocumentsDirectory().appendingPathComponent(fileName)
+        if let imageData = nuovaImmagine.pngData() {
+            try? imageData.write(to: url)
+            UserSessionManager.shared.salvaImmagineProfilo(nomeFile: fileName)
+            profileImage = Image(uiImage: nuovaImmagine)
+            immaginiProfilo.removeAll()
+        }
     }
 }
