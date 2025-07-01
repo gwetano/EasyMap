@@ -1,4 +1,3 @@
-
 //
 //  CampusMapView.swift
 //  EasyMap
@@ -12,6 +11,7 @@ struct ContentView: View {
     @StateObject private var store = AnnuncioStore()
 
     var body: some View {
+        //ListaAule()
         CampusMapView(store: store)
     }
 }

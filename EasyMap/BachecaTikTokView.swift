@@ -7,6 +7,7 @@ struct BachecaTikTokView: View {
     
     @State private var showLoginAlert = false
     @State private var mostraLoginView = false
+    @State private var mostraProfilo = false
     
     @EnvironmentObject var authManager: AuthManager
 
@@ -18,16 +19,31 @@ struct BachecaTikTokView: View {
             let availableWidth = geometry.size.width
             
             VStack(spacing: 0) {
-                VStack {
-                    HStack {
+                HStack {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "chevron.backward")
+                            .font(.title2)
+                            .foregroundColor(.primary)
+                            .padding(.horizontal, 17)
+                            .padding(.vertical, 12)
+                    }
+                    
+                    Spacer()
+                    
+                    HStack(spacing: 2) {
                         Button(action: {
-                            dismiss()
+                            mostraProfilo = true
                         }) {
-                            Image(systemName: "chevron.backward")
-                                .font(.title3)
-                                .padding()
+                            Image(systemName: "person.crop.circle")
+                                .font(.title2)
+                                .foregroundColor(.primary)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 12)
+                                .padding(.bottom, -5)
                         }
-                        Spacer()
+                        
                         Button {
                             if authManager.isAuthenticated {
                                 mostraCreazione = true
@@ -36,14 +52,18 @@ struct BachecaTikTokView: View {
                             }
                         } label: {
                             Image(systemName: "square.and.pencil")
-                                .font(.title3)
-                                .padding()
+                                .font(.title2)
+                                .foregroundColor(.primary)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 12)
                         }
+                        
                     }
+                    .padding(.trailing, 5)
                 }
                 .frame(height: headerHeight)
-                .zIndex(1)
-                
+                .background(Color(.systemBackground))
+
                 TabView {
                     ForEach(store.annunci) { annuncio in
                         AnnuncioCardView(
@@ -53,8 +73,6 @@ struct BachecaTikTokView: View {
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
-                .frame(height: availableHeight)
-
             }
         }
         .fullScreenCover(isPresented: $mostraCreazione) {
@@ -62,22 +80,29 @@ struct BachecaTikTokView: View {
                 store.aggiungi(nuovo)
                 mostraCreazione = false
             }
-        }.alert("Accesso richiesto", isPresented: $showLoginAlert) {
+        }
+        .alert("Accesso richiesto", isPresented: $showLoginAlert) {
             Button("Login") {
                 mostraLoginView = true
             }
             Button("Annulla", role: .cancel) {}
         } message: {
             Text("Per aggiungere un post devi effettuare il login.")
-        }.fullScreenCover(isPresented: $mostraLoginView){
+        }
+        .fullScreenCover(isPresented: $mostraLoginView) {
             LoginRegistrazione()
-                            .environmentObject(authManager)
-        }.onChange(of: authManager.isAuthenticated) { isAuthenticated in
-            
+                .environmentObject(authManager)
+        }
+        .fullScreenCover(isPresented: $mostraProfilo) {
+            if authManager.isAuthenticated {
+                Profilo()
+            } else {
+                LoginRegistrazione()
+            }
+        }
+        .onChange(of: authManager.isAuthenticated) { isAuthenticated in
             if isAuthenticated && mostraLoginView {
-                
                 mostraLoginView = false
-                // Piccolo delay per assicurarsi che la schermata di login si chiuda prima di aprire quella di creazione
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     mostraCreazione = true
                 }

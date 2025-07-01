@@ -16,8 +16,8 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let unisaCoordinate = CLLocationCoordinate2D(latitude: 40.772705, longitude: 14.791365)
 
     @Published var cameraPosition: MapCameraPosition = .camera(
-        MapCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 40.772705, longitude: 14.791365),
-                  distance: 1500, heading: 62, pitch: 0)
+        MapCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 40.7720, longitude: 14.79128),
+                  distance: 780, heading: 132, pitch: 70)
     )
 
     let cameraBounds = MapCameraBounds(
@@ -60,7 +60,6 @@ struct CampusMapView: View {
     @StateObject var store = AnnuncioStore()
     @State private var mostraCreazione = false
     @State private var mostraBacheca = false
-    @State private var mostraProfilo = false
     @EnvironmentObject var authManager: AuthManager
     @State private var isMap3D = false
 
@@ -412,6 +411,7 @@ struct CampusMapView: View {
             .mapControls {
                 MapUserLocationButton()
                 MapCompass()
+                MapPitchToggle()
             }
             .onAppear {
                 locationManager.startTracking()
@@ -445,22 +445,6 @@ struct CampusMapView: View {
                     }
                     
                     Spacer()
-                    Button(action: {
-                        mostraProfilo = true
-                    }) {
-                        Image("login")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 70)
-                            .padding()
-                    }
-                    .fullScreenCover(isPresented: $mostraProfilo) {
-                        if authManager.isAuthenticated {
-                            Profilo()
-                        } else {
-                            LoginRegistrazione()
-                        }
-                    }
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 10)

@@ -45,7 +45,7 @@ class UserSessionManager {
     }
     
     func salvaImmagineProfilo(nomeFile: String) {
-        guard var session = leggiSessione() else { return }
+        guard let session = leggiSessione() else { return }
 
         // aggiorna solo il campo immagine
         let nuovaSessione = UserSession(

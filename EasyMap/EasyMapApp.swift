@@ -13,7 +13,7 @@ struct EasyMapApp: App {
 
     var body: some Scene {
         WindowGroup {
-            CampusMapView()
+            ContentView()
                 .environmentObject(authManager)
         }
     }

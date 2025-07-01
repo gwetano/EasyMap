@@ -4,6 +4,7 @@
 //
 //  Created by Lorenzo Campagna on 25/06/25.
 //
+
 import SwiftUI
 
 struct LoginRegistrazione: View {
@@ -11,22 +12,17 @@ struct LoginRegistrazione: View {
     @State private var email = ""
     @State private var password = ""
     @State private var nome = ""
-    @State private var isLogin = true //Mostra scritta Login/Registrazione e la label Nome
+    @State private var isLogin = true
     @State private var message = ""
     
-    /* Gestione Alert in caso di errore*/
     @State private var isError = false
     @State private var msgError = ""
     @EnvironmentObject var authManager: AuthManager
     
-    /* Pulsante di Back */
     @Environment(\.dismiss) var dismiss
 
-    /* Aggiorna il flag per abilitare o disabilitare i bottoni in base */
        var disabilitaBottoni: Bool {
            if isLogin{
-               //Se sono in login page controllo solo i due fiel
-               //Altrimenti tutti e 3
                return !email.isEmpty && !password.isEmpty
            }else{
                return !email.isEmpty && !password.isEmpty && !nome.isEmpty
@@ -154,12 +150,10 @@ struct LoginRegistrazione: View {
                 return
             }
             
-            // Stampa la risposta raw del server
             if let responseString = String(data: data, encoding: .utf8) {
                 print("🔵 Risposta server (raw): \(responseString)")
             }
             
-            // Prova a parsare il JSON
             do {
                 let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
                 print("🔵 JSON parsato: \(json ?? [:])")
