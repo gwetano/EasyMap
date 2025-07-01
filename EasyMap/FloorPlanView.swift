@@ -1,8 +1,8 @@
 //
-//  FloorPlanImageView.swift
+//  FloorPlanView.swift
 //  EasyMap
 //
-//  Updated Floor Plan View with Image Overlay and Markers
+//  Created by Studente on 27/06/25.
 //
 
 import SwiftUI
@@ -11,53 +11,13 @@ import MapKit
 struct Room: Identifiable {
     let id = UUID()
     let name: String
-    let coordinate: CLLocationCoordinate2D
     let imagePosition: CGPoint
-    let type: RoomType
+    let imageSize: CGSize
     let capacity: Int?
     let description: String?
     
-    enum RoomType: String, CaseIterable {
-        case classroom = "Aula"
-        case lab = "Laboratorio"
-        case office = "Ufficio"
-        case library = "Biblioteca"
-        case bathroom = "Bagno"
-        case other = "Altro"
-        
-        var icon: String {
-            switch self {
-            case .classroom: return "person.3.fill"
-            case .lab: return "flask.fill"
-            case .office: return "briefcase.fill"
-            case .library: return "book.fill"
-            case .bathroom: return "figure.walk"
-            case .other: return "building.fill"
-            }
-        }
-        
-        var color: Color {
-            switch self {
-            case .classroom: return .blue
-            case .lab: return .green
-            case .office: return .orange
-            case .library: return .purple
-            case .bathroom: return .gray
-            case .other: return .brown
-            }
-        }
-    }
-    
     var isSmall: Bool {
-        return type == .bathroom || (capacity ?? 0) < 20
-    }
-    
-    var isImportant: Bool {
-        return type == .library || type == .lab || (capacity ?? 0) > 50
-    }
-    
-    var area: Double {
-        return Double(capacity ?? 10)
+        return (capacity ?? 0) < 20
     }
 }
 
@@ -67,14 +27,11 @@ struct Floor: Identifiable {
     let name: String
     let imageName: String
     let rooms: [Room]
-    let imageOverlayBounds: MKCoordinateRegion
 }
 
 struct Building {
     let name: String
     let floors: [Floor]
-    let baseCoordinate: CLLocationCoordinate2D
-    let polygonCoordinates: [CLLocationCoordinate2D]
 }
 
 class BuildingDataManager: ObservableObject {
@@ -102,42 +59,34 @@ class BuildingDataManager: ObservableObject {
             imageName: "edificio_e_piano_0",
             rooms: [
                 Room(
-                    name: "E01",
-                    coordinate: CLLocationCoordinate2D(latitude: 40.77290, longitude: 14.79065),
-                    imagePosition: CGPoint(x: 0.2, y: 0.3), // 20% da sinistra, 30% dall'alto
-                    type: .classroom,
+                    name: "Aula 21",
+                    imagePosition: CGPoint(x: 0.15, y: 0.25),
+                    imageSize: CGSize(width: 0.15, height: 0.12),
                     capacity: 120,
-                    description: "Aula magna con proiettore"
+                    description: "Aula magna con proiettore e sistema audio"
                 ),
                 Room(
-                    name: "E02",
-                    coordinate: CLLocationCoordinate2D(latitude: 40.77285, longitude: 14.79070),
-                    imagePosition: CGPoint(x: 0.7, y: 0.2),
-                    type: .lab,
+                    name: "Aula 22",
+                    imagePosition: CGPoint(x: 0.65, y: 0.15),
+                    imageSize: CGSize(width: 0.12, height: 0.10),
                     capacity: 30,
-                    description: "Laboratorio informatico"
+                    description: "Laboratorio informatico con 30 postazioni"
                 ),
                 Room(
                     name: "E03",
-                    coordinate: CLLocationCoordinate2D(latitude: 40.77280, longitude: 14.79075),
-                    imagePosition: CGPoint(x: 0.5, y: 0.8),
-                    type: .office,
+                    imagePosition: CGPoint(x: 0.45, y: 0.75),
+                    imageSize: CGSize(width: 0.10, height: 0.08),
                     capacity: nil,
-                    description: "Ufficio docenti"
+                    description: "Ufficio docenti - Piano terra"
                 ),
                 Room(
                     name: "WC",
-                    coordinate: CLLocationCoordinate2D(latitude: 40.77275, longitude: 14.79080),
-                    imagePosition: CGPoint(x: 0.1, y: 0.7),
-                    type: .bathroom,
+                    imagePosition: CGPoint(x: 0.05, y: 0.65),
+                    imageSize: CGSize(width: 0.06, height: 0.08),
                     capacity: nil,
                     description: "Servizi igienici"
                 )
-            ],
-            imageOverlayBounds: MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: 40.772885, longitude: 14.790675),
-                span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002)
-            )
+            ]
         )
         
         let floor1 = Floor(
@@ -147,88 +96,91 @@ class BuildingDataManager: ObservableObject {
             rooms: [
                 Room(
                     name: "E11",
-                    coordinate: CLLocationCoordinate2D(latitude: 40.77292, longitude: 14.79063),
-                    imagePosition: CGPoint(x: 0.3, y: 0.4),
-                    type: .classroom,
+                    imagePosition: CGPoint(x: 0.25, y: 0.35),
+                    imageSize: CGSize(width: 0.14, height: 0.12),
                     capacity: 80,
-                    description: "Aula con lavagna interattiva"
+                    description: "Aula con lavagna interattiva e sistema di videoconferenza"
                 ),
                 Room(
                     name: "E12",
-                    coordinate: CLLocationCoordinate2D(latitude: 40.77287, longitude: 14.79068),
-                    imagePosition: CGPoint(x: 0.6, y: 0.3),
-                    type: .library,
+                    imagePosition: CGPoint(x: 0.55, y: 0.25),
+                    imageSize: CGSize(width: 0.12, height: 0.10),
                     capacity: 50,
-                    description: "Sala studio e consultazione"
+                    description: "Sala studio e consultazione con accesso Wi-Fi"
                 )
-            ],
-            imageOverlayBounds: MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: 40.772885, longitude: 14.790675),
-                span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002)
-            )
+            ]
         )
         
         return Building(
             name: "E",
-            floors: [floor0, floor1],
-            baseCoordinate: CLLocationCoordinate2D(latitude: 40.772885, longitude: 14.790675),
-            polygonCoordinates: [
-                CLLocationCoordinate2D(latitude: 40.77213, longitude: 14.79143),
-                CLLocationCoordinate2D(latitude: 40.77377, longitude: 14.79024),
-                CLLocationCoordinate2D(latitude: 40.77364, longitude: 14.78992),
-                CLLocationCoordinate2D(latitude: 40.77200, longitude: 14.79117),
-                CLLocationCoordinate2D(latitude: 40.77213, longitude: 14.79143)
-            ]
+            floors: [floor0, floor1]
         )
     }
     
     private func createBuildingE1() -> Building {
-        
         let floorm1 = Floor(
             number: -1,
             name: "Sottoscala",
             imageName: "edificio_e1_piano_-1",
             rooms: [
                 Room(
-                    name: "E11",
-                    coordinate: CLLocationCoordinate2D(latitude: 40.77292, longitude: 14.79063),
-                    imagePosition: CGPoint(x: 0.3, y: 0.4),
-                    type: .classroom,
-                    capacity: 80,
-                    description: "Aula con lavagna interattiva"
+                    name: "Aula delle Lauree - V. Cardone",
+                    imagePosition: CGPoint(x: 0.31, y: 0.45),
+                    imageSize: CGSize(width: 0.27, height: 0.40),
+                    capacity: 15,
+                    description: "Sala deposito e archivio"
                 ),
                 Room(
-                    name: "E12",
-                    coordinate: CLLocationCoordinate2D(latitude: 40.77287, longitude: 14.79068),
-                    imagePosition: CGPoint(x: 0.6, y: 0.3),
-                    type: .library,
-                    capacity: 50,
-                    description: "Sala studio e consultazione"
-                )
-            ],
-            imageOverlayBounds: MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: 40.772885, longitude: 14.790675),
-                span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002)
-            )
+                    name: "Laboratorio Icaro - ICT",
+                    imagePosition: CGPoint(x: 0.653, y: 0.637),
+                    imageSize: CGSize(width: 0.263, height: 0.25),
+                    capacity: nil,
+                    description: "Ufficio tecnico"
+                ),
+            ]
         )
+        
         let floor0 = Floor(
             number: 0,
             name: "Piano Terra",
             imageName: "edificio_e1_piano_0",
             rooms: [
                 Room(
-                    name: "E1-01",
-                    coordinate: CLLocationCoordinate2D(latitude: 40.772850, longitude: 14.790120),
-                    imagePosition: CGPoint(x: 0.4, y: 0.5),
-                    type: .classroom,
+                    name: "Aula G",
+                    imagePosition: CGPoint(x: 0.352, y: 0.665),
+                    imageSize: CGSize(width: 0.176, height: 0.11),
                     capacity: 60,
-                    description: "Aula per lezioni frontali"
+                    description: "Aula per lezioni frontali con proiettore"
+                ),
+                Room(
+                    name: "Aula D",
+                    imagePosition: CGPoint(x: 0.625, y: 0.557),
+                    imageSize: CGSize(width: 0.22, height: 0.09),
+                    capacity: 60,
+                    description: "Aula per lezioni frontali con proiettore"
+                ),
+                Room(
+                    name: "Aula E",
+                    imagePosition: CGPoint(x: 0.625, y: 0.665),
+                    imageSize: CGSize(width: 0.22, height: 0.11),
+                    capacity: 60,
+                    description: "Aula per lezioni frontali con proiettore"
+                ),
+                Room(
+                    name: "Aula F",
+                    imagePosition: CGPoint(x: 0.352, y: 0.552),
+                    imageSize: CGSize(width: 0.176, height: 0.1),
+                    capacity: 60,
+                    description: "Aula per lezioni frontali con proiettore"
+                ),
+                Room(
+                    name: "Aula O",
+                    imagePosition: CGPoint(x: 0.352, y: 0.436),
+                    imageSize: CGSize(width: 0.176, height: 0.11),
+                    capacity: 60,
+                    description: "Aula per lezioni frontali con proiettore"
                 )
-            ],
-            imageOverlayBounds: MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: 40.772832, longitude: 14.790132),
-                span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001)
-            )
+            ]
         )
         
         let floor1 = Floor(
@@ -237,437 +189,190 @@ class BuildingDataManager: ObservableObject {
             imageName: "edificio_e1_piano_1",
             rooms: [
                 Room(
-                    name: "E11",
-                    coordinate: CLLocationCoordinate2D(latitude: 40.77292, longitude: 14.79063),
-                    imagePosition: CGPoint(x: 0.3, y: 0.4),
-                    type: .classroom,
-                    capacity: 80,
-                    description: "Aula con lavagna interattiva"
+                    name: "Aula Infografica",
+                    imagePosition: CGPoint(x: 0.352, y: 0.517),
+                    imageSize: CGSize(width: 0.217, height: 0.44),
+                    capacity: 45,
+                    description: "Aula seminari con disposizione a ferro di cavallo"
                 ),
                 Room(
-                    name: "E12",
-                    coordinate: CLLocationCoordinate2D(latitude: 40.77287, longitude: 14.79068),
-                    imagePosition: CGPoint(x: 0.6, y: 0.3),
-                    type: .library,
-                    capacity: 50,
-                    description: "Sala studio e consultazione"
-                )
-            ],
-            imageOverlayBounds: MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: 40.772885, longitude: 14.790675),
-                span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002)
-            )
+                    name: "Aula N",
+                    imagePosition: CGPoint(x: 0.654, y: 0.759),
+                    imageSize: CGSize(width: 0.212, height: 0.105),
+                    capacity: 60,
+                    description: "Aula per lezioni frontali con proiettore"
+                ),
+                Room(
+                    name: "Aula 102 CAD",
+                    imagePosition: CGPoint(x: 0.654, y: 0.651),
+                    imageSize: CGSize(width: 0.212, height: 0.095),
+                    capacity: 60,
+                    description: "Aula per lezioni frontali con proiettore"
+                ),
+            ]
         )
         
         let floor2 = Floor(
             number: 2,
-            name: "Primo Piano",
+            name: "Secondo Piano",
             imageName: "edificio_e1_piano_2",
             rooms: [
                 Room(
-                    name: "E11",
-                    coordinate: CLLocationCoordinate2D(latitude: 40.77292, longitude: 14.79063),
-                    imagePosition: CGPoint(x: 0.3, y: 0.4),
-                    type: .classroom,
-                    capacity: 80,
-                    description: "Aula con lavagna interattiva"
+                    name: "Spazio per attivita' complementari_107",
+                    imagePosition: CGPoint(x: 0.404, y: 0.445),
+                    imageSize: CGSize(width: 0.12, height: 0.1),
+                    capacity: nil,
+                    description: "Uffici amministrativi"
                 ),
                 Room(
-                    name: "E12",
-                    coordinate: CLLocationCoordinate2D(latitude: 40.77287, longitude: 14.79068),
-                    imagePosition: CGPoint(x: 0.6, y: 0.3),
-                    type: .library,
-                    capacity: 50,
-                    description: "Sala studio e consultazione"
-                )
-            ],
-            imageOverlayBounds: MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: 40.772885, longitude: 14.790675),
-                span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002)
-            )
+                    name: "Sala 108/9C",
+                    imagePosition: CGPoint(x: 0.404, y: 0.554),
+                    imageSize: CGSize(width: 0.12, height: 0.1),
+                    capacity: nil,
+                    description: "Uffici amministrativi"
+                ),
+                Room(
+                    name: "Sala 109/9C",
+                    imagePosition: CGPoint(x: 0.404, y: 0.666),
+                    imageSize: CGSize(width: 0.12, height: 0.1),
+                    capacity: nil,
+                    description: "Uffici amministrativi"
+                ),
+                Room(
+                    name: "Laboratorio Modelli",
+                    imagePosition: CGPoint(x: 0.653, y: 0.65),
+                    imageSize: CGSize(width: 0.22, height: 0.1),
+                    capacity: nil,
+                    description: "Uffici amministrativi"
+                ),
+            ]
         )
         
         return Building(
             name: "E1",
-            floors: [floorm1,floor0,floor1,floor2],
-            baseCoordinate: CLLocationCoordinate2D(latitude: 40.772832, longitude: 14.790132),
-            polygonCoordinates: [
-                CLLocationCoordinate2D(latitude: 40.773061, longitude: 14.790224),
-                CLLocationCoordinate2D(latitude: 40.772896, longitude: 14.789840),
-                CLLocationCoordinate2D(latitude: 40.772602, longitude: 14.790060),
-                CLLocationCoordinate2D(latitude: 40.772760, longitude: 14.790438),
-                CLLocationCoordinate2D(latitude: 40.773061, longitude: 14.790224)
-            ]
-        )
+            floors: [floorm1, floor0, floor1, floor2]
+            )
     }
     
     private func createBuildingE2() -> Building {
-        return Building(name: "E2", floors: [], baseCoordinate: CLLocationCoordinate2D(latitude: 40.772135, longitude: 14.791490), polygonCoordinates: [])
+        return Building(
+            name: "E2",
+            floors: [],
+        )
     }
 }
 
 struct FloorPlanImageView: View {
     let floor: Floor
     @Binding var selectedRoom: Room?
-    @State private var imageSize: CGSize = .zero
+
     @State private var scale: CGFloat = 1.0
+    @State private var lastScale: CGFloat = 1.0
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
-    @State private var lastScale: CGFloat = 1.0
-    
+    @State private var giornata: Giornata?
+
     private let minScale: CGFloat = 0.5
     private let maxScale: CGFloat = 4.0
-    
-    private let markerVisibilityThreshold: CGFloat = 0.7
-    private let smallRoomVisibilityThreshold: CGFloat = 1.1
-    
+    private let labelThreshold: CGFloat = 0.7
+
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Group {
-                    if UIImage(named: floor.imageName) != nil {
-                        Image(floor.imageName)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .onAppear {
-                                if let image = UIImage(named: floor.imageName) {
-                                    imageSize = image.size
+                Color.black.opacity(0.05)
+
+                ZStack {
+                    if let image = UIImage(named: floor.imageName) {
+                        let imageSize = image.size
+                        let imageAspect = imageSize.width / imageSize.height
+
+                        let displayWidth = geometry.size.width
+                        let displayHeight = displayWidth / imageAspect
+
+                        ZStack {
+                            Image(uiImage: image)
+                                .resizable()
+                                .frame(width: displayWidth, height: displayHeight)
+                                .clipped()
+
+                            ForEach(floor.rooms) { room in
+                                Button(action: {
+                                    selectedRoom = room
+                                }) {
+                                    ZStack {
+                                        Rectangle()
+                                            .fill(getRoomColor(for: room).opacity(0.7))
+                                        if scale >= labelThreshold {
+                                            Text(room.name)
+                                                .font(.caption2)
+                                                .foregroundColor(.primary)
+                                                .padding(2)
+                                                .background(Color.white.opacity(0.4))
+                                        }
+                                    }
                                 }
+                                .buttonStyle(PlainButtonStyle())
+                                .frame(
+                                    width: room.imageSize.width * displayWidth,
+                                    height: room.imageSize.height * displayHeight
+                                )
+                                .position(
+                                    x: room.imagePosition.x * displayWidth,
+                                    y: room.imagePosition.y * displayHeight
+                                )
                             }
+                        }
+                        .frame(width: displayWidth, height: displayHeight)
+                        .scaleEffect(scale)
+                        .offset(offset)
+                        .gesture(
+                            SimultaneousGesture(
+                                MagnificationGesture()
+                                    .onChanged { value in
+                                        let newScale = min(max(lastScale * value, minScale), maxScale)
+                                        scale = newScale
+                                    }
+                                    .onEnded { _ in
+                                        lastScale = scale
+                                    },
+                                DragGesture()
+                                    .onChanged { value in
+                                        offset = CGSize(
+                                            width: lastOffset.width + value.translation.width,
+                                            height: lastOffset.height + value.translation.height
+                                        )
+                                    }
+                                    .onEnded { _ in
+                                        lastOffset = offset
+                                    }
+                            )
+                        )
                     } else {
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.2))
-                            .overlay(
-                                VStack(spacing: 10) {
-                                    Image(systemName: "building.2.fill")
-                                        .font(.system(size: 50))
-                                        .foregroundColor(.gray)
-                                    Text("Pianta \(floor.name)")
-                                        .font(.headline)
-                                        .foregroundColor(.gray)
-                                    Text("Edificio \(floor.imageName)")
-                                        .font(.subheadline)
-                                        .foregroundColor(.gray.opacity(0.7))
-                                }
-                            )
-                            .onAppear {
-                                imageSize = geometry.size
-                            }
+                        Text("Immagine non trovata")
+                            .foregroundColor(.red)
                     }
-                }
-                .scaleEffect(scale)
-                .offset(offset)
-                
-                ForEach(visibleRooms(at: scale)) { room in
-                    RoomMarkerView(
-                        room: room,
-                        isSelected: selectedRoom?.id == room.id,
-                        zoomScale: scale
-                    )
-                    .position(
-                        x: room.imagePosition.x * geometry.size.width,
-                        y: room.imagePosition.y * geometry.size.height
-                    )
-                    .scaleEffect(scale)
-                    .offset(offset)
-                    .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            selectedRoom = room
-                        }
-                    }
-                    .opacity(markerOpacity(for: room, at: scale))
-                }
-                
-                VStack {
-                    HStack {
-                        Spacer()
-                        LegendView(rooms: floor.rooms)
-                            .padding()
-                    }
-                    Spacer()
-                }
-                
-                VStack {
-                    Spacer()
-                    HStack {
-                        Button(action: zoomOut) {
-                            Image(systemName: "minus.magnifyingglass")
-                                .font(.title2)
-                                .padding(12)
-                                .background(Color.black.opacity(0.7))
-                                .foregroundColor(.white)
-                                .clipShape(Circle())
-                        }
-                        .disabled(scale <= minScale + 0.1)
-                        
-                        Spacer()
-                        
-                        Text("\(Int(scale * 100))%")
-                            .font(.caption)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color.black.opacity(0.7))
-                            .foregroundColor(.white)
-                            .clipShape(Capsule())
-                        
-                        Spacer()
-                        
-                        Button(action: zoomIn) {
-                            Image(systemName: "plus.magnifyingglass")
-                                .font(.title2)
-                                .padding(12)
-                                .background(Color.black.opacity(0.7))
-                                .foregroundColor(.white)
-                                .clipShape(Circle())
-                        }
-                        .disabled(scale >= maxScale - 0.1)
-                        
-                        Spacer()
-                        
-                        Button(action: resetZoom) {
-                            Image(systemName: "arrow.clockwise")
-                                .font(.title2)
-                                .padding(12)
-                                .background(Color.black.opacity(0.7))
-                                .foregroundColor(.white)
-                                .clipShape(Circle())
-                        }
-                    }
-                    .padding()
                 }
             }
-            .clipped()
-            .gesture(
-                SimultaneousGesture(
-                    MagnificationGesture()
-                        .onChanged { value in
-                            let newScale = lastScale * value
-                            scale = min(max(newScale, minScale), maxScale)
-                        }
-                        .onEnded { _ in
-                            lastScale = scale
-                        },
-                    
-                    DragGesture()
-                        .onChanged { value in
-                            let newOffset = CGSize(
-                                width: lastOffset.width + value.translation.width,
-                                height: lastOffset.height + value.translation.height
-                            )
-                            offset = constrainOffset(newOffset, geometry: geometry)
-                        }
-                        .onEnded { _ in
-                            lastOffset = offset
-                        }
-                )
-            )
         }
+        .task {
+            giornata = await leggiJSONDaURL()
+        }
+    }
+    
+    private func getRoomColor(for room: Room) -> Color {
+        guard let giornata = giornata else {
+            return .gray
+        }
+        
+        for aula in giornata.aule {
+            if aula.nome == room.name {
+                return aula.isOccupiedNow() ? .red : .green
+            }
+        }
+        
+        return .green
     }
 
-    private func visibleRooms(at currentScale: CGFloat) -> [Room] {
-        return floor.rooms.filter { room in
-            if selectedRoom?.id == room.id {
-                return true
-            }
-            
-            if currentScale < markerVisibilityThreshold {
-                return false
-            }
-            
-            if room.isSmall && currentScale < smallRoomVisibilityThreshold {
-                return false
-            }
-            
-            return true
-        }
-    }
-    
-    private func markerOpacity(for room: Room, at currentScale: CGFloat) -> Double {
-        if selectedRoom?.id == room.id {
-            return 1.0
-        }
-        
-        if room.isSmall {
-            let fadeStart = smallRoomVisibilityThreshold - 0.2
-            let fadeEnd = smallRoomVisibilityThreshold
-            
-            if currentScale < fadeStart {
-                return 0.0
-            } else if currentScale < fadeEnd {
-                return Double((currentScale - fadeStart) / (fadeEnd - fadeStart))
-            }
-        }
-        
-        if currentScale < markerVisibilityThreshold {
-            let fadeStart = markerVisibilityThreshold - 0.2
-            if currentScale < fadeStart {
-                return 0.0
-            } else {
-                return Double((currentScale - fadeStart) / 0.2)
-            }
-        }
-        
-        return 1.0
-    }
-    
-    private func constrainOffset(_ newOffset: CGSize, geometry: GeometryProxy) -> CGSize {
-        let scaledWidth = geometry.size.width * scale
-        let scaledHeight = geometry.size.height * scale
-        
-        let maxOffsetX = max(0, (scaledWidth - geometry.size.width) / 2)
-        let maxOffsetY = max(0, (scaledHeight - geometry.size.height) / 2)
-        
-        let constrainedX = min(max(newOffset.width, -maxOffsetX), maxOffsetX)
-        let constrainedY = min(max(newOffset.height, -maxOffsetY), maxOffsetY)
-        
-        return CGSize(width: constrainedX, height: constrainedY)
-    }
-    
-    private func zoomIn() {
-        withAnimation(.easeInOut(duration: 0.3)) {
-            let newScale = min(scale * 1.4, maxScale)
-            scale = newScale
-            lastScale = newScale
-        }
-    }
-    
-    private func zoomOut() {
-        withAnimation(.easeInOut(duration: 0.3)) {
-            let newScale = max(scale / 1.4, minScale)
-            scale = newScale
-            lastScale = newScale
-            
-            if scale <= 1.0 {
-                offset = .zero
-                lastOffset = .zero
-            }
-        }
-    }
-    
-    private func resetZoom() {
-        withAnimation(.easeInOut(duration: 0.5)) {
-            scale = 1.0
-            offset = .zero
-            lastScale = 1.0
-            lastOffset = .zero
-        }
-    }
-}
-
-// MARK: - RoomMarkerView aggiornata
-struct RoomMarkerView: View {
-    let room: Room
-    let isSelected: Bool
-    let zoomScale: CGFloat
-    
-    init(room: Room, isSelected: Bool, zoomScale: CGFloat = 1.0) {
-        self.room = room
-        self.isSelected = isSelected
-        self.zoomScale = zoomScale
-    }
-    
-    var body: some View {
-        VStack(spacing: 4) {
-            Image(systemName: room.type.icon)
-                .font(.system(size: iconSize, weight: .semibold))
-                .foregroundColor(.white)
-                .frame(width: markerSize, height: markerSize)
-                .background(
-                    Circle()
-                        .fill(room.type.color)
-                        .shadow(color: .black.opacity(0.3), radius: shadowRadius, x: 0, y: shadowOffset)
-                )
-                .overlay(
-                    Circle()
-                        .stroke(.white, lineWidth: strokeWidth)
-                )
-            
-            if zoomScale > 1.0 {
-                Text(room.name)
-                    .font(.system(size: textSize, weight: .medium))
-                    .foregroundColor(.primary)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(.white.opacity(0.95))
-                            .stroke(room.type.color, lineWidth: 1)
-                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
-                    )
-            }
-        }
-        .scaleEffect(markerScale)
-        .animation(.easeInOut(duration: 0.2), value: isSelected)
-        .animation(.easeInOut(duration: 0.15), value: zoomScale)
-    }
-    
-    private var markerScale: CGFloat {
-        let baseScale = isSelected ? 1.1 : 1.0
-        let importanceMultiplier = room.isImportant ? 1.15 : 1.0
-        let zoomAdjustment = max(0.8, min(1.2, 1.0 / sqrt(zoomScale)))
-        
-        return baseScale * importanceMultiplier * zoomAdjustment
-    }
-    
-    private var markerSize: CGFloat {
-        let baseSize: CGFloat = room.isImportant ? 32 : 28
-        return isSelected ? baseSize + 4 : baseSize
-    }
-    
-    private var iconSize: CGFloat {
-        return isSelected ? 16 : 14
-    }
-    
-    private var textSize: CGFloat {
-        return isSelected ? 11 : 9
-    }
-    
-    private var strokeWidth: CGFloat {
-        return isSelected ? 3 : 2
-    }
-    
-    private var shadowRadius: CGFloat {
-        return isSelected ? 4 : 2
-    }
-    
-    private var shadowOffset: CGFloat {
-        return isSelected ? 2 : 1
-    }
-}
-
-struct LegendView: View {
-    let rooms: [Room]
-    
-    private var roomTypes: [Room.RoomType] {
-        Array(Set(rooms.map { $0.type })).sorted { $0.rawValue < $1.rawValue }
-    }
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text("Legenda")
-                .font(.caption)
-                .fontWeight(.semibold)
-                .foregroundColor(.secondary)
-            
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))], spacing: 4) {
-                ForEach(roomTypes, id: \.self) { type in
-                    HStack(spacing: 4) {
-                        Image(systemName: type.icon)
-                            .font(.system(size: 10))
-                            .foregroundColor(type.color)
-                        Text(type.rawValue)
-                            .font(.system(size: 9))
-                            .foregroundColor(.secondary)
-                    }
-                }
-            }
-        }
-        .padding(8)
-        .background(
-            RoundedRectangle(cornerRadius: 8)
-                .fill(.ultraThinMaterial)
-        )
-    }
 }
 
 struct FloorPlanView: View {
@@ -676,8 +381,6 @@ struct FloorPlanView: View {
     @StateObject private var buildingManager = BuildingDataManager.shared
     @State private var selectedFloorIndex = 0
     @State private var selectedRoom: Room?
-    @State private var showImageView = true
-    @State private var cameraPosition: MapCameraPosition
     
     private var building: Building? {
         buildingManager.getBuilding(named: buildingName)
@@ -689,32 +392,80 @@ struct FloorPlanView: View {
         return building.floors[selectedFloorIndex]
     }
     
-    init(buildingName: String) {
-        self.buildingName = buildingName
-        let baseCoordinate = BuildingDataManager.shared.getBuilding(named: buildingName)?.baseCoordinate ?? CLLocationCoordinate2D(latitude: 40.772705, longitude: 14.791365)
-        self._cameraPosition = State(initialValue: .camera(
-            MapCamera(
-                centerCoordinate: baseCoordinate,
-                distance: 300,
-                heading: 0,
-                pitch: 0
-            )
-        ))
-    }
-    
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                headerView
+                HStack {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "chevron.backward")
+                            .font(.title2)
+                            .foregroundColor(.primary)
+                            .padding(.horizontal, 17)
+                            .padding(.vertical, 12)
+                    }
+
+
+                    Text("Edificio \(buildingName)")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                    
+                    Spacer()
+                }
+                .background(Color(.systemBackground))
                 
                 if let building = building, building.floors.count > 1 {
-                    floorSelectorView
+                    VStack(spacing: 8) {
+                        Text(building.floors[selectedFloorIndex].name)
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                        
+                        HStack(spacing: 20) {
+                            Text("Piano")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            
+                            Slider(
+                                value: Binding(
+                                    get: { Double(selectedFloorIndex) },
+                                    set: {
+                                        selectedFloorIndex = Int($0.rounded())
+                                        selectedRoom = nil
+                                    }
+                                ),
+                                in: 0...Double(building.floors.count - 1),
+                                step: 1
+                            )
+                            .accentColor(.blue)
+                            
+                            Text("\(building.floors[selectedFloorIndex].number)")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                                .frame(minWidth: 20)
+                        }
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
+                    .background(Color(.systemBackground))
                 }
                 
                 if let floor = currentFloor {
                     FloorPlanImageView(floor: floor, selectedRoom: $selectedRoom)
                 } else {
-                    noFloorDataView
+                    VStack(spacing: 20) {
+                        Image(systemName: "building.2")
+                            .font(.system(size: 60))
+                            .foregroundColor(.gray)
+                        Text("Nessun dato disponibile")
+                            .font(.headline)
+                            .foregroundColor(.gray)
+                        Text("Per l'edificio \(buildingName)")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color(.systemGroupedBackground))
                 }
             }
         }
@@ -722,155 +473,124 @@ struct FloorPlanView: View {
             RoomDetailView(room: room)
         }
     }
-    
-    private var headerView: some View {
-        HStack {
-            Button("Chiudi") {
-                dismiss()
-            }
-            .foregroundColor(.blue)
-            
-            Spacer()
-            
-            Text("Edificio \(buildingName)")
-                .font(.headline)
-                .fontWeight(.semibold)
-            
-            Spacer()
-            
-        }
-        .padding()
-        .background(Color(.systemBackground))
-        .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
-    }
-    
-    private var floorSelectorView: some View {
-        VStack(spacing: 8) {
-            if let building = building {
-                Text(building.floors[selectedFloorIndex].name)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                
-                HStack(spacing: 20) {
-                    Text("Piano")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    
-                    Slider(
-                        value: Binding(
-                            get: { Double(selectedFloorIndex) },
-                            set: {
-                                selectedFloorIndex = Int($0.rounded())
-                                selectedRoom = nil
-                            }
-                        ),
-                        in: 0...Double(building.floors.count - 1),
-                        step: 1
-                    )
-                    .accentColor(.blue)
-                    
-                    Text("\(building.floors[selectedFloorIndex].number)")
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .frame(minWidth: 20)
-                }
-            }
-        }
-        .padding(.horizontal)
-        .padding(.vertical, 8)
-        .background(Color(.systemBackground))
-    }
-    
-    private var noFloorDataView: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "building.2")
-                .font(.system(size: 60))
-                .foregroundColor(.gray)
-            Text("Nessun dato disponibile")
-                .font(.headline)
-                .foregroundColor(.gray)
-            Text("Per l'edificio \(buildingName)")
-                .font(.subheadline)
-                .foregroundColor(.gray)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(.systemGroupedBackground))
-    }
 }
 
 struct RoomDetailView: View {
     let room: Room
     @Environment(\.dismiss) private var dismiss
+    @State private var giornata: Giornata?
     
     var body: some View {
         NavigationView {
             VStack(alignment: .leading, spacing: 20) {
                 HStack {
-                    Image(systemName: room.type.icon)
-                        .font(.title)
-                        .foregroundColor(room.type.color)
-                        .frame(width: 50, height: 50)
-                        .background(
-                            Circle()
-                                .fill(room.type.color.opacity(0.1))
+                    Circle()
+                        .fill(getRoomColor())
+                        .frame(width: 60, height: 60)
+                        .overlay(
+                            Image(systemName: "square.split.bottomrightquarter")
+                                .font(.title2)
+                                .foregroundColor(.white)
                         )
                     
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 4) {
                         Text(room.name)
                             .font(.title2)
                             .fontWeight(.bold)
-                        Text(room.type.rawValue)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                        
+                        HStack {
+                            Circle()
+                                .fill(getRoomColor())
+                                .frame(width: 12, height: 12)
+                            Text(getOccupancyStatus())
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
                     }
                     
                     Spacer()
                 }
                 
-                VStack(alignment: .leading, spacing: 12) {
+                Divider()
+                
+                VStack(alignment: .leading, spacing: 16) {
                     if let capacity = room.capacity {
-                        InfoRow(icon: "person.3.fill", title: "Capienza", value: "\(capacity) persone")
+                        HStack {
+                            Image(systemName: "person.3.fill")
+                                .foregroundColor(.blue)
+                                .frame(width: 24)
+                                .padding()
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Capienza")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                Text("\(capacity) persone")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                        }
                     }
                     
                     if let description = room.description {
-                        InfoRow(icon: "info.circle.fill", title: "Descrizione", value: description)
+                        HStack(alignment: .top) {
+                            Image(systemName: "info.circle.fill")
+                                .foregroundColor(.blue)
+                                .frame(width: 24)
+                                .padding()
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Descrizione")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                Text(description)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                            Spacer()
+                        }
                     }
-                    
-                    InfoRow(icon: "location.fill", title: "Coordinate", value: String(format: "%.6f, %.6f", room.coordinate.latitude, room.coordinate.longitude))
                 }
                 
                 Spacer()
-                
-                .buttonStyle(.borderedProminent)
-                .frame(maxWidth: .infinity)
             }
             .padding()
             .navigationBarHidden(true)
         }
+        .task {
+            giornata = await leggiJSONDaURL()
+        }
+    }
+    
+    private func getRoomColor() -> Color {
+        guard let giornata = giornata else {
+            return .gray
+        }
+        
+        for aula in giornata.aule {
+            if aula.nome == room.name {
+                return aula.isOccupiedNow() ? .red : .green
+            }
+        }
+        
+        return .green
+    }
+    
+    private func getOccupancyStatus() -> String {
+        guard let giornata = giornata else {
+            return "Stato sconosciuto"
+        }
+        
+        for aula in giornata.aule {
+            if aula.nome == room.name {
+                return aula.isOccupiedNow() ? "Occupata" : "Libera"
+            }
+        }
+        
+        return "Libera"
     }
 }
 
-struct InfoRow: View {
-    let icon: String
-    let title: String
-    let value: String
-    
-    var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: icon)
-                .foregroundColor(.blue)
-                .frame(width: 20)
-            
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                Text(value)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-            
-            Spacer()
-        }
-    }
+#Preview {
+    FloorPlanView(buildingName: "E1")
 }
