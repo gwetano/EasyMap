@@ -10,8 +10,22 @@ import SwiftUI
 
 class AnnuncioStore: ObservableObject {
     @Published var annunci: [Annuncio] = []
-    
+
+    func caricaDaServer() {
+        fetchAnnunci { annunci in
+            DispatchQueue.main.async {
+                self.annunci = annunci
+            }
+        }
+    }
+
     func aggiungi(_ annuncio: Annuncio) {
-        annunci.insert(annuncio, at: 0)
+        // lo aggiungi localmente
+        self.annunci.append(annuncio)
+
+        // e lo invii al server
+        uploadAnnuncio(annuncio) { success in
+            print(success ? "Inviato con successo" : "Errore nell'invio")
+        }
     }
 }

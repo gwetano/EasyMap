@@ -73,6 +73,9 @@ struct BachecaTikTokView: View {
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
+                .onAppear{
+                    store.caricaDaServer()
+                }
             }
         }
         .fullScreenCover(isPresented: $mostraCreazione) {
