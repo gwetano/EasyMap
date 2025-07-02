@@ -255,10 +255,73 @@ class BuildingDataManager: ObservableObject {
     }
     
     private func createBuildingE2() -> Building {
+        let floor0 = Floor(
+            number: 0,
+            name: "Piano Terra",
+            imageName: "edificio_e2_piano_0",
+            rooms: [
+                Room(
+                    name: "Aula A",
+                    imagePosition: CGPoint(x: 0.607, y: 0.384),
+                    imageSize: CGSize(width: 0.176, height: 0.17),
+                    capacity: 60,
+                    description: "Aula per lezioni frontali con proiettore"
+                ),
+                Room(
+                    name: "Aula B",
+                    imagePosition: CGPoint(x: 0.615, y: 0.645),
+                    imageSize: CGSize(width: 0.16, height: 0.17),
+                    capacity: 60,
+                    description: "Aula per lezioni frontali con proiettore"
+                ),
+                Room(
+                    name: "Aula C",
+                    imagePosition: CGPoint(x: 0.354, y: 0.388),
+                    imageSize: CGSize(width: 0.185, height: 0.185),
+                    capacity: 60,
+                    description: "Aula per lezioni frontali con proiettore"
+                )
+            ]
+        )
+        
+        let floor1 = Floor(
+            number: 1,
+            name: "Primo Piano",
+            imageName: "edificio_e2_piano_1",
+            rooms: [
+                Room(
+                    name: "Aula I",
+                    imagePosition: CGPoint(x: 0.6265, y: 0.361),
+                    imageSize: CGSize(width: 0.22, height: 0.216),
+                    capacity: 45,
+                    description: "Aula seminari con disposizione a ferro di cavallo"
+                ),
+                Room(
+                    name: "Aula H",
+                    imagePosition: CGPoint(x: 0.632, y: 0.67),
+                    imageSize: CGSize(width: 0.21, height: 0.217),
+                    capacity: 60,
+                    description: "Aula per lezioni frontali con proiettore"
+                ),
+                Room(
+                    name: "Aula L",
+                    imagePosition: CGPoint(x: 0.323, y: 0.427),
+                    imageSize: CGSize(width: 0.22, height: 0.11),
+                    capacity: 45,
+                    description: "Aula seminari con disposizione a ferro di cavallo"
+                ),
+                Room(
+                    name: "Aula M",
+                    imagePosition: CGPoint(x: 0.323, y: 0.308),
+                    imageSize: CGSize(width: 0.219, height: 0.11),
+                    capacity: 60,
+                    description: "Aula per lezioni frontali con proiettore"
+                )
+            ]
+        )
         return Building(
             name: "E2",
-            floors: [],
-        )
+            floors: [floor0, floor1])
     }
 }
 
@@ -304,7 +367,7 @@ struct FloorPlanImageView: View {
                                             .fill(getRoomColor(for: room).opacity(0.7))
                                         if scale >= labelThreshold {
                                             Text(room.name)
-                                                .font(.caption2)
+                                                .font(.system(size: 8))
                                                 .foregroundColor(.primary)
                                                 .padding(2)
                                                 .background(Color.white.opacity(0.4))
@@ -365,7 +428,7 @@ struct FloorPlanImageView: View {
         }
         
         for aula in giornata.aule {
-            if aula.nome == room.name {
+            if aula.nome == room.name && (aula.edificio == "E" || aula.edificio == "E1" || aula.edificio == "E2") {
                 return aula.isOccupiedNow() ? .red : .green
             }
         }
@@ -406,21 +469,21 @@ struct FloorPlanView: View {
                             .padding(.vertical, 12)
                     }
 
-
-                    Text("Edificio \(buildingName)")
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                    
                     Spacer()
+
+
+                    
                 }
                 .background(Color(.systemBackground))
                 
                 if let building = building, building.floors.count > 1 {
                     VStack(spacing: 8) {
-                        Text(building.floors[selectedFloorIndex].name)
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                        
+                        HStack{
+                            Text("Edificio \(buildingName) - \(building.floors[selectedFloorIndex].name)")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.primary)
+                        }
                         HStack(spacing: 20) {
                             Text("Piano")
                                 .font(.caption)
@@ -438,7 +501,6 @@ struct FloorPlanView: View {
                                 step: 1
                             )
                             .accentColor(.blue)
-                            
                             Text("\(building.floors[selectedFloorIndex].number)")
                                 .font(.caption)
                                 .fontWeight(.medium)
@@ -482,79 +544,138 @@ struct RoomDetailView: View {
     
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading, spacing: 20) {
-                HStack {
-                    Circle()
-                        .fill(getRoomColor())
-                        .frame(width: 60, height: 60)
-                        .overlay(
-                            Image(systemName: "square.split.bottomrightquarter")
-                                .font(.title2)
-                                .foregroundColor(.white)
-                        )
-                    
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(room.name)
-                            .font(.title2)
-                            .fontWeight(.bold)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    HStack {
+                        Circle()
+                            .fill(getRoomColor())
+                            .frame(width: 60, height: 60)
+                            .overlay(
+                                Image(systemName: "square.split.bottomrightquarter")
+                                    .font(.title2)
+                                    .foregroundColor(.white)
+                            )
+                            .padding()
                         
-                        HStack {
-                            Circle()
-                                .fill(getRoomColor())
-                                .frame(width: 12, height: 12)
-                            Text(getOccupancyStatus())
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(room.name)
+                                .font(.title2)
+                                .fontWeight(.bold)
+                            
+                            HStack {
+                                Circle()
+                                    .fill(getRoomColor())
+                                    .frame(width: 12, height: 12)
+                                Text(getOccupancyStatus())
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
                         }
+                        
+                        Spacer()
                     }
                     
-                    Spacer()
-                }
-                
-                Divider()
-                
-                VStack(alignment: .leading, spacing: 16) {
-                    if let capacity = room.capacity {
+                    Divider()
+                    
+                    VStack(alignment: .leading, spacing: 16) {
                         HStack {
                             Image(systemName: "person.3.fill")
                                 .foregroundColor(.blue)
                                 .frame(width: 24)
-                                .padding()
                             VStack(alignment: .leading, spacing: 2) {
                                 Text("Capienza")
                                     .font(.subheadline)
                                     .fontWeight(.medium)
-                                Text("\(capacity) persone")
+                                Text("\(getCapacityText())")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }
                             Spacer()
+                        }
+                        .padding(.horizontal)
+                        
+                        HStack {
+                            Image(systemName: "building.2.fill")
+                                .foregroundColor(.blue)
+                                .frame(width: 24)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Edificio")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                Text(getBuilding())
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                        }
+                        .padding(.horizontal)
+                        
+                        if let description = room.description {
+                            HStack(alignment: .top) {
+                                Image(systemName: "info.circle.fill")
+                                    .foregroundColor(.blue)
+                                    .frame(width: 24)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Descrizione")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                    Text(description)
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                }
+                                Spacer()
+                            }
+                            .padding(.horizontal)
                         }
                     }
                     
-                    if let description = room.description {
-                        HStack(alignment: .top) {
-                            Image(systemName: "info.circle.fill")
-                                .foregroundColor(.blue)
-                                .frame(width: 24)
-                                .padding()
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("Descrizione")
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
-                                Text(description)
+                    if let aula = getAulaFromJSON() {
+                        if !aula.prenotazioni.isEmpty {
+                            Divider()
+                            
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Image(systemName: "calendar.badge.clock")
+                                        .foregroundColor(.orange)
+                                        .frame(width: 24)
+                                    Text("Prenotazioni di oggi")
+                                        .font(.headline)
+                                        .fontWeight(.semibold)
+                                }
+                                .padding(.horizontal)
+                                
+                                ForEach(aula.prenotazioni.indices, id: \.self) { index in
+                                    let prenotazione = aula.prenotazioni[index]
+                                    PrenotazioneCard(prenotazione: prenotazione)
+                                }
+                            }
+                        } else {
+                            Divider()
+                            
+                            VStack(spacing: 12) {
+                                HStack {
+                                    Image(systemName: "calendar.badge.checkmark")
+                                        .foregroundColor(.green)
+                                        .frame(width: 24)
+                                    Text("Nessuna prenotazione oggi")
+                                        .font(.headline)
+                                        .fontWeight(.semibold)
+                                }
+                                .padding(.horizontal)
+                                
+                                Text("L'aula è libera per la giornata")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
-                                    .fixedSize(horizontal: false, vertical: true)
+                                    .padding(.horizontal)
                             }
-                            Spacer()
                         }
                     }
+                    
+                    Spacer(minLength: 20)
                 }
-                
-                Spacer()
+                .padding(.vertical)
             }
-            .padding()
             .navigationBarHidden(true)
         }
         .task {
@@ -568,7 +689,7 @@ struct RoomDetailView: View {
         }
         
         for aula in giornata.aule {
-            if aula.nome == room.name {
+            if aula.nome == room.name && (aula.edificio == "E" || aula.edificio == "E1" || aula.edificio == "E2") {
                 return aula.isOccupiedNow() ? .red : .green
             }
         }
@@ -582,15 +703,124 @@ struct RoomDetailView: View {
         }
         
         for aula in giornata.aule {
-            if aula.nome == room.name {
+            if aula.nome == room.name && (aula.edificio == "E" || aula.edificio == "E1" || aula.edificio == "E2") {
                 return aula.isOccupiedNow() ? "Occupata" : "Libera"
             }
         }
         
         return "Libera"
     }
+    
+    private func getCapacityText() -> String {
+        if let aulaJSON = getAulaFromJSON() {
+            return "\(aulaJSON.posti) persone"
+        }
+        else if let capacity = room.capacity {
+            return "\(capacity) persone"
+        }
+        return "Non specificata"
+    }
+    
+    private func getBuilding() -> String {
+        if let aulaJSON = getAulaFromJSON() {
+            return aulaJSON.edificio
+        }
+        return "Non specificato"
+    }
+    
+    private func getAulaFromJSON() -> Aula? {
+        guard let giornata = giornata else { return nil }
+        
+        return giornata.aule.first { aula in
+            aula.nome == room.name && (aula.edificio == "E" || aula.edificio == "E1" || aula.edificio == "E2");
+        }
+    }
+}
+
+struct PrenotazioneCard: View {
+    let prenotazione: Prenotazione
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: "clock.fill")
+                    .foregroundColor(.blue)
+                    .font(.caption)
+                Text(prenotazione.orario)
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                
+                Spacer()
+                
+                if isCurrentlyActive() {
+                    Text("IN CORSO")
+                        .font(.caption2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 2)
+                        .background(Color.red)
+                        .cornerRadius(4)
+                }
+            }
+            
+            if !prenotazione.corso.isEmpty {
+                Text(prenotazione.corso)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundColor(.primary)
+            }
+            
+            if !prenotazione.docente.isEmpty {
+                HStack {
+                    Image(systemName: "person.fill")
+                        .foregroundColor(.secondary)
+                        .font(.caption)
+                    Text(prenotazione.docente)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+            
+            if !prenotazione.tipo.isEmpty {
+                HStack {
+                    Image(systemName: "tag.fill")
+                        .foregroundColor(.secondary)
+                        .font(.caption)
+                    Text(prenotazione.tipo)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color(.systemGray6))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(isCurrentlyActive() ? Color.red : Color.clear, lineWidth: 2)
+                )
+        )
+        .padding(.horizontal)
+    }
+    
+    private func isCurrentlyActive() -> Bool {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        let now = dateFormatter.string(from: Date())
+        
+        let parts = prenotazione.orario.components(separatedBy: " - ")
+        if parts.count == 2,
+           let start = dateFormatter.date(from: parts[0].trimmingCharacters(in: .whitespaces)),
+           let end = dateFormatter.date(from: parts[1].trimmingCharacters(in: .whitespaces)),
+           let current = dateFormatter.date(from: now) {
+            return current >= start && current <= end
+        }
+        return false
+    }
 }
 
 #Preview {
-    FloorPlanView(buildingName: "E1")
+    FloorPlanView(buildingName: "E2")
 }
