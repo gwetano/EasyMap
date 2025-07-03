@@ -21,7 +21,7 @@ struct LoginRegistrazione: View {
     
     @Environment(\.dismiss) var dismiss
 
-       var disabilitaBottoni: Bool {
+       var disableButton: Bool {
            if isLogin{
                return !email.isEmpty && !password.isEmpty
            }else{
@@ -37,34 +37,61 @@ struct LoginRegistrazione: View {
                         dismiss()
                     }) {
                         Image(systemName: "chevron.backward")
-                            .font(.title3)
-                            .padding()
+                            .font(.title2)
+                            .foregroundColor(.primary)
+                            .padding(.horizontal, -4)
+                            .padding(.vertical, -4)
                     }
+                    
                     Spacer()
                 }
+                
                 Text(isLogin ? "Login" : "Registrazione")
                     .font(.largeTitle)
+                    .foregroundColor(.primary)
                 
                 if !isLogin {
                     TextField("Nome", text: $nome)
-                        .textFieldStyle(.roundedBorder)
+                        .font(.body)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color(.systemBackground))
+                                .strokeBorder(Color(.systemGray4), lineWidth: 1)
+                        )
                         .textInputAutocapitalization(.never)
                 }
                 
                 TextField("Email", text: $email)
-                    .textFieldStyle(.roundedBorder)
+                    .font(.body)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(.systemBackground))
+                            .strokeBorder(Color(.systemGray4), lineWidth: 1)
+                    )
                     .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled(true)
                     .disableAutocorrection(true)
+                
                 SecureField("Password", text: $password)
-                    .textFieldStyle(.roundedBorder)
+                    .font(.body)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(.systemBackground))
+                            .strokeBorder(Color(.systemGray4), lineWidth: 1)
+                    )
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled(true)
                 
                 Button(isLogin ? "Accedi" : "Registrati") {
                     isLogin ? login() : register()
-                }.disabled(!disabilitaBottoni).opacity(disabilitaBottoni ? 1 : 0.5)
+                }.disabled(!disableButton).opacity(disableButton ? 1 : 0.5)
                 
                 Button(isLogin ? "Non hai un account? Registrati" : "Hai già un account? Accedi") {
                     isLogin.toggle()

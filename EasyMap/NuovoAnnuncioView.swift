@@ -22,7 +22,9 @@ struct NuovoAnnuncioView: View {
     @State private var immagini: [UIImage] = []
     @State private var mostraGalleria = false
     @State private var mostraFotocamera = false
-
+    @FocusState private var isTitoloFocused: Bool
+    @FocusState private var isDescrizioneFocused: Bool
+    @FocusState private var isLuogoFocused: Bool
     
     enum Step: Int, CaseIterable {
         case categoria = 0
@@ -128,15 +130,20 @@ struct NuovoAnnuncioView: View {
             }
         }
         .gesture(
-             DragGesture()
-                 .onEnded { value in
-                     if value.translation.width > 100 && currentStep.rawValue > 0 {
-                         stepIndietro()
-                     } else if value.translation.width < -100 && canProceed {
-                         prossimoStep()
-                     }
-                 }
-         )
+            DragGesture()
+                .onEnded { value in
+                    isTitoloFocused = false
+                    isDescrizioneFocused = false
+                    isLuogoFocused = false
+                    
+                    if value.translation.width > 100 && currentStep.rawValue > 0 {
+                        stepIndietro()
+                    } else if value.translation.width < -100 && canProceed {
+                        prossimoStep()
+                    }
+                }
+        )
+
     }
     
     @ViewBuilder
@@ -199,9 +206,15 @@ struct NuovoAnnuncioView: View {
     private var titoloView: some View {
         VStack(spacing: 20) {
             TextField("Inserisci il titolo...", text: $titolo)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
                 .font(.title3)
-                .padding(20)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color(.systemBackground))
+                        .strokeBorder(Color(.systemGray4), lineWidth: 1)
+                )
+                .focused($isTitoloFocused)
                 .onSubmit {
                     if !titolo.isEmpty {
                         prossimoStep()
@@ -209,15 +222,28 @@ struct NuovoAnnuncioView: View {
                 }
             Spacer()
         }
+        .onTapGesture {
+        }
     }
     
     private var descrizioneView: some View {
         VStack(spacing: 20) {
             TextField("Descrivi il tuo annuncio...", text: $descrizione, axis: .vertical)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .lineLimit(5...10)
-            
+                .font(.body)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .frame(minHeight: 100)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color(.systemBackground))
+                        .strokeBorder(Color(.systemGray4), lineWidth: 1)
+                )
+                .lineLimit(3...8)
+                .focused($isDescrizioneFocused)
+        
             Spacer()
+        }
+        .onTapGesture {
         }
     }
     
@@ -291,20 +317,38 @@ struct NuovoAnnuncioView: View {
     private var dettagliView: some View {
         VStack(spacing: 20) {
             if categoriaSelezionata == .evento || categoriaSelezionata == .annuncio || categoriaSelezionata == .spot || categoriaSelezionata == .smarrimenti{
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Quando?")
-                        .font(.headline)
+                VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Quando?")
+                            .font(.headline)
+                        
+                        DatePicker("", selection: $dataEvento, displayedComponents: [.date, .hourAndMinute])
+                            .datePickerStyle(CompactDatePickerStyle())
+                            .labelsHidden()
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 12)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color(.systemBackground))
+                                    .strokeBorder(Color(.systemGray4), lineWidth: 1)
+                            )
+                    }
                     
-                    DatePicker("", selection: $dataEvento, displayedComponents: [.date, .hourAndMinute])
-                        .datePickerStyle(CompactDatePickerStyle())
-                        .labelsHidden()
-                    
-                    Text("Dove?")
-                        .font(.headline)
-                        .padding(.top)
-                    
-                    TextField("Inserisci il luogo...", text: $luogo)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Dove?")
+                            .font(.headline)
+                        
+                        TextField("Inserisci il luogo...", text: $luogo)
+                            .font(.body)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 12)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color(.systemBackground))
+                                    .strokeBorder(Color(.systemGray4), lineWidth: 1)
+                            )
+                            .focused($isLuogoFocused)
+                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             } else {
@@ -328,6 +372,8 @@ struct NuovoAnnuncioView: View {
             Spacer()
         }
         .frame(maxWidth: .infinity)
+        .onTapGesture {
+        }
     }
     
     private var recapView: some View {

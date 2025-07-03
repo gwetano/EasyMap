@@ -111,6 +111,14 @@ struct BachecaTikTokView: View {
                 }
             }
         }
+        .gesture(
+            DragGesture()
+                .onEnded { value in
+                    if value.translation.width > 100 {
+                        dismiss()
+                    }
+                }
+        )
     }
 }
 
@@ -178,12 +186,6 @@ struct AnnuncioCardView: View {
                     }
                     
                     HStack(spacing: 8) {
-                        Image(annuncio.categoria.icon)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 16, height: 16)
-                            .foregroundColor(.white)
-                        
                         Text(annuncio.categoria.rawValue)
                             .font(.system(size: 14, weight: .semibold))
                             .foregroundColor(.white)
@@ -202,12 +204,21 @@ struct AnnuncioCardView: View {
                 .padding(.top, padding)
                 
                 VStack(alignment: .leading) {
-                    Text(annuncio.titolo)
-                        .font(.system(size: min(screenWidth * 0.07, 35), weight: .bold))
-                        .lineLimit(2)
-                        .minimumScaleFactor(0.8)
-                        .fixedSize(horizontal: false, vertical: true)
-                    
+                    HStack{
+                        Text(annuncio.titolo)
+                            .font(.system(size: min(screenWidth * 0.07, 35), weight: .bold))
+                            .lineLimit(2)
+                            .minimumScaleFactor(0.8)
+                            .fixedSize(horizontal: false, vertical: true)
+                        
+                        Spacer()
+                        
+                        Image(annuncio.categoria.icon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 50, height: 50)
+                            .foregroundColor(.white)
+                    }
                     VStack(alignment: .leading) {
                         HStack(alignment: .bottom) {
                             Text(giorno)

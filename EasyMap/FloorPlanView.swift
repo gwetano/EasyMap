@@ -8,326 +8,9 @@
 import SwiftUI
 import MapKit
 
-struct Room: Identifiable {
-    let id = UUID()
-    let name: String
-    let imagePosition: CGPoint
-    let imageSize: CGSize
-    let capacity: Int?
-    let description: String?
-    
-    var isSmall: Bool {
-        return (capacity ?? 0) < 20
-    }
-}
-
-struct Floor: Identifiable {
-    let id = UUID()
-    let number: Int
-    let name: String
-    let imageName: String
-    let rooms: [Room]
-}
-
-struct Building {
-    let name: String
-    let floors: [Floor]
-}
-
-class BuildingDataManager: ObservableObject {
-    static let shared = BuildingDataManager()
-    
-    private init() {}
-    
-    func getBuilding(named name: String) -> Building? {
-        switch name {
-        case "E":
-            return createBuildingE()
-        case "E1":
-            return createBuildingE1()
-        case "E2":
-            return createBuildingE2()
-        default:
-            return nil
-        }
-    }
-    
-    private func createBuildingE() -> Building {
-        let floor0 = Floor(
-            number: 0,
-            name: "Piano Terra",
-            imageName: "edificio_e_piano_0",
-            rooms: [
-                Room(
-                    name: "Aula 21",
-                    imagePosition: CGPoint(x: 0.15, y: 0.25),
-                    imageSize: CGSize(width: 0.15, height: 0.12),
-                    capacity: 120,
-                    description: "Aula magna con proiettore e sistema audio"
-                ),
-                Room(
-                    name: "Aula 22",
-                    imagePosition: CGPoint(x: 0.65, y: 0.15),
-                    imageSize: CGSize(width: 0.12, height: 0.10),
-                    capacity: 30,
-                    description: "Laboratorio informatico con 30 postazioni"
-                ),
-                Room(
-                    name: "E03",
-                    imagePosition: CGPoint(x: 0.45, y: 0.75),
-                    imageSize: CGSize(width: 0.10, height: 0.08),
-                    capacity: nil,
-                    description: "Ufficio docenti - Piano terra"
-                ),
-                Room(
-                    name: "WC",
-                    imagePosition: CGPoint(x: 0.05, y: 0.65),
-                    imageSize: CGSize(width: 0.06, height: 0.08),
-                    capacity: nil,
-                    description: "Servizi igienici"
-                )
-            ]
-        )
-        
-        let floor1 = Floor(
-            number: 1,
-            name: "Primo Piano",
-            imageName: "edificio_e_piano_1",
-            rooms: [
-                Room(
-                    name: "E11",
-                    imagePosition: CGPoint(x: 0.25, y: 0.35),
-                    imageSize: CGSize(width: 0.14, height: 0.12),
-                    capacity: 80,
-                    description: "Aula con lavagna interattiva e sistema di videoconferenza"
-                ),
-                Room(
-                    name: "E12",
-                    imagePosition: CGPoint(x: 0.55, y: 0.25),
-                    imageSize: CGSize(width: 0.12, height: 0.10),
-                    capacity: 50,
-                    description: "Sala studio e consultazione con accesso Wi-Fi"
-                )
-            ]
-        )
-        
-        return Building(
-            name: "E",
-            floors: [floor0, floor1]
-        )
-    }
-    
-    private func createBuildingE1() -> Building {
-        let floorm1 = Floor(
-            number: -1,
-            name: "Sottoscala",
-            imageName: "edificio_e1_piano_-1",
-            rooms: [
-                Room(
-                    name: "Aula delle Lauree - V. Cardone",
-                    imagePosition: CGPoint(x: 0.31, y: 0.45),
-                    imageSize: CGSize(width: 0.27, height: 0.40),
-                    capacity: 15,
-                    description: "Sala deposito e archivio"
-                ),
-                Room(
-                    name: "Laboratorio Icaro - ICT",
-                    imagePosition: CGPoint(x: 0.653, y: 0.637),
-                    imageSize: CGSize(width: 0.263, height: 0.25),
-                    capacity: nil,
-                    description: "Ufficio tecnico"
-                ),
-            ]
-        )
-        
-        let floor0 = Floor(
-            number: 0,
-            name: "Piano Terra",
-            imageName: "edificio_e1_piano_0",
-            rooms: [
-                Room(
-                    name: "Aula G",
-                    imagePosition: CGPoint(x: 0.352, y: 0.665),
-                    imageSize: CGSize(width: 0.176, height: 0.11),
-                    capacity: 60,
-                    description: "Aula per lezioni frontali con proiettore"
-                ),
-                Room(
-                    name: "Aula D",
-                    imagePosition: CGPoint(x: 0.625, y: 0.557),
-                    imageSize: CGSize(width: 0.22, height: 0.09),
-                    capacity: 60,
-                    description: "Aula per lezioni frontali con proiettore"
-                ),
-                Room(
-                    name: "Aula E",
-                    imagePosition: CGPoint(x: 0.625, y: 0.665),
-                    imageSize: CGSize(width: 0.22, height: 0.11),
-                    capacity: 60,
-                    description: "Aula per lezioni frontali con proiettore"
-                ),
-                Room(
-                    name: "Aula F",
-                    imagePosition: CGPoint(x: 0.352, y: 0.552),
-                    imageSize: CGSize(width: 0.176, height: 0.1),
-                    capacity: 60,
-                    description: "Aula per lezioni frontali con proiettore"
-                ),
-                Room(
-                    name: "Aula O",
-                    imagePosition: CGPoint(x: 0.352, y: 0.436),
-                    imageSize: CGSize(width: 0.176, height: 0.11),
-                    capacity: 60,
-                    description: "Aula per lezioni frontali con proiettore"
-                )
-            ]
-        )
-        
-        let floor1 = Floor(
-            number: 1,
-            name: "Primo Piano",
-            imageName: "edificio_e1_piano_1",
-            rooms: [
-                Room(
-                    name: "Aula Infografica",
-                    imagePosition: CGPoint(x: 0.352, y: 0.517),
-                    imageSize: CGSize(width: 0.217, height: 0.44),
-                    capacity: 45,
-                    description: "Aula seminari con disposizione a ferro di cavallo"
-                ),
-                Room(
-                    name: "Aula N",
-                    imagePosition: CGPoint(x: 0.654, y: 0.759),
-                    imageSize: CGSize(width: 0.212, height: 0.105),
-                    capacity: 60,
-                    description: "Aula per lezioni frontali con proiettore"
-                ),
-                Room(
-                    name: "Aula 102 CAD",
-                    imagePosition: CGPoint(x: 0.654, y: 0.651),
-                    imageSize: CGSize(width: 0.212, height: 0.095),
-                    capacity: 60,
-                    description: "Aula per lezioni frontali con proiettore"
-                ),
-            ]
-        )
-        
-        let floor2 = Floor(
-            number: 2,
-            name: "Secondo Piano",
-            imageName: "edificio_e1_piano_2",
-            rooms: [
-                Room(
-                    name: "Spazio per attivita' complementari_107",
-                    imagePosition: CGPoint(x: 0.404, y: 0.445),
-                    imageSize: CGSize(width: 0.12, height: 0.1),
-                    capacity: nil,
-                    description: "Uffici amministrativi"
-                ),
-                Room(
-                    name: "Sala 108/9C",
-                    imagePosition: CGPoint(x: 0.404, y: 0.554),
-                    imageSize: CGSize(width: 0.12, height: 0.1),
-                    capacity: nil,
-                    description: "Uffici amministrativi"
-                ),
-                Room(
-                    name: "Sala 109/9C",
-                    imagePosition: CGPoint(x: 0.404, y: 0.666),
-                    imageSize: CGSize(width: 0.12, height: 0.1),
-                    capacity: nil,
-                    description: "Uffici amministrativi"
-                ),
-                Room(
-                    name: "Laboratorio Modelli",
-                    imagePosition: CGPoint(x: 0.653, y: 0.65),
-                    imageSize: CGSize(width: 0.22, height: 0.1),
-                    capacity: nil,
-                    description: "Uffici amministrativi"
-                ),
-            ]
-        )
-        
-        return Building(
-            name: "E1",
-            floors: [floorm1, floor0, floor1, floor2]
-            )
-    }
-    
-    private func createBuildingE2() -> Building {
-        let floor0 = Floor(
-            number: 0,
-            name: "Piano Terra",
-            imageName: "edificio_e2_piano_0",
-            rooms: [
-                Room(
-                    name: "Aula A",
-                    imagePosition: CGPoint(x: 0.607, y: 0.384),
-                    imageSize: CGSize(width: 0.176, height: 0.17),
-                    capacity: 60,
-                    description: "Aula per lezioni frontali con proiettore"
-                ),
-                Room(
-                    name: "Aula B",
-                    imagePosition: CGPoint(x: 0.615, y: 0.645),
-                    imageSize: CGSize(width: 0.16, height: 0.17),
-                    capacity: 60,
-                    description: "Aula per lezioni frontali con proiettore"
-                ),
-                Room(
-                    name: "Aula C",
-                    imagePosition: CGPoint(x: 0.354, y: 0.388),
-                    imageSize: CGSize(width: 0.185, height: 0.185),
-                    capacity: 60,
-                    description: "Aula per lezioni frontali con proiettore"
-                )
-            ]
-        )
-        
-        let floor1 = Floor(
-            number: 1,
-            name: "Primo Piano",
-            imageName: "edificio_e2_piano_1",
-            rooms: [
-                Room(
-                    name: "Aula I",
-                    imagePosition: CGPoint(x: 0.6265, y: 0.361),
-                    imageSize: CGSize(width: 0.22, height: 0.216),
-                    capacity: 45,
-                    description: "Aula seminari con disposizione a ferro di cavallo"
-                ),
-                Room(
-                    name: "Aula H",
-                    imagePosition: CGPoint(x: 0.632, y: 0.67),
-                    imageSize: CGSize(width: 0.21, height: 0.217),
-                    capacity: 60,
-                    description: "Aula per lezioni frontali con proiettore"
-                ),
-                Room(
-                    name: "Aula L",
-                    imagePosition: CGPoint(x: 0.323, y: 0.427),
-                    imageSize: CGSize(width: 0.22, height: 0.11),
-                    capacity: 45,
-                    description: "Aula seminari con disposizione a ferro di cavallo"
-                ),
-                Room(
-                    name: "Aula M",
-                    imagePosition: CGPoint(x: 0.323, y: 0.308),
-                    imageSize: CGSize(width: 0.219, height: 0.11),
-                    capacity: 60,
-                    description: "Aula per lezioni frontali con proiettore"
-                )
-            ]
-        )
-        return Building(
-            name: "E2",
-            floors: [floor0, floor1])
-    }
-}
-
 struct FloorPlanImageView: View {
     let floor: Floor
-    @Binding var selectedRoom: Room?
+    @Binding var selectedRoom: RoomImage?
 
     @State private var scale: CGFloat = 1.0
     @State private var lastScale: CGFloat = 1.0
@@ -346,8 +29,8 @@ struct FloorPlanImageView: View {
 
                 ZStack {
                     if let image = UIImage(named: floor.imageName) {
-                        let imageSize = image.size
-                        let imageAspect = imageSize.width / imageSize.height
+                        let size = image.size
+                        let imageAspect = size.width / size.height
 
                         let displayWidth = geometry.size.width
                         let displayHeight = displayWidth / imageAspect
@@ -376,12 +59,12 @@ struct FloorPlanImageView: View {
                                 }
                                 .buttonStyle(PlainButtonStyle())
                                 .frame(
-                                    width: room.imageSize.width * displayWidth,
-                                    height: room.imageSize.height * displayHeight
+                                    width: room.size.width * displayWidth,
+                                    height: room.size.height * displayHeight
                                 )
                                 .position(
-                                    x: room.imagePosition.x * displayWidth,
-                                    y: room.imagePosition.y * displayHeight
+                                    x: room.position.x * displayWidth,
+                                    y: room.position.y * displayHeight
                                 )
                             }
                         }
@@ -422,7 +105,7 @@ struct FloorPlanImageView: View {
         }
     }
     
-    private func getRoomColor(for room: Room) -> Color {
+    private func getRoomColor(for room: RoomImage) -> Color {
         guard let giornata = giornata else {
             return .gray
         }
@@ -443,7 +126,7 @@ struct FloorPlanView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var buildingManager = BuildingDataManager.shared
     @State private var selectedFloorIndex = 0
-    @State private var selectedRoom: Room?
+    @State private var selectedRoom: RoomImage?
     
     private var building: Building? {
         buildingManager.getBuilding(named: buildingName)
@@ -538,7 +221,7 @@ struct FloorPlanView: View {
 }
 
 struct RoomDetailView: View {
-    let room: Room
+    let room: RoomImage
     @Environment(\.dismiss) private var dismiss
     @State private var giornata: Giornata?
     
@@ -582,6 +265,7 @@ struct RoomDetailView: View {
                             Image(systemName: "person.3.fill")
                                 .foregroundColor(.blue)
                                 .frame(width: 24)
+                                .padding(.horizontal)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text("Capienza")
                                     .font(.subheadline)
@@ -598,6 +282,7 @@ struct RoomDetailView: View {
                             Image(systemName: "building.2.fill")
                                 .foregroundColor(.blue)
                                 .frame(width: 24)
+                                .padding(.horizontal)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text("Edificio")
                                     .font(.subheadline)
@@ -615,6 +300,7 @@ struct RoomDetailView: View {
                                 Image(systemName: "info.circle.fill")
                                     .foregroundColor(.blue)
                                     .frame(width: 24)
+                                    .padding(.horizontal)
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text("Descrizione")
                                         .font(.subheadline)
@@ -822,5 +508,5 @@ struct PrenotazioneCard: View {
 }
 
 #Preview {
-    FloorPlanView(buildingName: "E2")
+    FloorPlanView(buildingName: "E1")
 }

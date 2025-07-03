@@ -55,9 +55,9 @@ struct AnnuncioDTO: Codable, Identifiable {
     var id: Int
     var titolo: String
     var descrizione: String
-    var data: String  // ISO string da server, es. "2025-07-02T14:30:00Z"
+    var data: String
     var luogo: String
-    var img_path: String?  // solo nome file
+    var img_path: String?
     var autore: String
     var categoria: String
 }
