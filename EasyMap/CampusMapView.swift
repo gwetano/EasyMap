@@ -417,12 +417,6 @@ struct CampusMapView: View {
                 locationManager.startTracking()
             }
             .edgesIgnoringSafeArea(.bottom)
-            /*.sheet(item: Binding<IdentifiableString?>(
-                get: { selectedBuilding.map(IdentifiableString.init) },
-                set: { selectedBuilding = $0?.value }
-            )) { building in
-                BuildingDetailView(buildingName: building.value)
-            }*/
             .fullScreenCover(item: Binding<IdentifiableString?>(
                    get: { selectedBuilding.map(IdentifiableString.init) },
                    set: { selectedBuilding = $0?.value }
@@ -461,6 +455,34 @@ struct CampusMapView: View {
             selectedBuilding = "E1"
         } else if isPointInPolygon(point: coordinate, polygon: edificioE2Coordinates) {
             selectedBuilding = "E2"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioDCoordinates) {
+            selectedBuilding = "D"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioD1Coordinates) {
+            selectedBuilding = "D1"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioD2Coordinates) {
+            selectedBuilding = "D2"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioD3Coordinates) {
+            selectedBuilding = "D3"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioFCoordinates) {
+            selectedBuilding = "F"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioF1Coordinates) {
+            selectedBuilding = "F1"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioF2Coordinates) {
+            selectedBuilding = "F2"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioF3Coordinates) {
+            selectedBuilding = "F3"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioCCoordinates) {
+            selectedBuilding = "C"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioC1Coordinates) {
+            selectedBuilding = "C1"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioC2Coordinates) {
+            selectedBuilding = "C2"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioBCoordinates) {
+            selectedBuilding = "B"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioB1Coordinates) {
+            selectedBuilding = "B1"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioB2Coordinates) {
+            selectedBuilding = "B2"
         }
     }
 }
@@ -659,59 +681,6 @@ func isPointInPolygon(point: CLLocationCoordinate2D, polygon: [CLLocationCoordin
     return inside
 
 }
-
- /*
-struct BuildingDetailView: View {
-    let buildingName: String
-    @Environment(\.dismiss) private var dismiss
-    
-    var body: some View {
-        NavigationView {
-            VStack(spacing: 20) {
-                Text("Edificio \(buildingName)")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(.gray.opacity(0.2))
-                    .frame(height: 300)
-                    .overlay(
-                        VStack {
-                            Image(systemName: "building.2")
-                                .font(.system(size: 60))
-                                .foregroundColor(.gray)
-                            Text("Pianta Edificio \(buildingName)")
-                                .font(.headline)
-                                .foregroundColor(.gray)
-                            Text("Sostituisci con la tua immagine")
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                        }
-                    )
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Informazioni:")
-                        .font(.headline)
-                    Text("• Piano terra: Aule e laboratori")
-                    Text("• Primo piano: Uffici docenti")
-                    Text("• Secondo piano: Sale riunioni")
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Spacer()
-                
-                Button("Chiudi") {
-                    dismiss()
-                }
-                .buttonStyle(.borderedProminent)
-            }
-            .padding()
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarHidden(true)
-        }
-        .edgesIgnoringSafeArea(.bottom)
-    }
-}*/
-
 
 #Preview {
     CampusMapView()

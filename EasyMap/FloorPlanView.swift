@@ -11,12 +11,12 @@ import MapKit
 struct FloorPlanImageView: View {
     let floor: Floor
     @Binding var selectedRoom: RoomImage?
+    @StateObject private var roomStatusManager = RoomStatusManager.shared
 
     @State private var scale: CGFloat = 1.0
     @State private var lastScale: CGFloat = 1.0
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
-    @State private var giornata: Giornata?
 
     private let minScale: CGFloat = 0.5
     private let maxScale: CGFloat = 4.0
@@ -47,7 +47,7 @@ struct FloorPlanImageView: View {
                                 }) {
                                     ZStack {
                                         Rectangle()
-                                            .fill(getRoomColor(for: room).opacity(0.7))
+                                            .fill(roomStatusManager.getRoomColor(for: room).opacity(0.7))
                                         if scale >= labelThreshold {
                                             Text(room.name)
                                                 .font(.system(size: 8))
@@ -101,24 +101,93 @@ struct FloorPlanImageView: View {
             }
         }
         .task {
-            giornata = await leggiJSONDaURL()
+            await roomStatusManager.loadData()
+        }
+    }
+}
+
+struct BuildingRoomListView: View {
+    let buildingName: String
+    @StateObject private var roomStatusManager = RoomStatusManager.shared
+    @State private var selectedRoom: RoomImage?
+    
+    private var buildingRooms: [Aula] {
+        guard let giornata = roomStatusManager.giornata else { return [] }
+        return giornata.aule.filter { aula in
+            aula.edificio == buildingName
         }
     }
     
-    private func getRoomColor(for room: RoomImage) -> Color {
-        guard let giornata = giornata else {
-            return .gray
-        }
-        
-        for aula in giornata.aule {
-            if aula.nome == room.name && (aula.edificio == "E" || aula.edificio == "E1" || aula.edificio == "E2") {
-                return aula.isOccupiedNow() ? .red : .green
+    var body: some View {
+        VStack(spacing: 8) {
+            HStack{
+                    Text("Edificio \(buildingName)")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                }
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+            .background(Color(.systemBackground))
+    
+        List {
+            if buildingRooms.isEmpty {
+                VStack(spacing: 20) {
+                    Image(systemName: "building.2")
+                        .font(.system(size: 60))
+                        .foregroundColor(.gray)
+                    Text("Nessuna aula trovata")
+                        .font(.headline)
+                        .foregroundColor(.gray)
+                    Text("Nell'edificio \(buildingName)")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
+                .listRowSeparator(.hidden)
+            } else {
+                ForEach(buildingRooms, id: \.nome) { aula in
+                    Button(action: {
+                        let roomImage = RoomImage(
+                            name: aula.nome,
+                            position: .zero,
+                            size: .zero,
+                            description: aula.isOccupiedNow() ? "Aula occupata" : "Aula libera",
+                            buildingName: aula.edificio
+                        )
+                        selectedRoom = roomImage
+                    }) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(aula.nome)
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                                                                    
+                                Text("Posti: \(aula.posti)")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
+                            
+                            Circle()
+                                .fill(aula.isOccupiedNow() ? .red : .green)
+                                .frame(width: 12, height: 12)
+                        }
+                        .padding(.vertical, 4)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
             }
         }
-        
-        return .green
+        .task {
+            await roomStatusManager.loadData()
+        }
+        .sheet(item: $selectedRoom) { room in
+            RoomDetailView(room: room)
+        }
     }
-
 }
 
 struct FloorPlanView: View {
@@ -153,64 +222,51 @@ struct FloorPlanView: View {
                     }
 
                     Spacer()
-
-
-                    
                 }
                 .background(Color(.systemBackground))
                 
-                if let building = building, building.floors.count > 1 {
-                    VStack(spacing: 8) {
-                        HStack{
-                            Text("Edificio \(buildingName) - \(building.floors[selectedFloorIndex].name)")
-                                .font(.headline)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.primary)
+                if let building = building, !building.floors.isEmpty {
+                    if building.floors.count > 1 {
+                        VStack(spacing: 8) {
+                            HStack{
+                                Text("Edificio \(buildingName) - \(building.floors[selectedFloorIndex].name)")
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.primary)
+                            }
+                            HStack(spacing: 20) {
+                                Text("Piano")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                
+                                Slider(
+                                    value: Binding(
+                                        get: { Double(selectedFloorIndex) },
+                                        set: {
+                                            selectedFloorIndex = Int($0.rounded())
+                                            selectedRoom = nil
+                                        }
+                                    ),
+                                    in: 0...Double(building.floors.count - 1),
+                                    step: 1
+                                )
+                                .accentColor(.blue)
+                                Text("\(building.floors[selectedFloorIndex].number)")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .frame(minWidth: 20)
+                            }
                         }
-                        HStack(spacing: 20) {
-                            Text("Piano")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            
-                            Slider(
-                                value: Binding(
-                                    get: { Double(selectedFloorIndex) },
-                                    set: {
-                                        selectedFloorIndex = Int($0.rounded())
-                                        selectedRoom = nil
-                                    }
-                                ),
-                                in: 0...Double(building.floors.count - 1),
-                                step: 1
-                            )
-                            .accentColor(.blue)
-                            Text("\(building.floors[selectedFloorIndex].number)")
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .frame(minWidth: 20)
-                        }
+                        .padding(.horizontal)
+                        .padding(.vertical, 8)
+                        .background(Color(.systemBackground))
                     }
-                    .padding(.horizontal)
-                    .padding(.vertical, 8)
-                    .background(Color(.systemBackground))
-                }
-                
-                if let floor = currentFloor {
-                    FloorPlanImageView(floor: floor, selectedRoom: $selectedRoom)
+                    
+                    if let floor = currentFloor {
+                        FloorPlanImageView(floor: floor, selectedRoom: $selectedRoom)
+                    }
                 } else {
-                    VStack(spacing: 20) {
-                        Image(systemName: "building.2")
-                            .font(.system(size: 60))
-                            .foregroundColor(.gray)
-                        Text("Nessun dato disponibile")
-                            .font(.headline)
-                            .foregroundColor(.gray)
-                        Text("Per l'edificio \(buildingName)")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color(.systemGroupedBackground))
+                    BuildingRoomListView(buildingName: buildingName)
                 }
             }
         }
@@ -223,7 +279,7 @@ struct FloorPlanView: View {
 struct RoomDetailView: View {
     let room: RoomImage
     @Environment(\.dismiss) private var dismiss
-    @State private var giornata: Giornata?
+    @StateObject private var roomStatusManager = RoomStatusManager.shared
     
     var body: some View {
         NavigationView {
@@ -231,7 +287,7 @@ struct RoomDetailView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     HStack {
                         Circle()
-                            .fill(getRoomColor())
+                            .fill(roomStatusManager.getRoomColor(for: room))
                             .frame(width: 60, height: 60)
                             .overlay(
                                 Image(systemName: "square.split.bottomrightquarter")
@@ -247,9 +303,9 @@ struct RoomDetailView: View {
                             
                             HStack {
                                 Circle()
-                                    .fill(getRoomColor())
+                                    .fill(roomStatusManager.getRoomColor(for: room))
                                     .frame(width: 12, height: 12)
-                                Text(getOccupancyStatus())
+                                Text(roomStatusManager.getOccupancyStatus(for: room))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
@@ -287,7 +343,7 @@ struct RoomDetailView: View {
                                 Text("Edificio")
                                     .font(.subheadline)
                                     .fontWeight(.medium)
-                                Text(getBuilding())
+                                Text(room.buildingName)
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }
@@ -316,7 +372,7 @@ struct RoomDetailView: View {
                         }
                     }
                     
-                    if let aula = getAulaFromJSON() {
+                    if let aula = roomStatusManager.getAula(for: room) {
                         if !aula.prenotazioni.isEmpty {
                             Divider()
                             
@@ -365,61 +421,15 @@ struct RoomDetailView: View {
             .navigationBarHidden(true)
         }
         .task {
-            giornata = await leggiJSONDaURL()
+            await roomStatusManager.loadData()
         }
-    }
-    
-    private func getRoomColor() -> Color {
-        guard let giornata = giornata else {
-            return .gray
-        }
-        
-        for aula in giornata.aule {
-            if aula.nome == room.name && (aula.edificio == "E" || aula.edificio == "E1" || aula.edificio == "E2") {
-                return aula.isOccupiedNow() ? .red : .green
-            }
-        }
-        
-        return .green
-    }
-    
-    private func getOccupancyStatus() -> String {
-        guard let giornata = giornata else {
-            return "Stato sconosciuto"
-        }
-        
-        for aula in giornata.aule {
-            if aula.nome == room.name && (aula.edificio == "E" || aula.edificio == "E1" || aula.edificio == "E2") {
-                return aula.isOccupiedNow() ? "Occupata" : "Libera"
-            }
-        }
-        
-        return "Libera"
     }
     
     private func getCapacityText() -> String {
-        if let aulaJSON = getAulaFromJSON() {
-            return "\(aulaJSON.posti) persone"
-        }
-        else if let capacity = room.capacity {
-            return "\(capacity) persone"
+        if let aula = roomStatusManager.getAula(for: room) {
+            return "\(aula.posti) persone"
         }
         return "Non specificata"
-    }
-    
-    private func getBuilding() -> String {
-        if let aulaJSON = getAulaFromJSON() {
-            return aulaJSON.edificio
-        }
-        return "Non specificato"
-    }
-    
-    private func getAulaFromJSON() -> Aula? {
-        guard let giornata = giornata else { return nil }
-        
-        return giornata.aule.first { aula in
-            aula.nome == room.name && (aula.edificio == "E" || aula.edificio == "E1" || aula.edificio == "E2");
-        }
     }
 }
 
