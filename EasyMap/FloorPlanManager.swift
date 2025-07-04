@@ -137,9 +137,9 @@ class BuildingDataManager: ObservableObject {
             imageName: "edificio_e_piano_1",
             rooms: [
                 RoomImage(
-                    name: "E11",
-                    position: CGPoint(x: 0.25, y: 0.35),
-                    size: CGSize(width: 0.14, height: 0.12),
+                    name: "Laboratorio 152 - Software Matematico",
+                    position: CGPoint(x: 0.724, y: 0.365),
+                    size: CGSize(width: 0.065, height: 0.09),
                     description: "Aula con lavagna interattiva e sistema di videoconferenza",
                     buildingName: "E"
                 ),

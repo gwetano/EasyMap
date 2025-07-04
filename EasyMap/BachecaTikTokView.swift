@@ -78,6 +78,7 @@ struct BachecaTikTokView: View {
                 }
             }
         }
+        .ignoresSafeArea(.all, edges: .bottom)
         .fullScreenCover(isPresented: $mostraCreazione) {
             NuovoAnnuncioView { nuovo in
                 store.aggiungi(nuovo)
@@ -156,123 +157,121 @@ struct AnnuncioCardView: View {
             let safeAreaTop = geometry.safeAreaInsets.top
             let availableHeight = screenHeight - safeAreaTop - 60
             
-            VStack(alignment: .leading, spacing: 0) {
-                ZStack(alignment: .topLeading) {
-                    Group {
-                        if let immagine = annuncio.immagini.first {
-                            Image(uiImage: immagine)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    ZStack(alignment: .topLeading) {
+                        Group {
+                            if let immagine = annuncio.immagini.first {
+                                Image(uiImage: immagine)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(
+                                        width: screenWidth - (padding * 2),
+                                        height: availableHeight * 0.5
+                                    )
+                                    .clipped()
+                                    .cornerRadius(20)
+                            } else {
+                                Rectangle()
+                                    .fill(Color.gray.opacity(0.3))
+                                    .frame(
+                                        width: screenWidth - (padding * 2),
+                                        height: availableHeight * 0.5
+                                    )
+                                    .cornerRadius(20)
+                                    .overlay(
+                                        Image(systemName: "photo")
+                                            .font(.system(size: min(screenWidth, availableHeight) * 0.08))
+                                            .foregroundColor(.gray)
+                                    )
+                            }
+                        }
+                        
+                        HStack(spacing: 8) {
+                            Text(annuncio.categoria.rawValue)
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(.white)
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(
+                            Capsule()
+                                .fill(annuncio.categoria.color)
+                                .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+                        )
+                        .padding(.top, 12)
+                        .padding(.leading, 12)
+                    }
+                    .padding(.horizontal, padding)
+                    .padding(.top, padding)
+                    
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack{
+                            Text(annuncio.titolo)
+                                .font(.system(size: min(screenWidth * 0.07, 35), weight: .bold))
+                                .lineLimit(nil)
+                                .minimumScaleFactor(0.8)
+                                .fixedSize(horizontal: false, vertical: true)
+                            
+                            Spacer()
+                            
+                            Image(annuncio.categoria.icon)
                                 .resizable()
-                                .scaledToFill()
-                                .frame(
-                                    width: screenWidth - (padding * 2),
-                                    height: availableHeight * 0.5
-                                )
-                                .clipped()
-                                .cornerRadius(20)
-                        } else {
-                            Rectangle()
-                                .fill(Color.gray.opacity(0.3))
-                                .frame(
-                                    width: screenWidth - (padding * 2),
-                                    height: availableHeight * 0.5
-                                )
-                                .cornerRadius(20)
-                                .overlay(
-                                    Image(systemName: "photo")
-                                        .font(.system(size: min(screenWidth, availableHeight) * 0.08))
-                                        .foregroundColor(.gray)
-                                )
+                                .scaledToFit()
+                                .frame(width: 50, height: 50)
+                                .foregroundColor(.white)
                         }
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack(alignment: .bottom) {
+                                Text(giorno)
+                                    .font(.system(size: min(screenWidth * 0.1, 50), weight: .bold))
+                                Text(mese)
+                                    .font(.system(size: min(screenWidth * 0.06, 30)))
+                                    .offset(y: -3)
+                            }
+                            
+                            Text(annuncio.luogo)
+                                .font(.system(size: min(screenWidth * 0.055, 28), weight: .bold))
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        HStack {
+                            Text(orario)
+                                .font(.system(size: min(screenWidth * 0.055, 28), weight: .bold))
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                isPreferito.toggle()
+                            }) {
+                                Image(systemName: isPreferito ? "bookmark.fill" : "bookmark")
+                                    .font(.system(size: min(screenWidth * 0.05, 25)))
+                                    .foregroundColor(isPreferito ? .blue : .gray)
+                            }
+                        }
+                        
+                        Text(annuncio.descrizione)
+                            .font(.system(size: min(screenWidth * 0.035, 16)))
+                            .lineSpacing(3)
+                            .multilineTextAlignment(.leading)
+                            .padding(.vertical, 8)
+                        
+                        HStack {
+                            Circle()
+                                .fill(Color.orange)
+                                .frame(width: 10, height: 10)
+                            
+                            Text(annuncio.autore)
+                                .font(.system(size: min(screenWidth * 0.032, 15)))
+                                .foregroundColor(.primary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.bottom, padding)
                     }
-                    
-                    HStack(spacing: 8) {
-                        Text(annuncio.categoria.rawValue)
-                            .font(.system(size: 14, weight: .semibold))
-                            .foregroundColor(.white)
-                    }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(
-                        Capsule()
-                            .fill(annuncio.categoria.color)
-                            .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
-                    )
-                    .padding(.top, 12)
-                    .padding(.leading, 12)
+                    .padding(.horizontal, padding)
+                    .padding(.top, padding)
                 }
-                .padding(.horizontal, padding)
-                .padding(.top, padding)
-                
-                VStack(alignment: .leading) {
-                    HStack{
-                        Text(annuncio.titolo)
-                            .font(.system(size: min(screenWidth * 0.07, 35), weight: .bold))
-                            .lineLimit(2)
-                            .minimumScaleFactor(0.8)
-                            .fixedSize(horizontal: false, vertical: true)
-                        
-                        Spacer()
-                        
-                        Image(annuncio.categoria.icon)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 50, height: 50)
-                            .foregroundColor(.white)
-                    }
-                    VStack(alignment: .leading) {
-                        HStack(alignment: .bottom) {
-                            Text(giorno)
-                                .font(.system(size: min(screenWidth * 0.1, 50), weight: .bold))
-                            Text(mese)
-                                .font(.system(size: min(screenWidth * 0.06, 30)))
-                                .offset(y: -3)
-                        }
-                        
-                        Text(annuncio.luogo)
-                            .font(.system(size: min(screenWidth * 0.055, 28), weight: .bold))
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    HStack {
-                        Text(orario)
-                            .font(.system(size: min(screenWidth * 0.055, 28), weight: .bold))
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            isPreferito.toggle()
-                        }) {
-                            Image(systemName: isPreferito ? "bookmark.fill" : "bookmark")
-                                .font(.system(size: min(screenWidth * 0.05, 25)))
-                                .foregroundColor(isPreferito ? .blue : .gray)
-                        }
-                    }
-                    
-                    let remainingSpace = availableHeight * 0.5 - (availableHeight * 0.12)
-                    
-                    Text(annuncio.descrizione)
-                        .font(.system(size: min(screenWidth * 0.035, 16)))
-                        .lineSpacing(3)
-                        .frame(maxHeight: remainingSpace, alignment: .top)
-                        .multilineTextAlignment(.leading)
-                    
-                    Spacer()
-                    
-                    HStack {
-                        Circle()
-                            .fill(Color.orange)
-                            .frame(width: 10, height: 10)
-                        
-                        Text(annuncio.autore)
-                            .font(.system(size: min(screenWidth * 0.032, 15)))
-                            .foregroundColor(.primary)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.bottom, padding)
-                
-                }
-                .padding(.horizontal, padding)
-                .padding(.top, padding)
             }
             .frame(width: screenWidth, height: availableHeight)
         }

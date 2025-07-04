@@ -17,92 +17,157 @@ struct FloorPlanImageView: View {
     @State private var lastScale: CGFloat = 1.0
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
+    @State private var isFirstLoad = true
 
-    private let minScale: CGFloat = 0.5
-    private let maxScale: CGFloat = 4.0
-    private let labelThreshold: CGFloat = 0.7
+    private let minScale: CGFloat = 1.0
+    private let maxScale: CGFloat = 5.0
+    private let labelThreshold: CGFloat = 1
 
     var body: some View {
         GeometryReader { geometry in
-            ZStack {
-                Color.black.opacity(0.05)
+            if let image = UIImage(named: floor.imageName) {
+                let imageSize = image.size
+                let aspectRatio = imageSize.width / imageSize.height
+                
+                let viewWidth = geometry.size.width
+                let viewHeight = geometry.size.height
+                
+                let imageHeight = viewHeight
+                let imageWidth = imageHeight * aspectRatio
+                
+                let initialOffsetX = isFirstLoad ? (viewWidth - imageWidth) / 2 : 0
+                let initialOffsetY: CGFloat = 0
 
                 ZStack {
-                    if let image = UIImage(named: floor.imageName) {
-                        let size = image.size
-                        let imageAspect = size.width / size.height
+                    Color.black.opacity(0.05)
+                    
+                    ZStack {
+                        Image(uiImage: image)
+                            .resizable()
+                            .frame(width: imageWidth, height: imageHeight)
+                            .clipped()
 
-                        let displayWidth = geometry.size.width
-                        let displayHeight = displayWidth / imageAspect
-
-                        ZStack {
-                            Image(uiImage: image)
-                                .resizable()
-                                .frame(width: displayWidth, height: displayHeight)
-                                .clipped()
-
-                            ForEach(floor.rooms) { room in
-                                Button(action: {
-                                    selectedRoom = room
-                                }) {
-                                    ZStack {
-                                        Rectangle()
-                                            .fill(roomStatusManager.getRoomColor(for: room).opacity(0.7))
-                                        if scale >= labelThreshold {
-                                            Text(room.name)
-                                                .font(.system(size: 8))
-                                                .foregroundColor(.primary)
-                                                .padding(2)
-                                                .background(Color.white.opacity(0.4))
-                                        }
+                        ForEach(floor.rooms) { room in
+                            Button(action: {
+                                selectedRoom = room
+                            }) {
+                                ZStack {
+                                    Rectangle()
+                                        .fill(roomStatusManager.getRoomColor(for: room).opacity(0.7))
+                                    if scale >= labelThreshold {
+                                        Text(room.name)
+                                            .font(.system(size: 8 / scale))
+                                            .foregroundColor(.primary)
+                                            .padding(2)
+                                            .background(Color.white.opacity(0.4))
                                     }
                                 }
-                                .buttonStyle(PlainButtonStyle())
-                                .frame(
-                                    width: room.size.width * displayWidth,
-                                    height: room.size.height * displayHeight
-                                )
-                                .position(
-                                    x: room.position.x * displayWidth,
-                                    y: room.position.y * displayHeight
-                                )
                             }
-                        }
-                        .frame(width: displayWidth, height: displayHeight)
-                        .scaleEffect(scale)
-                        .offset(offset)
-                        .gesture(
-                            SimultaneousGesture(
-                                MagnificationGesture()
-                                    .onChanged { value in
-                                        let newScale = min(max(lastScale * value, minScale), maxScale)
-                                        scale = newScale
-                                    }
-                                    .onEnded { _ in
-                                        lastScale = scale
-                                    },
-                                DragGesture()
-                                    .onChanged { value in
-                                        offset = CGSize(
-                                            width: lastOffset.width + value.translation.width,
-                                            height: lastOffset.height + value.translation.height
-                                        )
-                                    }
-                                    .onEnded { _ in
-                                        lastOffset = offset
-                                    }
+                            .buttonStyle(PlainButtonStyle())
+                            .frame(
+                                width: room.size.width * imageWidth,
+                                height: room.size.height * imageHeight
                             )
+                            .position(
+                                x: room.position.x * imageWidth,
+                                y: room.position.y * imageHeight
+                            )
+                        }
+                    }
+                    .frame(width: imageWidth, height: imageHeight)
+                    .scaleEffect(scale)
+                    .offset(x: initialOffsetX + offset.width, y: initialOffsetY + offset.height)
+                    .gesture(
+                        SimultaneousGesture(
+                            MagnificationGesture()
+                                .onChanged { value in
+                                    let newScale = min(max(lastScale * value, minScale), maxScale)
+                                    
+                                    let centerX = geometry.size.width / 2
+                                    let centerY = geometry.size.height / 2
+                                    
+                                    let imagePointX = (centerX - initialOffsetX - lastOffset.width) / lastScale
+                                    let imagePointY = (centerY - initialOffsetY - lastOffset.height) / lastScale
+                                    
+                                    let newOffsetX = centerX - initialOffsetX - imagePointX * newScale
+                                    let newOffsetY = centerY - initialOffsetY - imagePointY * newScale
+                                    
+                                    scale = newScale
+                                    offset = CGSize(width: newOffsetX, height: newOffsetY)
+                                }
+                                .onEnded { _ in
+                                    lastScale = scale
+                                    offset = limitOffset(offset, scale: scale, geometry: geometry, imageWidth: imageWidth, imageHeight: imageHeight, initialOffsetX: initialOffsetX, initialOffsetY: initialOffsetY)
+                                    lastOffset = offset
+                                },
+                            
+                            DragGesture()
+                                .onChanged { value in
+                                    let newOffset = CGSize(
+                                        width: lastOffset.width + value.translation.width,
+                                        height: lastOffset.height + value.translation.height
+                                    )
+                                    offset = limitOffset(newOffset, scale: scale, geometry: geometry, imageWidth: imageWidth, imageHeight: imageHeight, initialOffsetX: initialOffsetX, initialOffsetY: initialOffsetY)
+                                }
+                                .onEnded { _ in
+                                    lastOffset = offset
+                                }
                         )
-                    } else {
-                        Text("Immagine non trovata")
-                            .foregroundColor(.red)
+                    )
+                    .onTapGesture(count: 2) {
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            scale = 1.0
+                            lastScale = 1.0
+                            offset = .zero
+                            lastOffset = .zero
+                        }
                     }
                 }
+                .frame(width: geometry.size.width, height: geometry.size.height)
+                .clipped()
+            } else {
+                Text("Immagine non trovata")
+                    .foregroundColor(.red)
             }
         }
         .task {
             await roomStatusManager.loadData()
+            isFirstLoad = false
         }
+    }
+    
+    private func limitOffset(_ offset: CGSize, scale: CGFloat, geometry: GeometryProxy, imageWidth: CGFloat, imageHeight: CGFloat, initialOffsetX: CGFloat, initialOffsetY: CGFloat) -> CGSize {
+        let scaledImageWidth = imageWidth * scale
+        let scaledImageHeight = imageHeight * scale
+        
+        let maxOffsetX: CGFloat
+        let minOffsetX: CGFloat
+        
+        if scaledImageWidth > geometry.size.width {
+            let maxPanDistance = (scaledImageWidth - geometry.size.width) / 2
+            maxOffsetX = maxPanDistance - initialOffsetX
+            minOffsetX = -maxPanDistance - initialOffsetX
+        } else {
+            maxOffsetX = -initialOffsetX
+            minOffsetX = -initialOffsetX
+        }
+        
+        let maxOffsetY: CGFloat
+        let minOffsetY: CGFloat
+        
+        if scaledImageHeight > geometry.size.height {
+            let maxPanDistance = (scaledImageHeight - geometry.size.height) / 2
+            maxOffsetY = maxPanDistance - initialOffsetY
+            minOffsetY = -maxPanDistance - initialOffsetY
+        } else {
+            maxOffsetY = -initialOffsetY
+            minOffsetY = -initialOffsetY
+        }
+        
+        let limitedOffsetX = max(minOffsetX, min(maxOffsetX, offset.width))
+        let limitedOffsetY = max(minOffsetY, min(maxOffsetY, offset.height))
+        
+        return CGSize(width: limitedOffsetX, height: limitedOffsetY)
     }
 }
 
@@ -121,10 +186,7 @@ struct BuildingRoomListView: View {
     var body: some View {
         VStack(spacing: 8) {
             HStack{
-                    Text("Edificio \(buildingName)")
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.primary)
+
                 }
             }
             .padding(.horizontal)
@@ -194,7 +256,7 @@ struct FloorPlanView: View {
     let buildingName: String
     @Environment(\.dismiss) private var dismiss
     @StateObject private var buildingManager = BuildingDataManager.shared
-    @State private var selectedFloorIndex = 0
+    @State private var selectedFloorIndex = 1
     @State private var selectedRoom: RoomImage?
     
     private var building: Building? {
@@ -222,6 +284,15 @@ struct FloorPlanView: View {
                     }
 
                     Spacer()
+                    
+                    Text("Edificio \(buildingName)")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                    
+                    Spacer()
+                    
+                    Text(" ")
                 }
                 .background(Color(.systemBackground))
                 
@@ -229,9 +300,9 @@ struct FloorPlanView: View {
                     if building.floors.count > 1 {
                         VStack(spacing: 8) {
                             HStack{
-                                Text("Edificio \(buildingName) - \(building.floors[selectedFloorIndex].name)")
-                                    .font(.headline)
-                                    .fontWeight(.semibold)
+                                Text("\(building.floors[selectedFloorIndex].name)")
+                                    .font(.caption)
+                                    .fontWeight(.regular)
                                     .foregroundColor(.primary)
                             }
                             HStack(spacing: 20) {
@@ -518,5 +589,5 @@ struct PrenotazioneCard: View {
 }
 
 #Preview {
-    FloorPlanView(buildingName: "E1")
+    FloorPlanView(buildingName: "E")
 }
