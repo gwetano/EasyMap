@@ -13,7 +13,6 @@ import CoreLocation
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let manager = CLLocationManager()
     
-    // Riferimento al manager delle missioni
     @Published var missioniManager: MissioniGPSManager?
     
     private let unisaCoordinate = CLLocationCoordinate2D(latitude: 40.772705, longitude: 14.791365)
@@ -58,11 +57,9 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         self.missioniManager = manager
     }
     
-    // MARK: - CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         
-        // Aggiorna la posizione nel manager delle missioni
         if let missioniManager = missioniManager {
             missioniManager.locationManager(manager, didUpdateLocations: locations)
         }
@@ -97,6 +94,7 @@ struct CampusMapView: View {
     @StateObject var store = AnnuncioStore()
     @State private var mostraCreazione = false
     @State private var mostraBacheca = false
+    @State private var mostraMissioni = false
     @EnvironmentObject var authManager: AuthManager
     @State private var isMap3D = false
 
@@ -462,6 +460,18 @@ struct CampusMapView: View {
                }
 
             VStack {
+                HStack{
+                    Button(action: {
+                       mostraMissioni = true
+                   }) {
+                       Image("missioni")
+                           .resizable()
+                           .aspectRatio(contentMode: .fit)
+                           .frame(width: 70)
+                           .padding()
+                   }
+                    Spacer()
+                }
                 Spacer()
                 
                 HStack {
@@ -482,6 +492,9 @@ struct CampusMapView: View {
             }
             .fullScreenCover(isPresented: $mostraBacheca) {
                 BachecaTikTokView(store: store)
+            }
+            .fullScreenCover(isPresented: $mostraMissioni) {
+                MissioniView()
             }
         }
     }
@@ -673,23 +686,23 @@ private let edificioB2Coordinates: [CLLocationCoordinate2D] = [
 
 
 
-private let centroEdificioE = CLLocationCoordinate2D(latitude: 40.772885, longitude: 14.790675)
-private let centroEdificioE1 = CLLocationCoordinate2D(latitude: 40.772832, longitude: 14.790132)
-private let centroEdificioE2 = CLLocationCoordinate2D(latitude: 40.772135, longitude: 14.791490)
-private let centroEdificioD = CLLocationCoordinate2D(latitude: 40.77156, longitude: 14.79138)
-private let centroEdificioD1 = CLLocationCoordinate2D(latitude: 40.77135, longitude: 14.79216)
-private let centroEdificioD2 = CLLocationCoordinate2D(latitude: 40.77105, longitude: 14.79137)
-private let centroEdificioD3 = CLLocationCoordinate2D(latitude: 40.77164, longitude: 14.79077)
-private let centroEdificioC = CLLocationCoordinate2D(latitude: 40.77136, longitude: 14.79265)
-private let centroEdificioC1 = CLLocationCoordinate2D(latitude: 40.77070, longitude: 14.79360)
-private let centroEdificioC2 = CLLocationCoordinate2D(latitude: 40.77168, longitude: 14.79295)
-private let centroEdificioF = CLLocationCoordinate2D(latitude: 40.77457, longitude: 14.78887)
-private let centroEdificioF1 = CLLocationCoordinate2D(latitude: 40.77363, longitude: 14.78893)
-private let centroEdificioF2 = CLLocationCoordinate2D(latitude: 40.77449, longitude: 14.78972)
-private let centroEdificioF3 = CLLocationCoordinate2D(latitude: 40.77510, longitude: 14.78919)
-private let centroEdificioB = CLLocationCoordinate2D(latitude: 40.77014, longitude: 14.79328)
-private let centroEdificioB1 = CLLocationCoordinate2D(latitude: 40.76954, longitude: 14.79329)
-private let centroEdificioB2 = CLLocationCoordinate2D(latitude: 40.77007, longitude: 14.79259)
+public let centroEdificioE = CLLocationCoordinate2D(latitude: 40.772885, longitude: 14.790675)
+public let centroEdificioE1 = CLLocationCoordinate2D(latitude: 40.772832, longitude: 14.790132)
+public let centroEdificioE2 = CLLocationCoordinate2D(latitude: 40.772135, longitude: 14.791490)
+public let centroEdificioD = CLLocationCoordinate2D(latitude: 40.77156, longitude: 14.79138)
+public let centroEdificioD1 = CLLocationCoordinate2D(latitude: 40.77135, longitude: 14.79216)
+public let centroEdificioD2 = CLLocationCoordinate2D(latitude: 40.77105, longitude: 14.79137)
+public let centroEdificioD3 = CLLocationCoordinate2D(latitude: 40.77164, longitude: 14.79077)
+public let centroEdificioC = CLLocationCoordinate2D(latitude: 40.77136, longitude: 14.79265)
+public let centroEdificioC1 = CLLocationCoordinate2D(latitude: 40.77070, longitude: 14.79360)
+public let centroEdificioC2 = CLLocationCoordinate2D(latitude: 40.77168, longitude: 14.79295)
+public let centroEdificioF = CLLocationCoordinate2D(latitude: 40.77457, longitude: 14.78887)
+public let centroEdificioF1 = CLLocationCoordinate2D(latitude: 40.77363, longitude: 14.78893)
+public let centroEdificioF2 = CLLocationCoordinate2D(latitude: 40.77449, longitude: 14.78972)
+public let centroEdificioF3 = CLLocationCoordinate2D(latitude: 40.77510, longitude: 14.78919)
+public let centroEdificioB = CLLocationCoordinate2D(latitude: 40.77014, longitude: 14.79328)
+public let centroEdificioB1 = CLLocationCoordinate2D(latitude: 40.76954, longitude: 14.79329)
+public let centroEdificioB2 = CLLocationCoordinate2D(latitude: 40.77007, longitude: 14.79259)
 
 
 struct IdentifiableString: Identifiable {

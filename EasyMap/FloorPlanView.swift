@@ -283,16 +283,12 @@ struct FloorPlanView: View {
                             .padding(.vertical, 12)
                     }
 
-                    Spacer()
-                    
                     Text("Edificio \(buildingName)")
                         .font(.headline)
                         .fontWeight(.semibold)
                         .foregroundColor(.primary)
                     
                     Spacer()
-                    
-                    Text(" ")
                 }
                 .background(Color(.systemBackground))
                 

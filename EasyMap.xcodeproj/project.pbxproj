@@ -16,10 +16,10 @@
 		1F43EE2D2E06C9A300D00794 /* EasyMapUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F43EE2C2E06C9A300D00794 /* EasyMapUITestsLaunchTests.swift */; };
 		1F43EE3A2E06CA0C00D00794 /* CampusMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F43EE392E06CA0C00D00794 /* CampusMapView.swift */; };
 		1F803B582E0AFA4300415689 /* AnnuncioStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F803B572E0AFA4300415689 /* AnnuncioStore.swift */; };
+		1FB352252E1826C400A581EA /* MissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB352242E1826BD00A581EA /* MissionView.swift */; };
 		1FCB506A2E0DBF4B0024E5B2 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCB50692E0DBF450024E5B2 /* Models.swift */; };
 		1FCB506D2E0DD7A30024E5B2 /* FloorPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCB506C2E0DD7A30024E5B2 /* FloorPlanView.swift */; };
 		1FE656EB2E168EA2004C7BDD /* FloorPlanManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE656EA2E168E8F004C7BDD /* FloorPlanManager.swift */; };
-		998EF3C62E18140F00EB8589 /* MissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 998EF3C52E18140600EB8589 /* MissionView.swift */; };
 		99CE50FC2E0B027600A4819B /* NuovoAnnuncioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CE50FB2E0B027600A4819B /* NuovoAnnuncioView.swift */; };
 		99CE50FE2E0B02A100A4819B /* BachecaTikTokView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CE50FD2E0B02A100A4819B /* BachecaTikTokView.swift */; };
 		ED2CE4462E09E5AB00A62C8E /* ListaAule.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2CE4452E09E5AB00A62C8E /* ListaAule.swift */; };
@@ -59,10 +59,10 @@
 		1F43EE2C2E06C9A300D00794 /* EasyMapUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyMapUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1F43EE392E06CA0C00D00794 /* CampusMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampusMapView.swift; sourceTree = "<group>"; };
 		1F803B572E0AFA4300415689 /* AnnuncioStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnuncioStore.swift; sourceTree = "<group>"; };
+		1FB352242E1826BD00A581EA /* MissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionView.swift; sourceTree = "<group>"; };
 		1FCB50692E0DBF450024E5B2 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		1FCB506C2E0DD7A30024E5B2 /* FloorPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlanView.swift; sourceTree = "<group>"; };
 		1FE656EA2E168E8F004C7BDD /* FloorPlanManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlanManager.swift; sourceTree = "<group>"; };
-		998EF3C52E18140600EB8589 /* MissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionView.swift; sourceTree = "<group>"; };
 		99CE50FB2E0B027600A4819B /* NuovoAnnuncioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuovoAnnuncioView.swift; sourceTree = "<group>"; };
 		99CE50FD2E0B02A100A4819B /* BachecaTikTokView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BachecaTikTokView.swift; sourceTree = "<group>"; };
 		ED2CE4452E09E5AB00A62C8E /* ListaAule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaAule.swift; sourceTree = "<group>"; };
@@ -121,7 +121,7 @@
 		1F43EE0E2E06C9A000D00794 /* EasyMap */ = {
 			isa = PBXGroup;
 			children = (
-				998EF3C52E18140600EB8589 /* MissionView.swift */,
+				1FB352242E1826BD00A581EA /* MissionView.swift */,
 				1FE656EA2E168E8F004C7BDD /* FloorPlanManager.swift */,
 				1FCB506C2E0DD7A30024E5B2 /* FloorPlanView.swift */,
 				ED98B4662E09846C0024E3D2 /* Info.plist */,
@@ -312,7 +312,7 @@
 				1FE656EB2E168EA2004C7BDD /* FloorPlanManager.swift in Sources */,
 				1FCB506D2E0DD7A30024E5B2 /* FloorPlanView.swift in Sources */,
 				99CE50FE2E0B02A100A4819B /* BachecaTikTokView.swift in Sources */,
-				998EF3C62E18140F00EB8589 /* MissionView.swift in Sources */,
+				1FB352252E1826C400A581EA /* MissionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,7 +476,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"EasyMap/Preview Content\"";
-				DEVELOPMENT_TEAM = ZU82SK9HYB;
+				DEVELOPMENT_TEAM = KFM9VN82RF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EasyMap/Info.plist;
@@ -495,7 +495,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = it.lorenzocampagna.easymap;
+				PRODUCT_BUNDLE_IDENTIFIER = it.gaetano.TestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -511,7 +511,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"EasyMap/Preview Content\"";
-				DEVELOPMENT_TEAM = ZU82SK9HYB;
+				DEVELOPMENT_TEAM = KFM9VN82RF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EasyMap/Info.plist;
@@ -530,7 +530,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = it.lorenzocampagna.easymap;
+				PRODUCT_BUNDLE_IDENTIFIER = it.gaetano.TestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
