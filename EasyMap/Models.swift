@@ -106,8 +106,8 @@ func uploadAnnuncio(_ annuncio: Annuncio, completion: @escaping (Bool) -> Void) 
     let fields: [String: String] = [
         "titolo": annuncio.titolo,
         "descrizione": annuncio.descrizione,
-        "data": dateOnly,
-        "ora": timeOnly,          
+        "data": dateOnly,         
+        "ora": timeOnly,
         "luogo": annuncio.luogo,
         "autore": annuncio.autore,
         "categoria": annuncio.categoria.rawValue
