@@ -12,10 +12,10 @@ struct ContentView: View {
 
     var body: some View {
         //ListaAule()
-        CampusMapView(store: store)
+        MissioniView()
     }
 }
 
 #Preview {
-    ContentView()
+    MissioniView()
 }

@@ -1,3 +1,10 @@
+//
+//  MissionView.swift
+//  EasyMap
+//
+//  Created by Francesco Apicella on 04/07/25.
+//
+
 import SwiftUI
 import CoreLocation
 
@@ -411,7 +418,7 @@ struct MissioniView: View {
                         Spacer()
                     }
                     .transition(.move(edge: .top).combined(with: .opacity))
-                    .animation(.spring(), value: missioniManager.missioneCompletataRecente)
+                   
                 }
             }
             .navigationTitle("Missioni")

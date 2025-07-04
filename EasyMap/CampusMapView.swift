@@ -12,7 +12,10 @@ import CoreLocation
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let manager = CLLocationManager()
-
+    
+    // Riferimento al manager delle missioni
+    @Published var missioniManager: MissioniGPSManager?
+    
     private let unisaCoordinate = CLLocationCoordinate2D(latitude: 40.772705, longitude: 14.791365)
 
     @Published var cameraPosition: MapCameraPosition = .camera(
@@ -49,6 +52,40 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                           distance: 200, heading: 0, pitch: 0)
             )
         }
+    }
+    
+    func setMissioniManager(_ manager: MissioniGPSManager) {
+        self.missioniManager = manager
+    }
+    
+    // MARK: - CLLocationManagerDelegate
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }
+        
+        // Aggiorna la posizione nel manager delle missioni
+        if let missioniManager = missioniManager {
+            missioniManager.locationManager(manager, didUpdateLocations: locations)
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Errore GPS: \(error.localizedDescription)")
+        missioniManager?.locationManager(manager, didFailWithError: error)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        switch status {
+        case .authorizedWhenInUse, .authorizedAlways:
+            manager.startUpdatingLocation()
+        case .denied, .restricted:
+            print("Permesso GPS negato")
+        case .notDetermined:
+            manager.requestWhenInUseAuthorization()
+        @unknown default:
+            break
+        }
+        
+        missioniManager?.locationManager(manager, didChangeAuthorization: status)
     }
 }
 
