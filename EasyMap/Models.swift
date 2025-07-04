@@ -93,12 +93,21 @@ func uploadAnnuncio(_ annuncio: Annuncio, completion: @escaping (Bool) -> Void) 
 
     var body = Data()
 
-    let dateString = ISO8601DateFormatter().string(from: annuncio.data)
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd"
+    dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+    let dateOnly = dateFormatter.string(from: annuncio.data)
+
+    let timeFormatter = DateFormatter()
+    timeFormatter.dateFormat = "HH:mm"
+    timeFormatter.locale = Locale(identifier: "en_US_POSIX")
+    let timeOnly = timeFormatter.string(from: annuncio.data)
 
     let fields: [String: String] = [
         "titolo": annuncio.titolo,
         "descrizione": annuncio.descrizione,
-        "data": dateString,
+        "data": dateOnly,
+        "ora": timeOnly,          
         "luogo": annuncio.luogo,
         "autore": annuncio.autore,
         "categoria": annuncio.categoria.rawValue
