@@ -94,7 +94,7 @@ struct Profilo: View {
                     Text(nome)
                         .font(.title)
                         .bold()
-                        .padding(.vertical, 10)
+                        .padding(.vertical, 7)
                 }
                 
                 /* Sezione postSalvati*/
@@ -141,9 +141,9 @@ struct Profilo: View {
 
     func salvatiView() -> some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Post salvati")
-                .font(.headline)
-                .padding(.horizontal)
+            Divider()
+                .frame(height: 1)
+                .background(Color.gray.opacity(0.5))
             
             if postSalvati.isEmpty {
                 VStack(spacing: 8) {
@@ -157,17 +157,14 @@ struct Profilo: View {
                 .padding()
                 .frame(maxWidth: .infinity)
             } else {
-                LazyVGrid(columns: [
-                    GridItem(.flexible()),
-                    GridItem(.flexible())
-                ], spacing: 12) {
+                VStack(spacing: 16) {
                     ForEach(postSalvati) { post in
                         PostAnteprimaView(post: post) {
                             postEspanso = post
                         }
                     }
                 }
-                .padding(.horizontal)
+                .frame(maxWidth: .infinity)
             }
         }
     }
@@ -198,75 +195,69 @@ struct Profilo: View {
 struct PostAnteprimaView: View {
     let post: Post
     let onTap: () -> Void
-    
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            // Header del post
-            HStack {
-                Image(systemName: "person.crop.circle.fill")
-                    .foregroundColor(.blue)
-                    .font(.title3)
-                
-                VStack(alignment: .leading) {
-                    Text(post.autore)
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                    
-                    Text(timeAgo(from: post.dataCreazione))
+        
+        ZStack(alignment: .bottomLeading) {
+            if let uiImage = post.immagineUI {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: 160)
+                    .clipped()
+            } else {
+                Color.gray.opacity(0.2)
+                    .frame(height: 160)
+            }
+
+            LinearGradient(
+                gradient: Gradient(colors: [Color.black.opacity(0.8), .clear]),
+                startPoint: .bottom,
+                endPoint: .top
+            )
+            .frame(height: 160)
+
+            VStack(alignment: .leading, spacing: 6) {
+                Spacer()
+
+                Text(post.contenuto.components(separatedBy: "\n").first ?? "Post")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .lineLimit(2)
+                    .shadow(color: .black.opacity(0.8), radius: 2, x: 0, y: 1)
+
+                HStack(spacing: 6) {
+                    Text(post.categoria.capitalized)
                         .font(.caption2)
-                        .foregroundColor(.gray)
-                }
-                
-                Spacer()
-            }
-            
-            // Contenuto del post (limitato)
-            Text(post.contenuto)
-                .font(.caption)
-                .lineLimit(3)
-                .multilineTextAlignment(.leading)
-            
-            // Immagine se presente
-            if let immagine = post.immagine {
-                AsyncImage(url: URL(string: immagine)) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(maxHeight: 80)
-                        .clipped()
-                        .cornerRadius(8)
-                } placeholder: {
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.gray.opacity(0.3))
-                        .frame(height: 80)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            Capsule()
+                                .fill((CategoriaAnnuncio(rawValue: post.categoria) ?? .info).color))
+                                .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+                        .foregroundColor(.white).bold()
+                        .cornerRadius(6)
+
+                    if !post.luogo.isEmpty {
+                        Text(post.luogo)
+                            .font(.caption2)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.blue).opacity(0.9)
+                            .foregroundColor(.white).bold()
+                            .cornerRadius(6)
+                    }
                 }
             }
-            
-            // Indicatore "Tocca per espandere"
-            HStack {
-                Spacer()
-                Text("Tocca per espandere")
-                    .font(.caption2)
-                    .foregroundColor(.blue)
-                Image(systemName: "chevron.right")
-                    .font(.caption2)
-                    .foregroundColor(.blue)
-            }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(12)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color(.systemGray6))
-        )
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(radius: 4)
+        .padding(.horizontal)
         .onTapGesture {
             onTap()
         }
-    }
-    
-    private func timeAgo(from date: Date) -> String {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .abbreviated
-        return formatter.localizedString(for: date, relativeTo: Date())
     }
 }
 
