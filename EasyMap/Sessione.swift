@@ -108,8 +108,17 @@ class UserSessionManager {
         }
     }
 
+    // Modifica il metodo isLoggedIn per essere più robusto
     func isLoggedIn() -> Bool {
-        leggiSessione()?.isAuthenticated == true
+        guard let session = leggiSessione() else { return false }
+        return session.isAuthenticated
+    }
+    
+    func clearSession() {
+        // Cancella il file di sessione
+        if FileManager.default.fileExists(atPath: fileURL.path) {
+            try? FileManager.default.removeItem(at: fileURL)
+        }
     }
     
     func salvaImmagineProfilo(nomeFile: String) {

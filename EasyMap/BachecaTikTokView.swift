@@ -100,6 +100,7 @@ struct BachecaTikTokView: View {
         .fullScreenCover(isPresented: $mostraProfilo) {
             if authManager.isAuthenticated {
                 Profilo()
+                    .environmentObject(authManager)
             } else {
                 LoginRegistrazione()
             }

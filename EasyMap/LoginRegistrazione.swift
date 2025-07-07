@@ -124,7 +124,7 @@ struct LoginRegistrazione: View {
                 DispatchQueue.main.async {
                     if let nome = json["nome"] as? String {
                         UserSessionManager.shared.scriviJSON(nome: nome, email: email)
-                        authManager.isAuthenticated = true
+                        authManager.login()
                         dismiss()
                     }
                 }
@@ -184,7 +184,7 @@ struct LoginRegistrazione: View {
                     if success == true {
                         DispatchQueue.main.async {
                             UserSessionManager.shared.scriviJSON(nome: self.nome, email: self.email)
-                            self.authManager.isAuthenticated = true
+                            self.authManager.login()
                         }
                     } else {
                         DispatchQueue.main.async {

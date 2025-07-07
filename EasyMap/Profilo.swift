@@ -23,21 +23,43 @@ struct Profilo: View {
     @State private var postSalvati: [Post] = []
     @State private var postEspanso: Post? = nil
     
+    @EnvironmentObject var authManager: AuthManager
+    
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 20) {
-                HStack{
+            VStack(spacing: 0) {
+                HStack {
                     Button(action: {
                         dismiss()
                     }) {
-                        Image(systemName: "chevron.left")
+                        Image(systemName: "chevron.backward")
                             .font(.title2)
-                            .padding()
-                    }.padding()
+                            .foregroundColor(.primary)
+                            .padding(.horizontal, 0)
+                            .padding(.vertical, 12)
+                    }
+                    
+                    Text("Profilo")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                    
                     Spacer()
+                    HStack{
+                        Button(action: {
+                            authManager.logout()
+                            dismiss()
+                        }) {
+                            Text("logout")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.red)
+                        }
+                    }
                 }
+                
                 
                 // Immagine profilo
                 if let image = profileImage {
@@ -56,7 +78,7 @@ struct Profilo: View {
                 // Bottone modifica immagine
                 Button("Modifica Foto") {
                     showImageSourceDialog = true
-                }
+                }.padding(.vertical, 10)
                 .confirmationDialog("Aggiungi da", isPresented: $showImageSourceDialog, titleVisibility: .visible) {
                     Button("Camera") {
                         mostraCamera = true
@@ -72,6 +94,7 @@ struct Profilo: View {
                     Text(nome)
                         .font(.title)
                         .bold()
+                        .padding(.vertical, 10)
                 }
                 
                 /* Sezione postSalvati*/
