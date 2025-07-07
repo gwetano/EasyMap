@@ -60,9 +60,8 @@ struct SearchView: View {
                         }
                     }
                 }
-            }
-            .navigationTitle("Cerca Aule")
-            .searchable(text: $searchText, prompt: "Cerca aula") // 🪄 qui la barra è nella navigation bar
+            }.background(.ultraThinMaterial)
+            .searchable(text: $searchText, prompt: "Cerca aula")
             .task {
                 self.giornata = await leggiJSONDaURL()
                 print("Aule caricate: \(giornata?.aule.count ?? 0)")

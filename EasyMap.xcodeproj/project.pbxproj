@@ -23,6 +23,7 @@
 		9939DFB12E1BD7620016624E /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9939DFB02E1BD7610016624E /* SearchView.swift */; };
 		99CE50FC2E0B027600A4819B /* NuovoAnnuncioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CE50FB2E0B027600A4819B /* NuovoAnnuncioView.swift */; };
 		99CE50FE2E0B02A100A4819B /* BachecaTikTokView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CE50FD2E0B02A100A4819B /* BachecaTikTokView.swift */; };
+		99FD2DDF2E1BFD6E00E9B11F /* CampusMapWithSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FD2DDE2E1BFD6E00E9B11F /* CampusMapWithSearch.swift */; };
 		ED2CE4462E09E5AB00A62C8E /* ListaAule.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2CE4452E09E5AB00A62C8E /* ListaAule.swift */; };
 		ED50316F2E10340C0080CA8D /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED50316E2E10340C0080CA8D /* AuthManager.swift */; };
 		ED7A0ED32E1BC3E800951658 /* AnnuncioCardProfiloView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7A0ED22E1BC3E800951658 /* AnnuncioCardProfiloView.swift */; };
@@ -68,6 +69,7 @@
 		9939DFB02E1BD7610016624E /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		99CE50FB2E0B027600A4819B /* NuovoAnnuncioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuovoAnnuncioView.swift; sourceTree = "<group>"; };
 		99CE50FD2E0B02A100A4819B /* BachecaTikTokView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BachecaTikTokView.swift; sourceTree = "<group>"; };
+		99FD2DDE2E1BFD6E00E9B11F /* CampusMapWithSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampusMapWithSearch.swift; sourceTree = "<group>"; };
 		ED2CE4452E09E5AB00A62C8E /* ListaAule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaAule.swift; sourceTree = "<group>"; };
 		ED50316E2E10340C0080CA8D /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		ED7A0ED22E1BC3E800951658 /* AnnuncioCardProfiloView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnuncioCardProfiloView.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				1F803B572E0AFA4300415689 /* AnnuncioStore.swift */,
 				1F43EE112E06C9A000D00794 /* ContentView.swift */,
 				1F43EE392E06CA0C00D00794 /* CampusMapView.swift */,
+				99FD2DDE2E1BFD6E00E9B11F /* CampusMapWithSearch.swift */,
 				1F43EE132E06C9A300D00794 /* Assets.xcassets */,
 				ED2CE4452E09E5AB00A62C8E /* ListaAule.swift */,
 				99CE50FB2E0B027600A4819B /* NuovoAnnuncioView.swift */,
@@ -305,6 +308,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FCB506A2E0DBF4B0024E5B2 /* Models.swift in Sources */,
+				99FD2DDF2E1BFD6E00E9B11F /* CampusMapWithSearch.swift in Sources */,
 				1F43EE122E06C9A000D00794 /* ContentView.swift in Sources */,
 				99CE50FC2E0B027600A4819B /* NuovoAnnuncioView.swift in Sources */,
 				ED7A0ED32E1BC3E800951658 /* AnnuncioCardProfiloView.swift in Sources */,

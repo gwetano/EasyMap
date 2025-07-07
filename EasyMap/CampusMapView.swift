@@ -472,8 +472,6 @@ struct CampusMapView: View {
                    }
                     Spacer()
                 }
-                Spacer()
-                
                 HStack {
                      Button(action: {
                         mostraBacheca = true
@@ -481,14 +479,14 @@ struct CampusMapView: View {
                         Image("bacheca")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 50)
+                            .frame(width: 55)
                             .padding()
                     }
                     
                     Spacer()
                 }
-                .padding(.horizontal, 20)
                 .padding(.bottom, 10)
+                Spacer()
             }
             .fullScreenCover(isPresented: $mostraBacheca) {
                 BachecaTikTokView(store: store)
