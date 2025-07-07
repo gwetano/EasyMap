@@ -20,6 +20,7 @@
 		1FCB506A2E0DBF4B0024E5B2 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCB50692E0DBF450024E5B2 /* Models.swift */; };
 		1FCB506D2E0DD7A30024E5B2 /* FloorPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCB506C2E0DD7A30024E5B2 /* FloorPlanView.swift */; };
 		1FE656EB2E168EA2004C7BDD /* FloorPlanManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE656EA2E168E8F004C7BDD /* FloorPlanManager.swift */; };
+		9939DFB12E1BD7620016624E /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9939DFB02E1BD7610016624E /* SearchView.swift */; };
 		99CE50FC2E0B027600A4819B /* NuovoAnnuncioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CE50FB2E0B027600A4819B /* NuovoAnnuncioView.swift */; };
 		99CE50FE2E0B02A100A4819B /* BachecaTikTokView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CE50FD2E0B02A100A4819B /* BachecaTikTokView.swift */; };
 		ED2CE4462E09E5AB00A62C8E /* ListaAule.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2CE4452E09E5AB00A62C8E /* ListaAule.swift */; };
@@ -64,6 +65,7 @@
 		1FCB50692E0DBF450024E5B2 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		1FCB506C2E0DD7A30024E5B2 /* FloorPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlanView.swift; sourceTree = "<group>"; };
 		1FE656EA2E168E8F004C7BDD /* FloorPlanManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlanManager.swift; sourceTree = "<group>"; };
+		9939DFB02E1BD7610016624E /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		99CE50FB2E0B027600A4819B /* NuovoAnnuncioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuovoAnnuncioView.swift; sourceTree = "<group>"; };
 		99CE50FD2E0B02A100A4819B /* BachecaTikTokView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BachecaTikTokView.swift; sourceTree = "<group>"; };
 		ED2CE4452E09E5AB00A62C8E /* ListaAule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaAule.swift; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 				ED7A0ED22E1BC3E800951658 /* AnnuncioCardProfiloView.swift */,
 				1FB352242E1826BD00A581EA /* MissionView.swift */,
 				1FE656EA2E168E8F004C7BDD /* FloorPlanManager.swift */,
+				9939DFB02E1BD7610016624E /* SearchView.swift */,
 				1FCB506C2E0DD7A30024E5B2 /* FloorPlanView.swift */,
 				ED98B4662E09846C0024E3D2 /* Info.plist */,
 				1FCB50692E0DBF450024E5B2 /* Models.swift */,
@@ -307,6 +310,7 @@
 				ED7A0ED32E1BC3E800951658 /* AnnuncioCardProfiloView.swift in Sources */,
 				ED50316F2E10340C0080CA8D /* AuthManager.swift in Sources */,
 				ED7C0E3C2E0D8F030049F3D2 /* Sessione.swift in Sources */,
+				9939DFB12E1BD7620016624E /* SearchView.swift in Sources */,
 				ED7C0E382E0D8E900049F3D2 /* LoginRegistrazione.swift in Sources */,
 				1F43EE102E06C9A000D00794 /* EasyMapApp.swift in Sources */,
 				1F803B582E0AFA4300415689 /* AnnuncioStore.swift in Sources */,
