@@ -24,6 +24,7 @@
 		99CE50FE2E0B02A100A4819B /* BachecaTikTokView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CE50FD2E0B02A100A4819B /* BachecaTikTokView.swift */; };
 		ED2CE4462E09E5AB00A62C8E /* ListaAule.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2CE4452E09E5AB00A62C8E /* ListaAule.swift */; };
 		ED50316F2E10340C0080CA8D /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED50316E2E10340C0080CA8D /* AuthManager.swift */; };
+		ED7A0ED32E1BC3E800951658 /* AnnuncioCardProfiloView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7A0ED22E1BC3E800951658 /* AnnuncioCardProfiloView.swift */; };
 		ED7C0E382E0D8E900049F3D2 /* LoginRegistrazione.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7C0E372E0D8E900049F3D2 /* LoginRegistrazione.swift */; };
 		ED7C0E3A2E0D8EE10049F3D2 /* Profilo.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7C0E392E0D8EE10049F3D2 /* Profilo.swift */; };
 		ED7C0E3C2E0D8F030049F3D2 /* Sessione.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7C0E3B2E0D8F030049F3D2 /* Sessione.swift */; };
@@ -67,6 +68,7 @@
 		99CE50FD2E0B02A100A4819B /* BachecaTikTokView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BachecaTikTokView.swift; sourceTree = "<group>"; };
 		ED2CE4452E09E5AB00A62C8E /* ListaAule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaAule.swift; sourceTree = "<group>"; };
 		ED50316E2E10340C0080CA8D /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		ED7A0ED22E1BC3E800951658 /* AnnuncioCardProfiloView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnuncioCardProfiloView.swift; sourceTree = "<group>"; };
 		ED7C0E372E0D8E900049F3D2 /* LoginRegistrazione.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRegistrazione.swift; sourceTree = "<group>"; };
 		ED7C0E392E0D8EE10049F3D2 /* Profilo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profilo.swift; sourceTree = "<group>"; };
 		ED7C0E3B2E0D8F030049F3D2 /* Sessione.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sessione.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 		1F43EE0E2E06C9A000D00794 /* EasyMap */ = {
 			isa = PBXGroup;
 			children = (
+				ED7A0ED22E1BC3E800951658 /* AnnuncioCardProfiloView.swift */,
 				1FB352242E1826BD00A581EA /* MissionView.swift */,
 				1FE656EA2E168E8F004C7BDD /* FloorPlanManager.swift */,
 				1FCB506C2E0DD7A30024E5B2 /* FloorPlanView.swift */,
@@ -301,6 +304,7 @@
 				1FCB506A2E0DBF4B0024E5B2 /* Models.swift in Sources */,
 				1F43EE122E06C9A000D00794 /* ContentView.swift in Sources */,
 				99CE50FC2E0B027600A4819B /* NuovoAnnuncioView.swift in Sources */,
+				ED7A0ED32E1BC3E800951658 /* AnnuncioCardProfiloView.swift in Sources */,
 				ED50316F2E10340C0080CA8D /* AuthManager.swift in Sources */,
 				ED7C0E3C2E0D8F030049F3D2 /* Sessione.swift in Sources */,
 				ED7C0E382E0D8E900049F3D2 /* LoginRegistrazione.swift in Sources */,
@@ -476,7 +480,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"EasyMap/Preview Content\"";
-				DEVELOPMENT_TEAM = KFM9VN82RF;
+				DEVELOPMENT_TEAM = ZU82SK9HYB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EasyMap/Info.plist;
@@ -495,7 +499,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = it.gaetano.TestApp;
+				PRODUCT_BUNDLE_IDENTIFIER = it.lorenzocampagna.easymap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -511,7 +515,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"EasyMap/Preview Content\"";
-				DEVELOPMENT_TEAM = KFM9VN82RF;
+				DEVELOPMENT_TEAM = ZU82SK9HYB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EasyMap/Info.plist;
@@ -530,7 +534,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = it.gaetano.TestApp;
+				PRODUCT_BUNDLE_IDENTIFIER = it.lorenzocampagna.easymap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

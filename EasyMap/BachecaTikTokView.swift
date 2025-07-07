@@ -243,6 +243,7 @@ struct AnnuncioCardView: View {
                             Spacer()
                             
                             Button(action: {
+                                UserSessionManager.shared.salvaPost(annuncio)
                                 isPreferito.toggle()
                             }) {
                                 Image(systemName: isPreferito ? "bookmark.fill" : "bookmark")
