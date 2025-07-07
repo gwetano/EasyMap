@@ -256,7 +256,7 @@ struct FloorPlanView: View {
     let buildingName: String
     @Environment(\.dismiss) private var dismiss
     @StateObject private var buildingManager = BuildingDataManager.shared
-    @State private var selectedFloorIndex = 1
+    @State private var selectedFloorIndex = 0
     @State private var selectedRoom: RoomImage?
     
     private var building: Building? {

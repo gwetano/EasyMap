@@ -9,32 +9,50 @@ import SwiftUI
 import CoreLocation
 import CoreMotion
 
+struct Medaglia: Identifiable, Codable {
+    let id = UUID()
+    let nome: String
+    let descrizione: String
+    let immagineDaSbloccare: String
+    let immagineSbloccata: String
+    var sbloccata: Bool = false
+    let missioneAssociata: String?
+    let tipo: TipoMedaglia
+    
+    enum TipoMedaglia: String, CaseIterable, Codable {
+        case esplorazione = "Esplorazione"
+        case studio = "Studio"
+        case speciale = "Speciale"
+        case completamento = "Completamento"
+    }
+}
+
 struct Missione: Identifiable, Codable {
     let id = UUID()
     let titolo: String
     let descrizione: String
     let edificioTarget: String?
     let coordinate: CLLocationCoordinate2D?
-    let punti: Int
     let icona: String
     var completata: Bool = false
     let categoria: String
     let raggioVerifica: Double
+    let medaliaAssociata: String?
     
     enum CodingKeys: String, CodingKey {
-        case titolo, descrizione, edificioTarget, punti, icona, completata, categoria, raggioVerifica
+        case titolo, descrizione, edificioTarget, icona, completata, categoria, raggioVerifica, medaliaAssociata
         case latitudine, longitudine
     }
     
-    init(titolo: String, descrizione: String, edificioTarget: String? = nil, coordinate: CLLocationCoordinate2D? = nil, punti: Int, icona: String, categoria: String, raggioVerifica: Double = 50.0) {
+    init(titolo: String, descrizione: String, edificioTarget: String? = nil, coordinate: CLLocationCoordinate2D? = nil, icona: String, categoria: String, raggioVerifica: Double = 50.0, medaliaAssociata: String? = nil) {
         self.titolo = titolo
         self.descrizione = descrizione
         self.edificioTarget = edificioTarget
         self.coordinate = coordinate
-        self.punti = punti
         self.icona = icona
         self.categoria = categoria
         self.raggioVerifica = raggioVerifica
+        self.medaliaAssociata = medaliaAssociata
     }
     
     init(from decoder: Decoder) throws {
@@ -42,11 +60,11 @@ struct Missione: Identifiable, Codable {
         titolo = try container.decode(String.self, forKey: .titolo)
         descrizione = try container.decode(String.self, forKey: .descrizione)
         edificioTarget = try container.decodeIfPresent(String.self, forKey: .edificioTarget)
-        punti = try container.decode(Int.self, forKey: .punti)
         icona = try container.decode(String.self, forKey: .icona)
         completata = try container.decode(Bool.self, forKey: .completata)
         categoria = try container.decode(String.self, forKey: .categoria)
         raggioVerifica = try container.decodeIfPresent(Double.self, forKey: .raggioVerifica) ?? 50.0
+        medaliaAssociata = try container.decodeIfPresent(String.self, forKey: .medaliaAssociata)
         
         if let lat = try container.decodeIfPresent(Double.self, forKey: .latitudine),
            let lon = try container.decodeIfPresent(Double.self, forKey: .longitudine) {
@@ -61,11 +79,11 @@ struct Missione: Identifiable, Codable {
         try container.encode(titolo, forKey: .titolo)
         try container.encode(descrizione, forKey: .descrizione)
         try container.encodeIfPresent(edificioTarget, forKey: .edificioTarget)
-        try container.encode(punti, forKey: .punti)
         try container.encode(icona, forKey: .icona)
         try container.encode(completata, forKey: .completata)
         try container.encode(categoria, forKey: .categoria)
         try container.encode(raggioVerifica, forKey: .raggioVerifica)
+        try container.encodeIfPresent(medaliaAssociata, forKey: .medaliaAssociata)
         
         if let coordinate = coordinate {
             try container.encode(coordinate.latitude, forKey: .latitudine)
@@ -76,9 +94,10 @@ struct Missione: Identifiable, Codable {
 
 class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var missioni: [Missione] = []
-    @Published var puntiTotali: Int = 0
+    @Published var medaglie: [Medaglia] = []
     @Published var posizioneCorrente: CLLocation?
     @Published var missioneCompletataRecente: Missione?
+    @Published var medaliaRecente: Medaglia?
     @Published var edificiVisitati: Set<String> = []
     @Published var heading: Double = 0.0
     @Published var headingAccuracy: Double = 0.0
@@ -91,7 +110,7 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
     private let motionManager = CMMotionManager()
     private let userDefaults = UserDefaults.standard
     private let missioniKey = "missioni_salvate"
-    private let puntiKey = "punti_totali"
+    private let medaglieKey = "medaglie_salvate"
     private let edificiKey = "edifici_visitati"
     
     override init() {
@@ -100,6 +119,7 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
         setupMotionManager()
         caricaDati()
         inizializzaMissioni()
+        inizializzaMedaglie()
     }
     
     private func setupLocationManager() {
@@ -155,7 +175,10 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
             self.missioni = missioniSalvate
         }
         
-        self.puntiTotali = userDefaults.integer(forKey: puntiKey)
+        if let data = userDefaults.data(forKey: medaglieKey),
+           let medaglieSalvate = try? JSONDecoder().decode([Medaglia].self, from: data) {
+            self.medaglie = medaglieSalvate
+        }
         
         if let edificiData = userDefaults.array(forKey: edificiKey) as? [String] {
             self.edificiVisitati = Set(edificiData)
@@ -167,7 +190,9 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
             userDefaults.set(data, forKey: missioniKey)
         }
         
-        userDefaults.set(puntiTotali, forKey: puntiKey)
+        if let data = try? JSONEncoder().encode(medaglie) {
+            userDefaults.set(data, forKey: medaglieKey)
+        }
         
         userDefaults.set(Array(edificiVisitati), forKey: edificiKey)
     }
@@ -176,71 +201,133 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
         if missioni.isEmpty {
             missioni = [
                 Missione(
-                    titolo: "Esplora l'Edificio E",
+                    titolo: "Visita l'Edificio E",
                     descrizione: "Visita l'Edificio E e scopri le sue aule",
                     edificioTarget: "E",
                     coordinate: centroEdificioE,
-                    punti: 50,
                     icona: "building.2",
                     categoria: "Esplorazione",
-                    raggioVerifica: 30.0
+                    raggioVerifica: 30.0,
+                    medaliaAssociata: "Esploratore dell'Edificio E"
                 ),
                 Missione(
                     titolo: "Esplora l'Edificio C",
-                    descrizione: "Visita l'Edificio E e scopri le sue aule",
+                    descrizione: "Visita l'Edificio C e scopri le sue aule",
                     edificioTarget: "C",
-                    coordinate:centroEdificioC,
-                    punti: 75,
+                    coordinate: centroEdificioC,
                     icona: "building.2",
                     categoria: "Esplorazione",
-                    raggioVerifica: 30.0
+                    raggioVerifica: 30.0,
+                    medaliaAssociata: "Esploratore dell'Edificio C"
                 ),
                 Missione(
                     titolo: "Visita l'Edificio D",
                     descrizione: "Esplora l'Edificio D e le sue aule",
                     edificioTarget: "D",
                     coordinate: centroEdificioD,
-                    punti: 50,
-                    icona: "building",
+                    icona: "building.2",
                     categoria: "Esplorazione",
-                    raggioVerifica: 30.0
+                    raggioVerifica: 30.0,
+                    medaliaAssociata: "Esploratore dell'Edificio D"
                 ),
                 Missione(
-                    titolo: "Trova l'Aula Magna",
-                    descrizione: "Localizza l'Aula Magna nell'Edificio F",
-                    edificioTarget: "F",
-                    coordinate: centroEdificioF,
-                    punti: 60,
-                    icona: "theatermask.and.paintbrush",
-                    categoria: "Studio",
-                    raggioVerifica: 35.0
+                    titolo: "Visita il Matitone",
+                    descrizione: "Localizza il matitone in Piazza del Sapere",
+                    coordinate: CLLocationCoordinate2D(latitude: 40.77066, longitude: 14.79237),
+                    icona: "pencil",
+                    categoria: "Esplorazione",
+                    raggioVerifica: 40.0,
+                    medaliaAssociata: "Matitone"
                 ),
                 Missione(
                     titolo: "Visita la Mensa",
                     descrizione: "Trova la mensa studentesca",
                     edificioTarget: "Q2",
                     coordinate: CLLocationCoordinate2D(latitude: 40.77275, longitude: 14.79337),
-                    punti: 40,
                     icona: "fork.knife",
                     categoria: "Esplorazione",
-                    raggioVerifica: 25.0
+                    raggioVerifica: 25.0,
+                    medaliaAssociata: "Buongustaio"
                 ),
                 Missione(
-                    titolo: "Scopri il Laboratorio Informatico",
-                    descrizione: "Trova i laboratori informatici nell'Edificio E1",
-                    edificioTarget: "E1",
+                    titolo: "Scopri il boschetto",
+                    descrizione: "Scopri l'area verde del campus",
                     coordinate: CLLocationCoordinate2D(latitude: 40.772832, longitude: 14.790132),
-                    punti: 65,
-                    icona: "desktopcomputer",
-                    categoria: "Studio",
-                    raggioVerifica: 20.0
+                    icona: "tree.fill",
+                    categoria: "Esplorazione",
+                    raggioVerifica: 20.0,
+                    medaliaAssociata: "Pollice verde"
                 ),
                 Missione(
                     titolo: "Esplora tutti gli Edifici",
                     descrizione: "Visita almeno 5 edifici diversi del campus",
-                    punti: 200,
                     icona: "map.fill",
-                    categoria: "Esplorazione"
+                    categoria: "Speciale",
+                    medaliaAssociata: "Maestro Esploratore"
+                )
+            ]
+            salvaDati()
+        }
+    }
+    
+    private func inizializzaMedaglie() {
+        if medaglie.isEmpty {
+            medaglie = [
+                Medaglia(
+                    nome: "Esploratore dell'Edificio E",
+                    descrizione: "Hai visitato l'Edificio E",
+                    immagineDaSbloccare: "medaglia1_da_sbloccare",
+                    immagineSbloccata: "medaglia1_sbloccata",
+                    missioneAssociata: "Esplora l'Edificio E",
+                    tipo: .esplorazione
+                ),
+                Medaglia(
+                    nome: "Esploratore dell'Edificio C",
+                    descrizione: "Hai visitato l'Edificio C",
+                    immagineDaSbloccare: "medaglia2_da_sbloccare",
+                    immagineSbloccata: "medaglia2_sbloccata",
+                    missioneAssociata: "Esplora l'Edificio C",
+                    tipo: .esplorazione
+                ),
+                Medaglia(
+                    nome: "Esploratore dell'Edificio D",
+                    descrizione: "Hai visitato l'Edificio D",
+                    immagineDaSbloccare: "medaglia3_da_sbloccare",
+                    immagineSbloccata: "medaglia3_sbloccata",
+                    missioneAssociata: "Visita l'Edificio D",
+                    tipo: .esplorazione
+                ),
+                Medaglia(
+                    nome: "Matitone",
+                    descrizione: "Hai trovato il Matitone in Piazza del Sapere",
+                    immagineDaSbloccare: "medaglia4_da_sbloccare",
+                    immagineSbloccata: "medaglia4_sbloccata",
+                    missioneAssociata: "Visita il matitone",
+                    tipo: .esplorazione
+                ),
+                Medaglia(
+                    nome: "Buongustaio",
+                    descrizione: "Hai visitato la mensa",
+                    immagineDaSbloccare: "medaglia5_da_sbloccare",
+                    immagineSbloccata: "medaglia5_sbloccata",
+                    missioneAssociata: "Visita la Mensa",
+                    tipo: .esplorazione
+                ),
+                Medaglia(
+                    nome: "Pollice verde",
+                    descrizione: "Hai scoperto il boschetto",
+                    immagineDaSbloccare: "medaglia6_da_sbloccare",
+                    immagineSbloccata: "medaglia6_sbloccata",
+                    missioneAssociata: "Scopri il boschetto",
+                    tipo: .esplorazione
+                ),
+                Medaglia(
+                    nome: "Maestro Esploratore",
+                    descrizione: "Hai visitato tutti gli edifici principali",
+                    immagineDaSbloccare: "medaglia7_da_sbloccare",
+                    immagineSbloccata: "medaglia7_sbloccata",
+                    missioneAssociata: "Esplora tutti gli Edifici",
+                    tipo: .speciale
                 )
             ]
             salvaDati()
@@ -314,10 +401,24 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
     private func completaMissione(_ missione: Missione) {
         if let index = missioni.firstIndex(where: { $0.id == missione.id }) {
             missioni[index].completata = true
-            puntiTotali += missione.punti
-            salvaDati()
             
+            if let nomeMedaglia = missione.medaliaAssociata {
+                sbloccaMedaglia(nome: nomeMedaglia)
+            }
+            
+            salvaDati()
             verificaMissioniSpeciali()
+        }
+    }
+    
+    private func sbloccaMedaglia(nome: String) {
+        if let index = medaglie.firstIndex(where: { $0.nome == nome && !$0.sbloccata }) {
+            medaglie[index].sbloccata = true
+            medaliaRecente = medaglie[index]
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                self.medaliaRecente = nil
+            }
         }
     }
     
@@ -328,10 +429,8 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
             }
         }
         
-        if puntiTotali >= 500 {
-            if let index = missioni.firstIndex(where: { $0.titolo == "Maestro del Campus" && !$0.completata }) {
-                completaMissione(missioni[index])
-            }
+        if missioni.allSatisfy({ $0.completata }) {
+            sbloccaMedaglia(nome: "Completista")
         }
     }
     
@@ -341,6 +440,14 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
     
     func missioniCompletate() -> [Missione] {
         return missioni.filter { $0.completata }
+    }
+    
+    func medaglieSbloccate() -> [Medaglia] {
+        return medaglie.filter { $0.sbloccata }
+    }
+    
+    func medaglieDaSbloccare() -> [Medaglia] {
+        return medaglie.filter { !$0.sbloccata }
     }
     
     func distanzaDaMissione(_ missione: Missione) -> Double? {
@@ -377,7 +484,7 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
 struct MissioniView: View {
     @StateObject private var missioniManager = MissioniGPSManager()
     @State private var categoriaSelezionata: String? = nil
-    @State private var mostraCompletate = false
+    @State private var mostraMedaglie = false
     @State private var missioneSelezionata: Missione? = nil
     @Environment(\.dismiss) private var dismiss
     
@@ -385,28 +492,52 @@ struct MissioniView: View {
         NavigationView {
             ZStack {
                 VStack(spacing: 0) {
+                    HStack {
+                        Button(action: {
+                            dismiss()
+                        }) {
+                            Image(systemName: "chevron.backward")
+                                .font(.title2)
+                                .foregroundColor(.primary)
+                                .padding(.horizontal, 17)
+                                .padding(.vertical, 12)
+                        }
+
+                        Text(mostraMedaglie ? "Medaglie" : "Missioni")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.primary)
+                        
+                        Spacer()
+                    }
+                    .background(Color(.systemGray6))
+                    
                     headerView
                     
                     filterView
                     
-                    ScrollView {
-                        LazyVStack(spacing: 12) {
-                            ForEach(missioniFiltrate()) { missione in
-                                MissioneCard(
-                                    missione: missione,
-                                    distanza: missioniManager.distanzaDaMissione(missione),
-                                    bearing: missioniManager.bearingToMission(missione),
-                                    currentHeading: missioniManager.heading,
-                                    onTap: {
-                                        if !missione.completata && missione.coordinate != nil {
-                                            missioneSelezionata = missione
+                    if mostraMedaglie {
+                        medaglieView
+                    } else {
+                        ScrollView {
+                            LazyVStack(spacing: 12) {
+                                ForEach(missioniFiltrate()) { missione in
+                                    MissioneCard(
+                                        missione: missione,
+                                        distanza: missioniManager.distanzaDaMissione(missione),
+                                        bearing: missioniManager.bearingToMission(missione),
+                                        currentHeading: missioniManager.heading,
+                                        onTap: {
+                                            if !missione.completata && missione.coordinate != nil {
+                                                missioneSelezionata = missione
+                                            }
                                         }
-                                    }
-                                )
+                                    )
+                                }
                             }
+                            .padding(.horizontal)
+                            .padding(.top, 8)
                         }
-                        .padding(.horizontal)
-                        .padding(.top, 8)
                     }
                 }
                 
@@ -418,21 +549,6 @@ struct MissioniView: View {
                     .transition(.move(edge: .top).combined(with: .opacity))
                 }
             }
-            .navigationTitle("Missioni")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Chiudi") {
-                        dismiss()
-                    }
-                }
-            }
-            .sheet(item: $missioneSelezionata) { missione in
-                NavigationMissioneView(
-                    missione: missione,
-                    missioniManager: missioniManager
-                )
-            }
         }
     }
     
@@ -440,18 +556,6 @@ struct MissioniView: View {
         VStack(spacing: 8) {
             HStack {
                 VStack(alignment: .leading) {
-                    Text("Punti Totali")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Text("\(missioniManager.puntiTotali)")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.primary)
-                }
-                
-                Spacer()
-                
-                VStack(alignment: .trailing) {
                     Text("Completate")
                         .font(.caption)
                         .foregroundColor(.secondary)
@@ -459,6 +563,18 @@ struct MissioniView: View {
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundColor(.green)
+                }
+                
+                Spacer()
+                
+                VStack(alignment: .trailing) {
+                    Text("Medaglie")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text("\(missioniManager.medaglieSbloccate().count)/\(missioniManager.medaglie.count)")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.yellow)
                 }
             }
             .padding(.horizontal)
@@ -471,39 +587,49 @@ struct MissioniView: View {
                     .foregroundColor(.secondary)
                 
                 Spacer()
-                
-                HStack(spacing: 4) {
-                    Image(systemName: "safari")
-                        .foregroundColor(.blue)
-                    Text("Bussola")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
             }
             .padding(.horizontal)
+
+
             
             ProgressView(value: Double(missioniManager.missioniCompletate().count), total: Double(missioniManager.missioni.count))
                 .progressViewStyle(LinearProgressViewStyle(tint: .green))
                 .padding(.horizontal)
-        }
-        .padding(.vertical, 12)
-        .background(Color(.systemGray6))
+            }
+            .padding(.vertical, 12)
+            .background(Color(.systemGray6))
     }
     
     private var filterView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                Button(action: { mostraCompletate.toggle() }) {
+                Button(action: {
+                    mostraMedaglie = false
+                }) {
                     HStack {
-                        Image(systemName: mostraCompletate ? "checkmark.circle.fill" : "circle")
-                        Text(mostraCompletate ? "Completate" : "Attive")
+                        Image(systemName: "target")
+                        Text("Missioni Attive")
                     }
                     .font(.caption)
                     .fontWeight(.medium)
-                    .foregroundColor(mostraCompletate ? .white : .primary)
+                    .foregroundColor(!mostraMedaglie ? .white : .primary)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
-                    .background(mostraCompletate ? Color.green : Color(.systemGray5))
+                    .background(!mostraMedaglie ? Color.blue : Color(.systemGray5))
+                    .cornerRadius(15)
+                }
+                
+                Button(action: { mostraMedaglie = true }) {
+                    HStack {
+                        Image(systemName: "medal.fill")
+                        Text("Medaglie")
+                    }
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(mostraMedaglie ? .white : .primary)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(mostraMedaglie ? Color.yellow : Color(.systemGray5))
                     .cornerRadius(15)
                 }
             }
@@ -512,8 +638,20 @@ struct MissioniView: View {
         .padding(.vertical, 8)
     }
     
+    private var medaglieView: some View {
+        ScrollView {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 2), spacing: 16) {
+                ForEach(missioniManager.medaglie) { medaglia in
+                    MedagliaCard(medaglia: medaglia)
+                }
+            }
+            .padding(.horizontal)
+            .padding(.top, 8)
+        }
+    }
+    
     private func missioniFiltrate() -> [Missione] {
-        let missioni = mostraCompletate ? missioniManager.missioniCompletate() : missioniManager.missioniAttive()
+        let missioni = missioniManager.missioniAttive()
         
         if let categoria = categoriaSelezionata {
             return missioni.filter { $0.categoria == categoria }
@@ -577,9 +715,6 @@ struct MissioneCard: View {
                             Image(systemName: "star.fill")
                                 .font(.caption2)
                                 .foregroundColor(.yellow)
-                            Text("\(missione.punti) punti")
-                                .font(.caption)
-                                .fontWeight(.medium)
                         }
                         
                         Spacer()
@@ -675,92 +810,46 @@ struct BussolaView: View {
     }
 }
 
-struct NavigationMissioneView: View {
-    let missione: Missione
-    @ObservedObject var missioniManager: MissioniGPSManager
-    @Environment(\.dismiss) private var dismiss
-    
+
+
+struct MedagliaCard: View {
+    let medaglia: Medaglia
+
     var body: some View {
-        NavigationView {
-            VStack(spacing: 20) {
-                VStack(spacing: 12) {
-                    Image(systemName: missione.icona)
-                        .font(.largeTitle)
-                        .foregroundColor(.blue)
-                    
-                    Text(missione.titolo)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .multilineTextAlignment(.center)
-                    
-                    Text(missione.descrizione)
-                        .font(.body)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                }
-                .padding()
+        VStack(spacing: 12) {
+            Image(medaglia.sbloccata ? medaglia.immagineSbloccata : medaglia.immagineDaSbloccare)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 60, height: 60)
+
+            VStack(spacing: 4) {
+                Text(medaglia.nome)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
                 
-                if let bearing = missioniManager.bearingToMission(missione),
-                   let distanza = missioniManager.distanzaDaMissione(missione) {
-                    VStack(spacing: 16) {
-                        ZStack {
-                            Circle()
-                                .stroke(Color.gray.opacity(0.3), lineWidth: 4)
-                                .frame(width: 200, height: 200)
-                            
-                            Image(systemName: "arrow.up.circle.fill")
-                                .font(.system(size: 60))
-                                .foregroundColor(.blue)
-                                .rotationEffect(.degrees(bearing - missioniManager.heading))
-                                .animation(.easeInOut(duration: 0.3), value: bearing - missioniManager.heading)
-                        }
-                        
-                        VStack(spacing: 8) {
-                            Text("Distanza")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            Text(String(format: "%.0f metri", distanza))
-                                .font(.title2)
-                                .fontWeight(.bold)
-                        }
-                        
-                        if distanza <= missione.raggioVerifica {
-                            Text("Sei arrivato! La missione verrà completata automaticamente.")
-                                .font(.callout)
-                                .foregroundColor(.green)
-                                .fontWeight(.medium)
-                                .multilineTextAlignment(.center)
-                                .padding()
-                                .background(Color.green.opacity(0.1))
-                                .cornerRadius(10)
-                        }
-                    }
-                }
+                Text(medaglia.descrizione)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(3)
                 
-                Spacer()
-                
-                HStack {
+                HStack(spacing: 4) {
                     Image(systemName: "star.fill")
+                        .font(.caption2)
                         .foregroundColor(.yellow)
-                    Text("\(missione.punti) punti")
-                        .fontWeight(.medium)
-                }
-                .font(.callout)
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(10)
-            }
-            .padding()
-            .navigationTitle("Navigazione")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Chiudi") {
-                        dismiss()
-                    }
+                    Text(medaglia.tipo.rawValue)
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
                 }
             }
         }
+        .padding()
+        .background(Color(.systemBackground))
+        .cornerRadius(12)
+        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+        .opacity(medaglia.sbloccata ? 1.0 : 0.6)
     }
 }
 
@@ -783,11 +872,6 @@ struct NotificaCompletamento: View {
             }
             
             Spacer()
-            
-            Text("+\(missione.punti)")
-                .font(.headline)
-                .fontWeight(.bold)
-                .foregroundColor(.green)
         }
         .padding()
         .background(Color(.systemBackground))
