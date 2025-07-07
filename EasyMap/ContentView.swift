@@ -11,7 +11,7 @@ struct ContentView: View {
     @StateObject private var store = AnnuncioStore()
 
     var body: some View {
-        CampusMapView()
+        CampusMapWithSearch()
     }
 }
 

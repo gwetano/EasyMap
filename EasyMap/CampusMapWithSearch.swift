@@ -12,7 +12,7 @@ struct CampusMapWithSearch: View {
 
     var body: some View {
         ZStack {
-            CampusMapView() // la tua mappa
+            CampusMapView()
 
             VStack {
                 Spacer()
@@ -20,30 +20,26 @@ struct CampusMapWithSearch: View {
                 Button {
                     showSearchSheet.toggle()
                 } label: {
-                    HStack(spacing: 8) {
+                    HStack() {
                         Image(systemName: "magnifyingglass")
-                            .foregroundColor(.gray)
-                        Text("Search for rooms…")
-                            .foregroundColor(.gray)
+                            .foregroundColor(.secondary)
+                        Text("Cerca aula...")
+                            .foregroundColor(.secondary)
                             .font(.subheadline)
                         Spacer()
                     }
-                    .padding(16)
-                    
+                    .padding(11)
                     .background(.ultraThinMaterial)
                     .cornerRadius(15)
-                    .padding(.horizontal, 40)
+                    .padding(.horizontal, 15)
                    
                 }
-
                 .sheet(isPresented: $showSearchSheet) {
-                    SearchView()
-                        .presentationDetents([.medium, .large]) 
+                    SearchView(shouldFocusOnAppear: true)
+                        .presentationDetents([.medium, .large])
                         .presentationDragIndicator(.visible)
-                        
                 }
             }
-            .padding(.bottom, 16)
         }
     }
 }

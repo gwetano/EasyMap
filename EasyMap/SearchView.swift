@@ -10,16 +10,18 @@ import SwiftUI
 struct SearchView: View {
     @State private var giornata: Giornata? = nil
     @State private var searchText: String = ""
-    
+
+    var shouldFocusOnAppear: Bool = false
+
     let edificiValidi: Set<String> = [
         "E", "E1", "E2", "D", "D1", "D2", "D3", "C", "C1", "C2", "B", "B1", "B2", "F", "F1", "F2", "F3"
     ]
-    
+
     var filteredAule: [Aula] {
         guard let aule = giornata?.aule else { return [] }
         let query = searchText.trimmingCharacters(in: .whitespaces).lowercased()
         if query.isEmpty {
-            return [] // Non mostra nulla finché non scrivi
+            return []
         } else {
             return aule.filter { aula in
                 edificiValidi.contains(aula.edificio) &&
@@ -27,7 +29,7 @@ struct SearchView: View {
             }
         }
     }
-    
+
     var body: some View {
         NavigationStack {
             Group {
@@ -37,10 +39,6 @@ struct SearchView: View {
                 } else if filteredAule.isEmpty {
                     if !searchText.isEmpty {
                         Text("Nessuna aula trovata.")
-                            .foregroundColor(.gray)
-                            .padding()
-                    } else {
-                        Text("Scrivi per cercare un'aula.")
                             .foregroundColor(.gray)
                             .padding()
                     }
@@ -59,16 +57,19 @@ struct SearchView: View {
                                 .font(.subheadline)
                         }
                     }
+                    .background(.ultraThinMaterial)
                 }
-            }.background(.ultraThinMaterial)
-            .searchable(text: $searchText, prompt: "Cerca aula")
+            }
+            .searchable(text: $searchText, prompt: "Cerca aula...")
+            .padding(.bottom, 50)
             .task {
                 self.giornata = await leggiJSONDaURL()
-                print("Aule caricate: \(giornata?.aule.count ?? 0)")
             }
         }
+        .background(.ultraThinMaterial)
     }
 }
+
 
 #Preview {
     SearchView()
