@@ -17,14 +17,6 @@ struct Medaglia: Identifiable, Codable {
     let immagineSbloccata: String
     var sbloccata: Bool = false
     let missioneAssociata: String?
-    let tipo: TipoMedaglia
-    
-    enum TipoMedaglia: String, CaseIterable, Codable {
-        case esplorazione = "Esplorazione"
-        case studio = "Studio"
-        case speciale = "Speciale"
-        case completamento = "Completamento"
-    }
 }
 
 struct Missione: Identifiable, Codable {
@@ -279,7 +271,6 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
                     immagineDaSbloccare: "medaglia1_da_sbloccare",
                     immagineSbloccata: "medaglia1_sbloccata",
                     missioneAssociata: "Esplora l'Edificio E",
-                    tipo: .esplorazione
                 ),
                 Medaglia(
                     nome: "Esploratore dell'Edificio C",
@@ -287,7 +278,6 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
                     immagineDaSbloccare: "medaglia2_da_sbloccare",
                     immagineSbloccata: "medaglia2_sbloccata",
                     missioneAssociata: "Esplora l'Edificio C",
-                    tipo: .esplorazione
                 ),
                 Medaglia(
                     nome: "Esploratore dell'Edificio D",
@@ -295,7 +285,6 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
                     immagineDaSbloccare: "medaglia3_da_sbloccare",
                     immagineSbloccata: "medaglia3_sbloccata",
                     missioneAssociata: "Visita l'Edificio D",
-                    tipo: .esplorazione
                 ),
                 Medaglia(
                     nome: "Matitone",
@@ -303,7 +292,6 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
                     immagineDaSbloccare: "medaglia4_da_sbloccare",
                     immagineSbloccata: "medaglia4_sbloccata",
                     missioneAssociata: "Visita il matitone",
-                    tipo: .esplorazione
                 ),
                 Medaglia(
                     nome: "Buongustaio",
@@ -311,7 +299,6 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
                     immagineDaSbloccare: "medaglia5_da_sbloccare",
                     immagineSbloccata: "medaglia5_sbloccata",
                     missioneAssociata: "Visita la Mensa",
-                    tipo: .esplorazione
                 ),
                 Medaglia(
                     nome: "Pollice verde",
@@ -319,7 +306,6 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
                     immagineDaSbloccare: "medaglia6_da_sbloccare",
                     immagineSbloccata: "medaglia6_sbloccata",
                     missioneAssociata: "Scopri il boschetto",
-                    tipo: .esplorazione
                 ),
                 Medaglia(
                     nome: "Maestro Esploratore",
@@ -327,7 +313,6 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
                     immagineDaSbloccare: "medaglia7_da_sbloccare",
                     immagineSbloccata: "medaglia7_sbloccata",
                     missioneAssociata: "Esplora tutti gli Edifici",
-                    tipo: .speciale
                 )
             ]
             salvaDati()
@@ -711,12 +696,7 @@ struct MissioneCard: View {
                         .lineLimit(2)
                     
                     HStack {
-                        HStack(spacing: 4) {
-                            Image(systemName: "star.fill")
-                                .font(.caption2)
-                                .foregroundColor(.yellow)
-                        }
-                        
+
                         Spacer()
                         
                         if let distanza = distanza {
@@ -834,15 +814,6 @@ struct MedagliaCard: View {
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
                     .lineLimit(3)
-                
-                HStack(spacing: 4) {
-                    Image(systemName: "star.fill")
-                        .font(.caption2)
-                        .foregroundColor(.yellow)
-                    Text(medaglia.tipo.rawValue)
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                }
             }
         }
         .padding()
