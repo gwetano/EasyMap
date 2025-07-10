@@ -107,28 +107,126 @@ class BuildingDataManager: ObservableObject {
                     name: "Aula 24",
                     position: CGPoint(x: 0.8335, y: 0.423),
                     size: CGSize(width: 0.0287, height: 0.125),
-                    description: "Aula magna con proiettore e sistema audio",
+                    description: "Aula non elettrificata",
                     buildingName: "E"
                 ),
                 RoomImage(
                     name: "Aula 23",
                     position: CGPoint(x: 0.802, y: 0.423),
                     size: CGSize(width: 0.0287, height: 0.125),
-                    description: "Aula magna con proiettore e sistema audio",
+                    description: "Aula non elettrificata",
                     buildingName: "E"
                 ),
                 RoomImage(
                     name: "Aula 21",
                     position: CGPoint(x: 0.713, y: 0.423),
                     size: CGSize(width: 0.0287, height: 0.125),
-                    description: "Aula magna con proiettore e sistema audio",
+                    description: "Aula non elettrificata",
                     buildingName: "E"
                 ),
                 RoomImage(
                     name: "Aula 22",
                     position: CGPoint(x: 0.744, y: 0.423),
                     size: CGSize(width: 0.0287, height: 0.125),
-                    description: "Aula magna con proiettore e sistema audio",
+                    description: "Aula non elettrificata",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 16",
+                    position: CGPoint(x: 0.533, y: 0.423),
+                    size: CGSize(width: 0.03, height: 0.125),
+                    description: "LCEM",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 18",
+                    position: CGPoint(x: 0.565, y: 0.423),
+                    size: CGSize(width: 0.028, height: 0.125),
+                    description: "TETI",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 19",
+                    position: CGPoint(x: 0.6236, y: 0.423),
+                    size: CGSize(width: 0.028, height: 0.125),
+                    description: "TAU",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 20",
+                    position: CGPoint(x: 0.655, y: 0.423),
+                    size: CGSize(width: 0.028, height: 0.125),
+                    description: "MOT",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "CUES",
+                    position: CGPoint(x: 0.4136, y: 0.39),
+                    size: CGSize(width: 0.0235, height: 0.14),
+                    description: "Cooperativa universitaria",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 12a",
+                    position: CGPoint(x: 0.3845, y: 0.394),
+                    size: CGSize(width: 0.0295, height: 0.145),
+                    description: "Impianti industriali meccanici",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 12b",
+                    position: CGPoint(x: 0.3533, y: 0.394),
+                    size: CGSize(width: 0.0295, height: 0.145),
+                    description: "Cooperativa universitaria",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 10",
+                    position: CGPoint(x: 0.3, y: 0.394),
+                    size: CGSize(width: 0.0295, height: 0.145),
+                    description: "Disegno e metodi per l'ingengeria industriale",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 10",
+                    position: CGPoint(x: 0.26, y: 0.394),
+                    size: CGSize(width: 0.0295, height: 0.145),
+                    description: "Virtual Reality Lab",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 2",
+                    position: CGPoint(x: 0.0873, y: 0.396),
+                    size: CGSize(width: 0.0355, height: 0.145),
+                    description: "Proprietà termodinamiche e di trasporto",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 4",
+                    position: CGPoint(x: 0.1175, y: 0.396),
+                    size: CGSize(width: 0.022, height: 0.145),
+                    description: "Caratterizzazione chimico-fisica",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab T0",
+                    position: CGPoint(x: 0.144, y: 0.396),
+                    size: CGSize(width: 0.026, height: 0.145),
+                    description: "Laboratorio analisi dei materiali",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 6",
+                    position: CGPoint(x: 0.179, y: 0.396),
+                    size: CGSize(width: 0.039, height: 0.145),
+                    description: "Laboratorio analisi dei materiali",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 8",
+                    position: CGPoint(x: 0.2107, y: 0.396),
+                    size: CGSize(width: 0.0204, height: 0.145),
+                    description: "Fluidi supercritici",
                     buildingName: "E"
                 ),
                 RoomImage(
@@ -136,6 +234,34 @@ class BuildingDataManager: ObservableObject {
                     position: CGPoint(x: 0.4585, y: 0.3765),
                     size: CGSize(width: 0.063, height: 0.085),
                     description: "Ufficio docenti - Piano terra",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 14",
+                    position: CGPoint(x: 0.3845, y: 0.576),
+                    size: CGSize(width: 0.0295, height: 0.12),
+                    description: "Trasmissione del calore",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 14",
+                    position: CGPoint(x: 0.3533, y: 0.576),
+                    size: CGSize(width: 0.0295, height: 0.12),
+                    description: "Tecniche del freddo",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 11",
+                    position: CGPoint(x: 0.532, y: 0.605),
+                    size: CGSize(width: 0.032, height: 0.145),
+                    description: "Fisica tecnica ambientale",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 9",
+                    position: CGPoint(x: 0.5645, y: 0.605),
+                    size: CGSize(width: 0.028, height: 0.145),
+                    description: "Fisica tecnica ambientale",
                     buildingName: "E"
                 ),
             ]

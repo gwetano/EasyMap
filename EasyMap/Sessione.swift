@@ -8,8 +8,6 @@
 import Foundation
 import UIKit
 
-// MARK: - Modelli dati
-
 struct AnnuncioCodificabile: Codable, Identifiable, Equatable {
     let id: Int
     let titolo: String
@@ -32,8 +30,6 @@ struct UserSession: Codable {
     let immagineProfilo: String?
     var preferiti: [AnnuncioCodificabile]
 }
-
-// MARK: - Gestione sessione utente
 
 class UserSessionManager {
     static let shared = UserSessionManager()
@@ -138,7 +134,6 @@ class UserSessionManager {
     }
 }
 
-// MARK: - Gestione ricerche recenti
 
 class SearchHistoryManager {
     static let shared = SearchHistoryManager()
@@ -151,18 +146,15 @@ class SearchHistoryManager {
             .appendingPathComponent(fileName)
     }
 
-    /// Salva una query nella cronologia (spostandola in cima e senza duplicati)
     func salva(query: String) {
         var history = leggi() ?? []
 
         let trimmedQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
 
         if !trimmedQuery.isEmpty {
-            // rimuove duplicati
             history.removeAll { $0.lowercased() == trimmedQuery.lowercased() }
             history.insert(trimmedQuery, at: 0)
 
-            // limita a massimo 10
             if history.count > 10 {
                 history = Array(history.prefix(10))
             }
@@ -173,7 +165,6 @@ class SearchHistoryManager {
         }
     }
 
-    /// Restituisce la cronologia
     func leggi() -> [String]? {
         guard let data = try? Data(contentsOf: fileURL),
               let history = try? JSONDecoder().decode([String].self, from: data) else {
@@ -182,7 +173,6 @@ class SearchHistoryManager {
         return history
     }
 
-    /// Cancella una query specifica
     func cancella(query: String) {
         var history = leggi() ?? []
         history.removeAll { $0 == query }
@@ -191,7 +181,6 @@ class SearchHistoryManager {
         }
     }
 
-    /// Cancella tutta la cronologia
     func cancellaTutto() {
         try? FileManager.default.removeItem(at: fileURL)
     }

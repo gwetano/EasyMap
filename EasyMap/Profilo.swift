@@ -19,7 +19,6 @@ struct Profilo: View {
     
     @State private var showImageSourceDialog : Bool = false
     
-    // Nuovi stati per i post salvati
     @State private var postSalvati: [Post] = []
     @State private var postEspanso: Post? = nil
     
@@ -190,7 +189,6 @@ struct Profilo: View {
     }
 }
 
-// MARK: - PostAnteprimaView
 struct PostAnteprimaView: View {
     let post: Post
     let onTap: () -> Void
@@ -292,13 +290,12 @@ struct PostEspansoView: View {
         }
     }
 }
-// MARK: - Modello Post
 struct Post: Identifiable {
     let id: String
     let autore: String
     let contenuto: String
     let dataCreazione: Date
-    let immagine: String? // opzionale se non usi URL
+    let immagine: String?
     let immagineUI: UIImage?
     let categoria: String
     let luogo: String
@@ -312,8 +309,8 @@ extension Post {
             titolo: contenuto.components(separatedBy: "\n").first ?? "Post",
             descrizione: contenuto.components(separatedBy: "\n").dropFirst().joined(separator: "\n"),
             data: dataCreazione,
-            luogo: "", // opzionalmente puoi includerlo nel contenuto
-            immagini: immagineUI != nil ? [immagineUI!] : [], // se presente, la include
+            luogo: "",
+            immagini: immagineUI != nil ? [immagineUI!] : [],
             autore: autore,
             categoria: categoria
         )
@@ -329,7 +326,6 @@ extension Post: Equatable {
                lhs.immagine == rhs.immagine &&
                lhs.categoria == rhs.categoria &&
                lhs.luogo == rhs.luogo
-        //Non confrontiamo immagineUI perché UIImage non è Equatable
     }
 }
 #Preview {

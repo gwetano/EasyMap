@@ -769,7 +769,7 @@ struct MedagliaCard: View {
             Image(medaglia.sbloccata ? medaglia.immagineSbloccata : medaglia.immagineDaSbloccare)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 70, height: 70)
+                .frame(width: 60, height: 60)
 
             VStack(spacing: 4) {
                 Text(medaglia.nome)

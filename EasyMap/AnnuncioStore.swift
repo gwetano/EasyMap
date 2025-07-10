@@ -20,10 +20,8 @@ class AnnuncioStore: ObservableObject {
     }
 
     func aggiungi(_ annuncio: Annuncio) {
-        // lo aggiungi localmente
         self.annunci.append(annuncio)
 
-        // e lo invii al server
         uploadAnnuncio(annuncio) { success in
             print(success ? "Inviato con successo" : "Errore nell'invio")
         }

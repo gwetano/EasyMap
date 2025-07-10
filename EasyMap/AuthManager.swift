@@ -11,7 +11,6 @@ class AuthManager: ObservableObject {
     @Published var isAuthenticated: Bool = false
     
     init() {
-        // Controlla lo stato di autenticazione all'avvio
         checkAuthenticationStatus()
     }
     
@@ -25,7 +24,6 @@ class AuthManager: ObservableObject {
     
     func logout() {
         isAuthenticated = false
-        // Opzionale: cancella anche i dati di sessione
         UserSessionManager.shared.clearSession()
     }
 }

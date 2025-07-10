@@ -160,7 +160,6 @@ func fetchAnnunci(completion: @escaping ([Annuncio]) -> Void) {
             let decoder = JSONDecoder()
             let dtos = try decoder.decode([AnnuncioDTO].self, from: data)
 
-            // carica immagini da img_path
             var annunci: [Annuncio] = []
             let group = DispatchGroup()
 

@@ -178,7 +178,11 @@ struct CampusMapView: View {
                     MapPolygon(coordinates: edificioQ2Coordinates)
                         .foregroundStyle(.purple.opacity(0.3))
                         .stroke(.purple, lineWidth: 2)
-                
+                    
+                    MapPolygon(coordinates: bibliotecaScientificaCoordinates)
+                        .foregroundStyle(.brown.opacity(0.3))
+                        .stroke(.brown, lineWidth: 2)
+                    
                     Annotation("E", coordinate: centroEdificioE) {
                         Text("E")
                             .font(.caption)
@@ -441,6 +445,7 @@ struct CampusMapView: View {
                             .scaleEffect(0.8)
                     }
                     .annotationTitles(.hidden)
+                    
                     Annotation("Mensa", coordinate: centroEdificioQ2) {
                         Text("Mensa")
                             .font(.caption2)
@@ -451,6 +456,22 @@ struct CampusMapView: View {
                                 RoundedRectangle(cornerRadius: 4)
                                     .fill(.white.opacity(0.9))
                                     .stroke(.purple, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
+                    
+                    Annotation("Biblioteca Scientifica", coordinate: centroBiblioSci) {
+                        Text("Biblioteca Scientifica")
+                            .font(.caption2)
+                            .fontWeight(.medium)
+                            .foregroundColor(.brown)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.brown, lineWidth: 1)
                             )
                             .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
                             .scaleEffect(0.8)
@@ -752,6 +773,16 @@ private let edificioQ2Coordinates: [CLLocationCoordinate2D] = [
 ]
 
 
+private let bibliotecaScientificaCoordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.77278, longitude: 14.78894),
+    CLLocationCoordinate2D(latitude: 40.77254, longitude: 14.78837),
+    CLLocationCoordinate2D(latitude: 40.77211, longitude: 14.78867),
+    CLLocationCoordinate2D(latitude: 40.77235, longitude: 14.78924),
+    CLLocationCoordinate2D(latitude: 40.77278, longitude: 14.78894)
+]
+
+
+
 
 public let centroEdificioE = CLLocationCoordinate2D(latitude: 40.772885, longitude: 14.790675)
 public let centroEdificioE1 = CLLocationCoordinate2D(latitude: 40.772832, longitude: 14.790132)
@@ -771,6 +802,7 @@ public let centroEdificioB = CLLocationCoordinate2D(latitude: 40.77014, longitud
 public let centroEdificioB1 = CLLocationCoordinate2D(latitude: 40.76954, longitude: 14.79329)
 public let centroEdificioB2 = CLLocationCoordinate2D(latitude: 40.77007, longitude: 14.79259)
 public let centroEdificioQ2 = CLLocationCoordinate2D(latitude: 40.77289, longitude: 14.79374)
+public let centroBiblioSci = CLLocationCoordinate2D(latitude: 40.77245, longitude: 14.78879)
 
 
 struct IdentifiableString: Identifiable {
