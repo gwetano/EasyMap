@@ -528,16 +528,19 @@ struct MissioniView: View {
     
     private var headerView: some View {
         VStack(spacing: 8) {
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("Completate")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Text("\(missioniManager.missioniCompletate().count)/\(missioniManager.missioni.count)")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.green)
-                }
+            HStack{
+                Text("Completate")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+                Spacer()
+            }
+            
+            HStack{
+                Text("\(missioniManager.missioniCompletate().count)/\(missioniManager.missioni.count)")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(.green)
                 
                 Spacer()
                 
@@ -548,17 +551,12 @@ struct MissioniView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
-                .padding(.horizontal)
-                
             }
-            .padding(.horizontal)
-
-
             
             ProgressView(value: Double(missioniManager.missioniCompletate().count), total: Double(missioniManager.missioni.count))
                 .progressViewStyle(LinearProgressViewStyle(tint: .green))
-                .padding(.horizontal)
             }
+            .padding(.horizontal)
             .padding(.vertical, 12)
             .background(Color(.systemGray6))
     }
@@ -765,11 +763,11 @@ struct MedagliaCard: View {
             Image(medaglia.sbloccata ? medaglia.immagineSbloccata : medaglia.immagineDaSbloccare)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 60, height: 60)
+                .frame(width: 70, height: 70)
 
             VStack(spacing: 4) {
                 Text(medaglia.nome)
-                    .font(.headline)
+                    .font(.subheadline)
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
                     .lineLimit(2)

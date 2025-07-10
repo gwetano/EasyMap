@@ -29,7 +29,7 @@ struct Profilo: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 0) {
+            VStack() {
                 HStack {
                     Button(action: {
                         dismiss()
@@ -52,52 +52,52 @@ struct Profilo: View {
                             authManager.logout()
                             dismiss()
                         }) {
-                            Text("logout")
+                            Image(systemName: "iphone.and.arrow.right.outward")
                                 .font(.headline)
-                                .fontWeight(.semibold)
                                 .foregroundColor(.red)
+                                .padding()
                         }
                     }
                 }
                 
-                
-                // Immagine profilo
-                if let image = profileImage {
-                    image
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 120, height: 120)
-                        .clipShape(Circle())
-                } else {
-                    Image(systemName: "person.crop.circle.fill")
-                        .resizable()
-                        .frame(width: 120, height: 120)
-                        .foregroundColor(.blue)
-                }
-                
-                // Bottone modifica immagine
-                Button("Modifica Foto") {
-                    showImageSourceDialog = true
-                }.padding(.vertical, 10)
-                .confirmationDialog("Aggiungi da", isPresented: $showImageSourceDialog, titleVisibility: .visible) {
-                    Button("Camera") {
-                        mostraCamera = true
+                HStack{
+                    if let image = profileImage {
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 120, height: 120)
+                            .clipShape(Circle())
+                    } else {
+                        Image(systemName: "person.crop.circle.fill")
+                            .resizable()
+                            .frame(width: 120, height: 120)
+                            .foregroundColor(.blue)
                     }
-                    Button("Foto") {
-                        mostraGalleria = true
+                    VStack{
+                        if let nome = user?.nome {
+                            Text(nome)
+                                .font(.title)
+                                .bold()
+                        }
+                        
+                        Button("Modifica Foto") {
+                            showImageSourceDialog = true
+                        }.padding(.vertical, 5)
+                            .confirmationDialog("Aggiungi da", isPresented: $showImageSourceDialog, titleVisibility: .visible) {
+                                Button("Camera") {
+                                    mostraCamera = true
+                                }
+                                Button("Foto") {
+                                    mostraGalleria = true
+                                }
+                                Button("Annulla", role: .cancel) {}
+                            }
+                        Spacer()
                     }
-                    Button("Annulla", role: .cancel) {}
+                    
+                    Spacer()
                 }
-                
-                /* Mostra nome utente */
-                if let nome = user?.nome {
-                    Text(nome)
-                        .font(.title)
-                        .bold()
-                        .padding(.vertical, 7)
-                }
-                
-                /* Sezione postSalvati*/
+                .padding(.vertical, 10)
                 salvatiView()
             }
             .padding()
@@ -129,7 +129,6 @@ struct Profilo: View {
                     aggiornaFoto()
                 }
         }
-        // Sheet per post espanso
         .sheet(item: $postEspanso) { post in
             PostEspansoView(post: post)
         }.onChange(of: postEspanso) { nuovoValore in
