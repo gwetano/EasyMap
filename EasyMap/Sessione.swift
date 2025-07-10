@@ -2,11 +2,13 @@
 //  Sessione.swift
 //  loginRegServer
 //
-//  Created by Lorenzo Campagna on 26/06/25.
+//  Created by  Francesco Apicella on 26/06/25.
 //
 
 import Foundation
 import UIKit
+
+// MARK: - Modelli dati
 
 struct AnnuncioCodificabile: Codable, Identifiable, Equatable {
     let id: Int
@@ -31,7 +33,7 @@ struct UserSession: Codable {
     var preferiti: [AnnuncioCodificabile]
 }
 
-
+// MARK: - Gestione sessione utente
 
 class UserSessionManager {
     static let shared = UserSessionManager()
@@ -108,14 +110,12 @@ class UserSessionManager {
         }
     }
 
-    // Modifica il metodo isLoggedIn per essere più robusto
     func isLoggedIn() -> Bool {
         guard let session = leggiSessione() else { return false }
         return session.isAuthenticated
     }
     
     func clearSession() {
-        // Cancella il file di sessione
         if FileManager.default.fileExists(atPath: fileURL.path) {
             try? FileManager.default.removeItem(at: fileURL)
         }
@@ -124,7 +124,6 @@ class UserSessionManager {
     func salvaImmagineProfilo(nomeFile: String) {
         guard let session = leggiSessione() else { return }
 
-        // aggiorna solo il campo immagine
         let nuovaSessione = UserSession(
             nome: session.nome,
             email: session.email,
@@ -136,5 +135,64 @@ class UserSessionManager {
         if let data = try? JSONEncoder().encode(nuovaSessione) {
             try? data.write(to: fileURL)
         }
+    }
+}
+
+// MARK: - Gestione ricerche recenti
+
+class SearchHistoryManager {
+    static let shared = SearchHistoryManager()
+    private init() {}
+
+    private let fileName = "search_history.json"
+
+    private var fileURL: URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent(fileName)
+    }
+
+    /// Salva una query nella cronologia (spostandola in cima e senza duplicati)
+    func salva(query: String) {
+        var history = leggi() ?? []
+
+        let trimmedQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if !trimmedQuery.isEmpty {
+            // rimuove duplicati
+            history.removeAll { $0.lowercased() == trimmedQuery.lowercased() }
+            history.insert(trimmedQuery, at: 0)
+
+            // limita a massimo 10
+            if history.count > 10 {
+                history = Array(history.prefix(10))
+            }
+
+            if let data = try? JSONEncoder().encode(history) {
+                try? data.write(to: fileURL)
+            }
+        }
+    }
+
+    /// Restituisce la cronologia
+    func leggi() -> [String]? {
+        guard let data = try? Data(contentsOf: fileURL),
+              let history = try? JSONDecoder().decode([String].self, from: data) else {
+            return nil
+        }
+        return history
+    }
+
+    /// Cancella una query specifica
+    func cancella(query: String) {
+        var history = leggi() ?? []
+        history.removeAll { $0 == query }
+        if let data = try? JSONEncoder().encode(history) {
+            try? data.write(to: fileURL)
+        }
+    }
+
+    /// Cancella tutta la cronologia
+    func cancellaTutto() {
+        try? FileManager.default.removeItem(at: fileURL)
     }
 }

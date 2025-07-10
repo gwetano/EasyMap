@@ -87,6 +87,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 }
 
 struct CampusMapView: View {
+    @State private var showSearchSheet = false
     
     @StateObject private var locationManager = LocationManager()
     @State private var selectedBuilding: String? = nil
@@ -507,11 +508,35 @@ struct CampusMapView: View {
                 .padding(.bottom, 10)
                 Spacer()
             }
+            VStack {
+                Spacer()
+                Button {
+                    showSearchSheet.toggle()
+                } label: {
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                            .foregroundColor(.secondary)
+                        Text("Cerca aula…")
+                            .foregroundColor(.secondary)
+                            .font(.subheadline)
+                        Spacer()
+                    }
+                    .padding(11)
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(15)
+                    .padding(.horizontal, 15)
+                }
+            }
             .fullScreenCover(isPresented: $mostraBacheca) {
                 BachecaTikTokView(store: store)
             }
             .fullScreenCover(isPresented: $mostraMissioni) {
                 MissioniView()
+            }
+            .sheet(isPresented: $showSearchSheet) {
+                SearchView()
+                    .presentationDetents([.medium, .large])
+                    .presentationDragIndicator(.visible)
             }
         }
     }

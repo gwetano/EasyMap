@@ -80,9 +80,11 @@ class BuildingDataManager: ObservableObject {
     static let shared = BuildingDataManager()
     
     private init() {}
-    
+  
     func getBuilding(named name: String) -> Building? {
-        switch name {
+        let normalizedName = name.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        
+        switch normalizedName {
         case "E":
             return createBuildingE()
         case "E1":
@@ -93,6 +95,7 @@ class BuildingDataManager: ObservableObject {
             return nil
         }
     }
+
     
     private func createBuildingE() -> Building {
         let floor0 = Floor(
