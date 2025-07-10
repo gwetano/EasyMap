@@ -101,33 +101,40 @@ class BuildingDataManager: ObservableObject {
             imageName: "edificio_e_piano_0",
             rooms: [
                 RoomImage(
+                    name: "Aula 24",
+                    position: CGPoint(x: 0.8335, y: 0.423),
+                    size: CGSize(width: 0.0287, height: 0.125),
+                    description: "Aula magna con proiettore e sistema audio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Aula 23",
+                    position: CGPoint(x: 0.802, y: 0.423),
+                    size: CGSize(width: 0.0287, height: 0.125),
+                    description: "Aula magna con proiettore e sistema audio",
+                    buildingName: "E"
+                ),
+                RoomImage(
                     name: "Aula 21",
-                    position: CGPoint(x: 0.15, y: 0.25),
-                    size: CGSize(width: 0.15, height: 0.12),
+                    position: CGPoint(x: 0.713, y: 0.423),
+                    size: CGSize(width: 0.0287, height: 0.125),
                     description: "Aula magna con proiettore e sistema audio",
                     buildingName: "E"
                 ),
                 RoomImage(
                     name: "Aula 22",
-                    position: CGPoint(x: 0.65, y: 0.15),
-                    size: CGSize(width: 0.12, height: 0.10),
-                    description: "Laboratorio informatico con 30 postazioni",
+                    position: CGPoint(x: 0.744, y: 0.423),
+                    size: CGSize(width: 0.0287, height: 0.125),
+                    description: "Aula magna con proiettore e sistema audio",
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "E03",
-                    position: CGPoint(x: 0.45, y: 0.75),
-                    size: CGSize(width: 0.10, height: 0.08),
+                    name: "Aula Ex-Cues",
+                    position: CGPoint(x: 0.4585, y: 0.3765),
+                    size: CGSize(width: 0.063, height: 0.085),
                     description: "Ufficio docenti - Piano terra",
                     buildingName: "E"
                 ),
-                RoomImage(
-                    name: "WC",
-                    position: CGPoint(x: 0.05, y: 0.65),
-                    size: CGSize(width: 0.06, height: 0.08),
-                    description: "Servizi igienici",                    
-                    buildingName: "E"
-                )
             ]
         )
         
@@ -139,15 +146,22 @@ class BuildingDataManager: ObservableObject {
                 RoomImage(
                     name: "Laboratorio 152 - Software Matematico",
                     position: CGPoint(x: 0.724, y: 0.365),
-                    size: CGSize(width: 0.065, height: 0.09),
+                    size: CGSize(width: 0.063, height: 0.1),
                     description: "Aula con lavagna interattiva e sistema di videoconferenza",
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "E12",
-                    position: CGPoint(x: 0.55, y: 0.25),
-                    size: CGSize(width: 0.12, height: 0.10),
-                    description: "Sala studio e consultazione con accesso Wi-Fi",
+                    name: "Aula 133",
+                    position: CGPoint(x: 0.5278, y: 0.365),
+                    size: CGSize(width: 0.0268, height: 0.1),
+                    description: "Aula magna con proiettore e sistema audio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Aula 136",
+                    position: CGPoint(x: 0.5576, y: 0.365),
+                    size: CGSize(width: 0.0286, height: 0.1),
+                    description: "Aula magna con proiettore e sistema audio",
                     buildingName: "E"
                 )
             ]

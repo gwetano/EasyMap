@@ -27,22 +27,20 @@ struct Missione: Identifiable, Codable {
     let coordinate: CLLocationCoordinate2D?
     let icona: String
     var completata: Bool = false
-    let categoria: String
     let raggioVerifica: Double
     let medaliaAssociata: String?
     
     enum CodingKeys: String, CodingKey {
-        case titolo, descrizione, edificioTarget, icona, completata, categoria, raggioVerifica, medaliaAssociata
+        case titolo, descrizione, edificioTarget, icona, completata, raggioVerifica, medaliaAssociata
         case latitudine, longitudine
     }
     
-    init(titolo: String, descrizione: String, edificioTarget: String? = nil, coordinate: CLLocationCoordinate2D? = nil, icona: String, categoria: String, raggioVerifica: Double = 50.0, medaliaAssociata: String? = nil) {
+    init(titolo: String, descrizione: String, edificioTarget: String? = nil, coordinate: CLLocationCoordinate2D? = nil, icona: String, raggioVerifica: Double = 50.0, medaliaAssociata: String? = nil) {
         self.titolo = titolo
         self.descrizione = descrizione
         self.edificioTarget = edificioTarget
         self.coordinate = coordinate
         self.icona = icona
-        self.categoria = categoria
         self.raggioVerifica = raggioVerifica
         self.medaliaAssociata = medaliaAssociata
     }
@@ -54,7 +52,6 @@ struct Missione: Identifiable, Codable {
         edificioTarget = try container.decodeIfPresent(String.self, forKey: .edificioTarget)
         icona = try container.decode(String.self, forKey: .icona)
         completata = try container.decode(Bool.self, forKey: .completata)
-        categoria = try container.decode(String.self, forKey: .categoria)
         raggioVerifica = try container.decodeIfPresent(Double.self, forKey: .raggioVerifica) ?? 50.0
         medaliaAssociata = try container.decodeIfPresent(String.self, forKey: .medaliaAssociata)
         
@@ -73,7 +70,6 @@ struct Missione: Identifiable, Codable {
         try container.encodeIfPresent(edificioTarget, forKey: .edificioTarget)
         try container.encode(icona, forKey: .icona)
         try container.encode(completata, forKey: .completata)
-        try container.encode(categoria, forKey: .categoria)
         try container.encode(raggioVerifica, forKey: .raggioVerifica)
         try container.encodeIfPresent(medaliaAssociata, forKey: .medaliaAssociata)
         
@@ -198,7 +194,6 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
                     edificioTarget: "E",
                     coordinate: centroEdificioE,
                     icona: "building.2",
-                    categoria: "Esplorazione",
                     raggioVerifica: 30.0,
                     medaliaAssociata: "Esploratore dell'Edificio E"
                 ),
@@ -208,7 +203,6 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
                     edificioTarget: "C",
                     coordinate: centroEdificioC,
                     icona: "building.2",
-                    categoria: "Esplorazione",
                     raggioVerifica: 30.0,
                     medaliaAssociata: "Esploratore dell'Edificio C"
                 ),
@@ -218,7 +212,6 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
                     edificioTarget: "D",
                     coordinate: centroEdificioD,
                     icona: "building.2",
-                    categoria: "Esplorazione",
                     raggioVerifica: 30.0,
                     medaliaAssociata: "Esploratore dell'Edificio D"
                 ),
@@ -227,7 +220,6 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
                     descrizione: "Localizza il matitone in Piazza del Sapere",
                     coordinate: CLLocationCoordinate2D(latitude: 40.77066, longitude: 14.79237),
                     icona: "pencil",
-                    categoria: "Esplorazione",
                     raggioVerifica: 40.0,
                     medaliaAssociata: "Matitone"
                 ),
@@ -237,7 +229,6 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
                     edificioTarget: "Q2",
                     coordinate: CLLocationCoordinate2D(latitude: 40.77275, longitude: 14.79337),
                     icona: "fork.knife",
-                    categoria: "Esplorazione",
                     raggioVerifica: 25.0,
                     medaliaAssociata: "Buongustaio"
                 ),
@@ -246,7 +237,6 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
                     descrizione: "Scopri l'area verde del campus",
                     coordinate: CLLocationCoordinate2D(latitude: 40.772832, longitude: 14.790132),
                     icona: "tree.fill",
-                    categoria: "Esplorazione",
                     raggioVerifica: 20.0,
                     medaliaAssociata: "Pollice verde"
                 ),
@@ -254,7 +244,6 @@ class MissioniGPSManager: NSObject, ObservableObject, CLLocationManagerDelegate 
                     titolo: "Esplora tutti gli Edifici",
                     descrizione: "Visita almeno 5 edifici diversi del campus",
                     icona: "map.fill",
-                    categoria: "Speciale",
                     medaliaAssociata: "Maestro Esploratore"
                 )
             ]
@@ -552,26 +541,15 @@ struct MissioniView: View {
                 
                 Spacer()
                 
-                VStack(alignment: .trailing) {
-                    Text("Medaglie")
+                HStack {
+                    Image(systemName: missioniManager.posizioneCorrente != nil ? "location.fill" : "location.slash")
+                        .foregroundColor(missioniManager.posizioneCorrente != nil ? .green : .red)
+                    Text(missioniManager.posizioneCorrente != nil ? "GPS Attivo" : "GPS Non Disponibile")
                         .font(.caption)
                         .foregroundColor(.secondary)
-                    Text("\(missioniManager.medaglieSbloccate().count)/\(missioniManager.medaglie.count)")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.yellow)
                 }
-            }
-            .padding(.horizontal)
-            
-            HStack {
-                Image(systemName: missioniManager.posizioneCorrente != nil ? "location.fill" : "location.slash")
-                    .foregroundColor(missioniManager.posizioneCorrente != nil ? .green : .red)
-                Text(missioniManager.posizioneCorrente != nil ? "GPS Attivo" : "GPS Non Disponibile")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                .padding(.horizontal)
                 
-                Spacer()
             }
             .padding(.horizontal)
 
@@ -638,10 +616,6 @@ struct MissioniView: View {
     private func missioniFiltrate() -> [Missione] {
         let missioni = missioniManager.missioniAttive()
         
-        if let categoria = categoriaSelezionata {
-            return missioni.filter { $0.categoria == categoria }
-        }
-        
         return missioni
     }
 }
@@ -679,15 +653,6 @@ struct MissioneCard: View {
                             .fontWeight(.medium)
                         
                         Spacer()
-                        
-                        Text(missione.categoria)
-                            .font(.caption2)
-                            .fontWeight(.medium)
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 2)
-                            .background(.blue)
-                            .cornerRadius(8)
                     }
                     
                     Text(missione.descrizione)
