@@ -185,47 +185,34 @@ struct BuildingRoomListView: View {
     
     var body: some View {
         VStack(spacing: 8) {
-            HStack{
-
-                }
-            }
-            .padding(.horizontal)
-            .padding(.vertical, 8)
-            .background(Color(.systemBackground))
+            HStack {}
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+                .background(Color(.systemBackground))
     
-        List {
-            if buildingRooms.isEmpty {
-                VStack(spacing: 20) {
-                    Image(systemName: "building.2")
-                        .font(.system(size: 60))
-                        .foregroundColor(.gray)
-                    Text("Nessuna aula trovata")
-                        .font(.headline)
-                        .foregroundColor(.gray)
-                    Text("Nell'edificio \(buildingName)")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                }
-                .frame(maxWidth: .infinity, alignment: .center)
-                .listRowSeparator(.hidden)
-            } else {
-                ForEach(buildingRooms, id: \.nome) { aula in
-                    Button(action: {
-                        let roomImage = RoomImage(
-                            name: aula.nome,
-                            position: .zero,
-                            size: .zero,
-                            description: aula.isOccupiedNow() ? "Aula occupata" : "Aula libera",
-                            buildingName: aula.edificio
-                        )
-                        selectedRoom = roomImage
-                    }) {
+            List {
+                if buildingRooms.isEmpty {
+                    VStack(spacing: 20) {
+                        Image(systemName: "building.2")
+                            .font(.system(size: 60))
+                            .foregroundColor(.gray)
+                        Text("Nessuna aula trovata")
+                            .font(.headline)
+                            .foregroundColor(.gray)
+                        Text("Nell'edificio \(buildingName)")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .listRowSeparator(.hidden)
+                } else {
+                    ForEach(buildingRooms, id: \.nome) { aula in
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(aula.nome)
                                     .font(.headline)
                                     .foregroundColor(.primary)
-                                                                    
+                                                                
                                 Text("Posti: \(aula.posti)")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
@@ -238,18 +225,29 @@ struct BuildingRoomListView: View {
                                 .frame(width: 12, height: 12)
                         }
                         .padding(.vertical, 4)
+                        .contentShape(Rectangle()) // 👈 tutta la riga è tappabile
+                        .onTapGesture {
+                            let roomImage = RoomImage(
+                                name: aula.nome,
+                                position: .zero,
+                                size: .zero,
+                                description: aula.isOccupiedNow() ? "Aula occupata" : "Aula libera",
+                                buildingName: aula.edificio
+                            )
+                            selectedRoom = roomImage
+                        }
                     }
-                    .buttonStyle(PlainButtonStyle())
                 }
             }
-        }
-        .task {
-            await roomStatusManager.loadData()
-        }
-        .sheet(item: $selectedRoom) { room in
-            RoomDetailView(room: room)
+            .task {
+                await roomStatusManager.loadData()
+            }
+            .sheet(item: $selectedRoom) { room in
+                RoomDetailView(room: room)
+            }
         }
     }
+
     func giornoCorrenteAbbreviato() -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "it_IT")
@@ -263,12 +261,11 @@ struct BuildingRoomListView: View {
         var calendar = Calendar.current
         calendar.locale = Locale(identifier: "it_IT")
 
-        // Costruisci le 15:00 di oggi
         let todayAt3PM = calendar.date(bySettingHour: 15, minute: 0, second: 0, of: now)!
-
         return now > todayAt3PM
     }
 }
+
 
 struct FloorPlanView: View {
     let buildingName: String
