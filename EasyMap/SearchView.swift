@@ -39,29 +39,38 @@ struct SearchView: View {
                         .padding()
                 } else {
                     List {
-                        // 🔷 Ricerche recenti
+                        
                         if searchText.isEmpty && !recentSearches.isEmpty {
                             Section(header: Text("Ricerche recenti").font(.headline)) {
                                 ForEach(recentSearches, id: \.self) { query in
                                     HStack {
                                         Text(query)
-                                            .onTapGesture {
-                                                searchText = query
-                                            }
+                                            .foregroundColor(.primary)
                                         Spacer()
-                                        Button(action: {
-                                            SearchHistoryManager.shared.cancella(query: query)
-                                            recentSearches = SearchHistoryManager.shared.leggi() ?? []
-                                        }) {
+                                        Button {
+                                            removeRecent(query)
+                                        } label: {
                                             Image(systemName: "xmark.circle.fill")
                                                 .foregroundColor(.gray)
+                                        }
+                                        .buttonStyle(BorderlessButtonStyle())
+                                    }
+                                    .contentShape(Rectangle()) // 👈 rende tappabile tutta la riga
+                                    .onTapGesture {
+                                        searchText = query
+                                        if let aula = giornata?.aule.first(where: {
+                                            $0.nome.caseInsensitiveCompare(query) == .orderedSame
+                                                && edificiValidi.contains($0.edificio)
+                                        }) {
+                                            handleAulaSelection(aula)
                                         }
                                     }
                                 }
                             }
                         }
 
-                        // 🔷 Risultati ricerca
+
+
                         if !filteredAule.isEmpty {
                             Section(header: Text("Risultati").font(.headline)) {
                                 ForEach(filteredAule, id: \.nome) { aula in
@@ -98,7 +107,7 @@ struct SearchView: View {
             .padding(.bottom, 50)
             .task {
                 self.giornata = await leggiJSONDaURL()
-                self.recentSearches = SearchHistoryManager.shared.leggi() ?? []
+                loadRecents()
             }
             .sheet(isPresented: $showingFloorPlan) {
                 if let aula = selectedAula {
@@ -111,11 +120,22 @@ struct SearchView: View {
 
     private func handleAulaSelection(_ aula: Aula) {
         SearchHistoryManager.shared.salva(query: aula.nome)
-        recentSearches = SearchHistoryManager.shared.leggi() ?? []
+        loadRecents()
         selectedAula = aula
         showingFloorPlan = true
     }
+
+    private func removeRecent(_ query: String) {
+        SearchHistoryManager.shared.cancella(query: query)
+        loadRecents()
+    }
+
+    private func loadRecents() {
+        recentSearches = SearchHistoryManager.shared.leggi() ?? []
+    }
 }
+
+// MARK: - FloorPlanViewWithRoom
 
 struct FloorPlanViewWithRoom: View {
     let buildingName: String
@@ -228,6 +248,7 @@ struct FloorPlanViewWithRoom: View {
     }
 }
 
+// MARK: - Safe collection access
 extension Collection {
     subscript(safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil
@@ -237,4 +258,3 @@ extension Collection {
 #Preview {
     SearchView()
 }
-

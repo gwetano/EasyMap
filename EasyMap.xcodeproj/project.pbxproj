@@ -484,7 +484,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"EasyMap/Preview Content\"";
-				DEVELOPMENT_TEAM = KFM9VN82RF;
+				DEVELOPMENT_TEAM = 7ZT97T3U9D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EasyMap/Info.plist;
@@ -503,7 +503,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = it.gaetano.easymap;
+				PRODUCT_BUNDLE_IDENTIFIER = it.Francesco.easymap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -519,7 +519,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"EasyMap/Preview Content\"";
-				DEVELOPMENT_TEAM = KFM9VN82RF;
+				DEVELOPMENT_TEAM = 7ZT97T3U9D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EasyMap/Info.plist;
@@ -538,7 +538,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = it.gaetano.easymap;
+				PRODUCT_BUNDLE_IDENTIFIER = it.Francesco.easymap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
