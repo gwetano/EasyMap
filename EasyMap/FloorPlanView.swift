@@ -250,6 +250,24 @@ struct BuildingRoomListView: View {
             RoomDetailView(room: room)
         }
     }
+    func giornoCorrenteAbbreviato() -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "it_IT")
+        formatter.dateFormat = "E"
+        let giorno = formatter.string(from: Date()).capitalized
+        return giorno.prefix(1).uppercased() + giorno.dropFirst().lowercased()
+    }
+    
+    func dopoLe15() -> Bool {
+        let now = Date()
+        var calendar = Calendar.current
+        calendar.locale = Locale(identifier: "it_IT")
+
+        // Costruisci le 15:00 di oggi
+        let todayAt3PM = calendar.date(bySettingHour: 15, minute: 0, second: 0, of: now)!
+
+        return now > todayAt3PM
+    }
 }
 
 struct FloorPlanView: View {

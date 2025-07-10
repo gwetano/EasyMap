@@ -98,6 +98,7 @@ struct CampusMapView: View {
     @State private var mostraMissioni = false
     @EnvironmentObject var authManager: AuthManager
     @State private var isMap3D = false
+    @State private var mostraPDFMensa = false
 
     var body: some View {
         ZStack {
@@ -478,7 +479,9 @@ struct CampusMapView: View {
                )) { building in
                    FloorPlanView(buildingName: building.value)
                }
-
+           .fullScreenCover(isPresented: $mostraPDFMensa) {
+               MensaPDFView()
+           }
             VStack {
                 HStack{
                     Button(action: {
@@ -575,6 +578,8 @@ struct CampusMapView: View {
             selectedBuilding = "B1"
         } else if isPointInPolygon(point: coordinate, polygon: edificioB2Coordinates) {
             selectedBuilding = "B2"
+        } else if isPointInPolygon(point: coordinate, polygon: edificioQ2Coordinates) {
+            mostraPDFMensa = true
         }
     }
 }
