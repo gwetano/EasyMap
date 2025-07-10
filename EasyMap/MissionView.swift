@@ -524,6 +524,12 @@ struct MissioniView: View {
                 }
             }
         }
+        .sheet(item: $missioneSelezionata) { missione in
+            NavigationMissioneView(
+                missione: missione,
+                missioniManager: missioniManager
+            )
+        }
     }
     
     private var headerView: some View {
@@ -813,6 +819,83 @@ struct NotificaCompletamento: View {
         .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
         .padding(.horizontal)
         .padding(.top, 10)
+    }
+}
+struct NavigationMissioneView: View {
+    let missione: Missione
+    @ObservedObject var missioniManager: MissioniGPSManager
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 20) {
+                VStack(spacing: 12) {
+                    Image(systemName: missione.icona)
+                        .font(.largeTitle)
+                        .foregroundColor(.blue)
+                    
+                    Text(missione.titolo)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .multilineTextAlignment(.center)
+                    
+                    Text(missione.descrizione)
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+                .padding()
+                
+                if let bearing = missioniManager.bearingToMission(missione),
+                   let distanza = missioniManager.distanzaDaMissione(missione) {
+                    VStack(spacing: 16) {
+                        ZStack {
+                            Circle()
+                                .stroke(Color.gray.opacity(0.3), lineWidth: 4)
+                                .frame(width: 200, height: 200)
+                            
+                            Image(systemName: "arrow.up.circle.fill")
+                                .font(.system(size: 100))
+                                .foregroundColor(.blue)
+                                .rotationEffect(.degrees(bearing - missioniManager.heading))
+                                .animation(.easeInOut(duration: 0.3), value: bearing - missioniManager.heading)
+                        }
+                        
+                        VStack(spacing: 8) {
+                            Text("Distanza")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Text(String(format: "%.0f metri", distanza))
+                                .font(.title2)
+                                .fontWeight(.bold)
+                        }
+                        
+                        if distanza <= missione.raggioVerifica {
+                            Text("Sei arrivato! La missione verrà completata automaticamente.")
+                                .font(.callout)
+                                .foregroundColor(.green)
+                                .fontWeight(.medium)
+                                .multilineTextAlignment(.center)
+                                .padding()
+                                .background(Color.green.opacity(0.1))
+                                .cornerRadius(10)
+                        }
+                    }
+                }
+                
+                Spacer()
+            }
+            .padding()
+            .navigationTitle("Navigazione")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Chiudi") {
+                        dismiss()
+                    }
+                }
+            }
+        }
     }
 }
 

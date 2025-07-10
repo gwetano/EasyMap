@@ -16,6 +16,9 @@
 		1F43EE2D2E06C9A300D00794 /* EasyMapUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F43EE2C2E06C9A300D00794 /* EasyMapUITestsLaunchTests.swift */; };
 		1F43EE3A2E06CA0C00D00794 /* CampusMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F43EE392E06CA0C00D00794 /* CampusMapView.swift */; };
 		1F803B582E0AFA4300415689 /* AnnuncioStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F803B572E0AFA4300415689 /* AnnuncioStore.swift */; };
+		1FAE63962E1FF2250057A03E /* MensaPDFView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAE63952E1FF2210057A03E /* MensaPDFView.swift */; };
+		1FAE63982E1FF23A0057A03E /* PDFKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAE63972E1FF2350057A03E /* PDFKitView.swift */; };
+		1FAE639A2E1FF25A0057A03E /* PDFViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAE63992E1FF24F0057A03E /* PDFViewerView.swift */; };
 		1FB352252E1826C400A581EA /* MissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB352242E1826BD00A581EA /* MissionView.swift */; };
 		1FCB506A2E0DBF4B0024E5B2 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCB50692E0DBF450024E5B2 /* Models.swift */; };
 		1FCB506D2E0DD7A30024E5B2 /* FloorPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCB506C2E0DD7A30024E5B2 /* FloorPlanView.swift */; };
@@ -61,6 +64,9 @@
 		1F43EE2C2E06C9A300D00794 /* EasyMapUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyMapUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1F43EE392E06CA0C00D00794 /* CampusMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampusMapView.swift; sourceTree = "<group>"; };
 		1F803B572E0AFA4300415689 /* AnnuncioStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnuncioStore.swift; sourceTree = "<group>"; };
+		1FAE63952E1FF2210057A03E /* MensaPDFView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MensaPDFView.swift; sourceTree = "<group>"; };
+		1FAE63972E1FF2350057A03E /* PDFKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFKitView.swift; sourceTree = "<group>"; };
+		1FAE63992E1FF24F0057A03E /* PDFViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFViewerView.swift; sourceTree = "<group>"; };
 		1FB352242E1826BD00A581EA /* MissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionView.swift; sourceTree = "<group>"; };
 		1FCB50692E0DBF450024E5B2 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		1FCB506C2E0DD7A30024E5B2 /* FloorPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlanView.swift; sourceTree = "<group>"; };
@@ -125,6 +131,9 @@
 		1F43EE0E2E06C9A000D00794 /* EasyMap */ = {
 			isa = PBXGroup;
 			children = (
+				1FAE63992E1FF24F0057A03E /* PDFViewerView.swift */,
+				1FAE63972E1FF2350057A03E /* PDFKitView.swift */,
+				1FAE63952E1FF2210057A03E /* MensaPDFView.swift */,
 				ED7A0ED22E1BC3E800951658 /* AnnuncioCardProfiloView.swift */,
 				1FB352242E1826BD00A581EA /* MissionView.swift */,
 				1FE656EA2E168E8F004C7BDD /* FloorPlanManager.swift */,
@@ -305,6 +314,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FCB506A2E0DBF4B0024E5B2 /* Models.swift in Sources */,
+				1FAE639A2E1FF25A0057A03E /* PDFViewerView.swift in Sources */,
 				1F43EE122E06C9A000D00794 /* ContentView.swift in Sources */,
 				99CE50FC2E0B027600A4819B /* NuovoAnnuncioView.swift in Sources */,
 				ED7A0ED32E1BC3E800951658 /* AnnuncioCardProfiloView.swift in Sources */,
@@ -313,9 +323,11 @@
 				9939DFB12E1BD7620016624E /* SearchView.swift in Sources */,
 				ED7C0E382E0D8E900049F3D2 /* LoginRegistrazione.swift in Sources */,
 				1F43EE102E06C9A000D00794 /* EasyMapApp.swift in Sources */,
+				1FAE63982E1FF23A0057A03E /* PDFKitView.swift in Sources */,
 				1F803B582E0AFA4300415689 /* AnnuncioStore.swift in Sources */,
 				ED2CE4462E09E5AB00A62C8E /* ListaAule.swift in Sources */,
 				1F43EE3A2E06CA0C00D00794 /* CampusMapView.swift in Sources */,
+				1FAE63962E1FF2250057A03E /* MensaPDFView.swift in Sources */,
 				ED7C0E3A2E0D8EE10049F3D2 /* Profilo.swift in Sources */,
 				1FE656EB2E168EA2004C7BDD /* FloorPlanManager.swift in Sources */,
 				1FCB506D2E0DD7A30024E5B2 /* FloorPlanView.swift in Sources */,
@@ -484,7 +496,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"EasyMap/Preview Content\"";
-				DEVELOPMENT_TEAM = 7ZT97T3U9D;
+				DEVELOPMENT_TEAM = KFM9VN82RF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EasyMap/Info.plist;
@@ -503,7 +515,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = it.Francesco.easymap;
+				PRODUCT_BUNDLE_IDENTIFIER = it.gaetano.easymap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -519,7 +531,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"EasyMap/Preview Content\"";
-				DEVELOPMENT_TEAM = 7ZT97T3U9D;
+				DEVELOPMENT_TEAM = KFM9VN82RF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EasyMap/Info.plist;
@@ -538,7 +550,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = it.Francesco.easymap;
+				PRODUCT_BUNDLE_IDENTIFIER = it.gaetano.easymap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

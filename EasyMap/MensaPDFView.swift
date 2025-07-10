@@ -16,7 +16,7 @@ struct MensaPDFView: View {
         formatter.dateFormat = "E"
         let giorno = formatter.string(from: Date()).capitalized
         
-        let isAfter3PM = Calendar.current.component(.hour, from: Date()) >= 15
+        let isAfter3PM = Calendar.current.component(.hour, from: Date()) >= 16
         let tipo = isAfter3PM ? "cena" : "pranzo"
         let urlString = "https://giotto.pythonanywhere.com/menu_\(tipo)_\(giorno).pdf"
         return URL(string: urlString)
