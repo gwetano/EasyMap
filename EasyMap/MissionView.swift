@@ -606,21 +606,104 @@ struct MissioniView: View {
     }
     
     private var medaglieView: some View {
-        ScrollView {
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 2), spacing: 16) {
-                ForEach(missioniManager.medaglie) { medaglia in
-                    MedagliaCard(medaglia: medaglia)
-                }
-            }
-            .padding(.horizontal)
-            .padding(.top, 8)
-        }
+        MedaglieDettagliateView(missioniManager: missioniManager)
     }
     
     private func missioniFiltrate() -> [Missione] {
         let missioni = missioniManager.missioniAttive()
         
         return missioni
+    }
+}
+
+struct NotificaCompletamento: View {
+    let missione: Missione
+    
+    var body: some View {
+        HStack {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.title2)
+                .foregroundColor(.green)
+            
+            VStack(alignment: .leading) {
+                Text("Missione Completata!")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                Text(missione.titolo)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            Spacer()
+        }
+        .padding()
+        .background(Color(.systemBackground))
+        .cornerRadius(12)
+        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+        .padding(.horizontal)
+        .padding(.top, 10)
+    }
+}
+
+struct BussolaView: View {
+    let bearing: Double?
+    let currentHeading: Double
+    let distanza: Double?
+    let raggioVerifica: Double
+    
+    @State private var displayedRotation: Double = 0
+    
+    var targetRotation: Double {
+        guard let bearing = bearing else { return 0 }
+        return bearing - currentHeading
+    }
+    
+    var isNearTarget: Bool {
+        guard let distanza = distanza else { return false }
+        return distanza <= raggioVerifica
+    }
+    
+    var body: some View {
+        VStack(spacing: 4) {
+            ZStack {
+                Circle()
+                    .stroke(Color.gray.opacity(0.3), lineWidth: 2)
+                    .frame(width: isNearTarget ? 48 : 40, height: isNearTarget ? 48 : 40)
+                    .animation(.easeInOut(duration: 0.3), value: isNearTarget)
+                
+                if bearing != nil {
+                    Image(systemName: "arrow.up.circle.fill")
+                        .font(isNearTarget ? .title : .title2)
+                        .foregroundColor(isNearTarget ? .green : .blue)
+                        .rotationEffect(.degrees(displayedRotation))
+                        .opacity(1.0)
+                        .animation(.easeInOut(duration: 0.3), value: isNearTarget)
+                        .onChange(of: targetRotation) { newValue in
+                            withAnimation(.easeInOut(duration: 0.8)) {
+                                displayedRotation = normalizeAngle(newValue)
+                            }
+                        }
+                        .onAppear {
+                            displayedRotation = normalizeAngle(targetRotation)
+                        }
+                }
+            }
+            
+            Text(isNearTarget ? "Vicino!" : "Vai")
+                .font(.caption2)
+                .foregroundColor(isNearTarget ? .green : .blue)
+                .animation(.easeInOut(duration: 0.3), value: isNearTarget)
+        }
+    }
+    
+    private func normalizeAngle(_ angle: Double) -> Double {
+        var normalized = angle.truncatingRemainder(dividingBy: 360)
+        if normalized > 180 {
+            normalized -= 360
+        } else if normalized < -180 {
+            normalized += 360
+        }
+        return normalized
     }
 }
 
@@ -665,7 +748,6 @@ struct MissioneCard: View {
                         .lineLimit(2)
                     
                     HStack {
-
                         Spacer()
                         
                         if let distanza = distanza {
@@ -693,6 +775,8 @@ struct MissioneCard: View {
                     BussolaView(
                         bearing: bearing,
                         currentHeading: currentHeading,
+                        distanza: distanza,
+                        raggioVerifica: missione.raggioVerifica
                     )
                 }
             }
@@ -707,120 +791,6 @@ struct MissioneCard: View {
     }
 }
 
-struct BussolaView: View {
-    let bearing: Double?
-    let currentHeading: Double
-    
-    @State private var displayedRotation: Double = 0
-    
-    var targetRotation: Double {
-        guard let bearing = bearing else { return 0 }
-        return bearing - currentHeading
-    }
-    
-    var body: some View {
-        VStack(spacing: 4) {
-            ZStack {
-                Circle()
-                    .stroke(Color.gray.opacity(0.3), lineWidth: 2)
-                    .frame(width: 40, height: 40)
-                
-                if bearing != nil {
-                    Image(systemName: "arrow.up.circle.fill")
-                        .font(.title2)
-                        .foregroundColor(.blue)
-                        .rotationEffect(.degrees(displayedRotation))
-                        .opacity(1.0)
-                        .onChange(of: targetRotation) { newValue in
-                            withAnimation(.easeInOut(duration: 0.8)) {
-                                displayedRotation = normalizeAngle(newValue)
-                            }
-                        }
-                        .onAppear {
-                            displayedRotation = normalizeAngle(targetRotation)
-                        }
-                }
-            }
-            
-            Text("Vai")
-                .font(.caption2)
-                .foregroundColor(.blue)
-        }
-    }
-    
-    private func normalizeAngle(_ angle: Double) -> Double {
-        var normalized = angle.truncatingRemainder(dividingBy: 360)
-        if normalized > 180 {
-            normalized -= 360
-        } else if normalized < -180 {
-            normalized += 360
-        }
-        return normalized
-    }
-}
-
-
-
-struct MedagliaCard: View {
-    let medaglia: Medaglia
-
-    var body: some View {
-        VStack(spacing: 12) {
-            Image(medaglia.sbloccata ? medaglia.immagineSbloccata : medaglia.immagineDaSbloccare)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 60, height: 60)
-
-            VStack(spacing: 4) {
-                Text(medaglia.nome)
-                    .font(.subheadline)
-                    .fontWeight(.bold)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(2)
-                
-                Text(medaglia.descrizione)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(3)
-            }
-        }
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
-        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
-        .opacity(medaglia.sbloccata ? 1.0 : 0.6)
-    }
-}
-
-struct NotificaCompletamento: View {
-    let missione: Missione
-    
-    var body: some View {
-        HStack {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.title2)
-                .foregroundColor(.green)
-            
-            VStack(alignment: .leading) {
-                Text("Missione Completata!")
-                    .font(.headline)
-                    .fontWeight(.bold)
-                Text(missione.titolo)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-            
-            Spacer()
-        }
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
-        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
-        .padding(.horizontal)
-        .padding(.top, 10)
-    }
-}
 struct NavigationMissioneView: View {
     let missione: Missione
     @ObservedObject var missioniManager: MissioniGPSManager
@@ -852,13 +822,18 @@ struct NavigationMissioneView: View {
                         ZStack {
                             Circle()
                                 .stroke(Color.gray.opacity(0.3), lineWidth: 4)
-                                .frame(width: 200, height: 200)
+                                .frame(
+                                    width: distanza <= missione.raggioVerifica ? 240 : 200,
+                                    height: distanza <= missione.raggioVerifica ? 240 : 200
+                                )
+                                .animation(.easeInOut(duration: 0.5), value: distanza <= missione.raggioVerifica)
                             
                             Image(systemName: "arrow.up.circle.fill")
-                                .font(.system(size: 100))
-                                .foregroundColor(.blue)
+                                .font(.system(size: distanza <= missione.raggioVerifica ? 120 : 100))
+                                .foregroundColor(distanza <= missione.raggioVerifica ? .green : .blue)
                                 .rotationEffect(.degrees(bearing - missioniManager.heading))
                                 .animation(.easeInOut(duration: 0.3), value: bearing - missioniManager.heading)
+                                .animation(.easeInOut(duration: 0.5), value: distanza <= missione.raggioVerifica)
                         }
                         
                         VStack(spacing: 8) {
@@ -868,17 +843,7 @@ struct NavigationMissioneView: View {
                             Text(String(format: "%.0f metri", distanza))
                                 .font(.title2)
                                 .fontWeight(.bold)
-                        }
-                        
-                        if distanza <= missione.raggioVerifica {
-                            Text("Sei arrivato! La missione verrà completata automaticamente.")
-                                .font(.callout)
-                                .foregroundColor(.green)
-                                .fontWeight(.medium)
-                                .multilineTextAlignment(.center)
-                                .padding()
-                                .background(Color.green.opacity(0.1))
-                                .cornerRadius(10)
+                                .foregroundColor(distanza <= missione.raggioVerifica ? .green : .primary)
                         }
                     }
                 }
@@ -886,7 +851,6 @@ struct NavigationMissioneView: View {
                 Spacer()
             }
             .padding()
-            .navigationTitle("Navigazione")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -895,6 +859,196 @@ struct NavigationMissioneView: View {
                     }
                 }
             }
+        }
+    }
+}
+
+struct MedagliaDettagliataCard: View {
+    let medaglia: Medaglia
+    @State private var isAnimating = false
+    
+    var body: some View {
+        VStack(spacing: 16) {
+            ZStack {
+                Image(medaglia.sbloccata ? medaglia.immagineSbloccata : medaglia.immagineDaSbloccare)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 80, height: 80)
+                    .rotationEffect(.degrees(isAnimating ? 5 : -5))
+                    .animation(.easeInOut(duration: 3.0).repeatForever(autoreverses: true), value: isAnimating)
+                
+                VStack {
+                    HStack {
+                        Spacer()
+                        Image(systemName: medaglia.sbloccata ? "lock.open.fill" : "lock.fill")
+                            .font(.caption)
+                            .foregroundColor(medaglia.sbloccata ? .green :  .red)
+                    }
+                    Spacer()
+                }
+                .frame(width: 120, height: 120)
+            }
+            
+            VStack(spacing: 8) {
+                Text(medaglia.nome)
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(medaglia.sbloccata ? .primary : .secondary)
+                
+                Text(medaglia.descrizione)
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(3)
+            }
+        }
+        .padding()
+        .background(Color(.systemBackground))
+        .cornerRadius(16)
+        .shadow(color: .black.opacity(medaglia.sbloccata ? 0.1 : 0.05), radius: 8, x: 0, y: 4)
+        .opacity(medaglia.sbloccata ? 1.0 : 0.7)
+        .scaleEffect(medaglia.sbloccata ? 1.0 : 0.95)
+        .onAppear {
+            isAnimating = medaglia.sbloccata
+        }
+    }
+}
+
+struct MedaglieDettagliateView: View {
+    @ObservedObject var missioniManager: MissioniGPSManager
+    @State private var medagliaSelezionata: Medaglia? = nil
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            ScrollView {
+                LazyVGrid(columns: [
+                    GridItem(.flexible(), spacing: 12),
+                    GridItem(.flexible(), spacing: 12)
+                ], spacing: 16) {
+                    ForEach(missioniManager.medaglie) { medaglia in
+                        MedagliaCard(medaglia: medaglia)
+                            .onTapGesture {
+                                medagliaSelezionata = medaglia
+                            }
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.top, 8)
+            }
+        }
+        .sheet(item: $medagliaSelezionata) { medaglia in
+            MedagliaDetailView(medaglia: medaglia, missioniManager: missioniManager)
+        }
+    }
+}
+
+struct MedagliaCard: View {
+    let medaglia: Medaglia
+
+    var body: some View {
+        VStack(spacing: 12) {
+            Image(medaglia.sbloccata ? medaglia.immagineSbloccata : medaglia.immagineDaSbloccare)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 60, height: 60)
+
+            VStack(spacing: 4) {
+                Text(medaglia.nome)
+                    .font(.subheadline)
+                    .fontWeight(.bold)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                
+                Text(medaglia.descrizione)
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(3)
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, minHeight: 180, maxHeight: 150)
+        .background(Color(.systemBackground))
+        .cornerRadius(12)
+        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+        .opacity(medaglia.sbloccata ? 1.0 : 0.6)
+    }
+}
+
+struct MedagliaDetailView: View {
+    let medaglia: Medaglia
+    @ObservedObject var missioniManager: MissioniGPSManager
+    @Environment(\.dismiss) private var dismiss
+    @State private var isAnimating = false
+    
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 24) {
+                    ZStack {
+                        Image(medaglia.sbloccata ? medaglia.immagineSbloccata : medaglia.immagineDaSbloccare)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 120, height: 120)
+
+                            .animation(.easeInOut(duration: 3.0).repeatForever(autoreverses: true), value: isAnimating)
+                    }
+                    
+                    VStack(spacing: 16) {
+                        Text(medaglia.nome)
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(medaglia.sbloccata ? .primary : .secondary)
+                        
+                        Text(medaglia.descrizione)
+                            .font(.title3)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                        
+                        HStack(spacing: 12) {
+                            Image(systemName: medaglia.sbloccata ? "checkmark.circle.fill" : "lock.fill")
+                                .font(.title2)
+                                .foregroundColor(medaglia.sbloccata ? .green : .gray)
+                            
+                            Text(medaglia.sbloccata ? "Medaglia Sbloccata" : "Medaglia Bloccata")
+                                .font(.headline)
+                                .fontWeight(.medium)
+                                .foregroundColor(medaglia.sbloccata ? .green : .gray)
+                        }
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
+
+                        
+                        if !medaglia.sbloccata {
+                            VStack(spacing: 8) {
+                                Text("Completa la missione associata per sbloccare questa medaglia")
+                                    .font(.body)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+                                    .padding()
+                                    .background(Color(.systemGray6))
+                                    .cornerRadius(10)
+                            }
+                        }
+                    }
+                    .padding()
+                }
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Chiudi") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+        .onAppear {
+            isAnimating = medaglia.sbloccata
         }
     }
 }

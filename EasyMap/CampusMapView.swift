@@ -99,11 +99,12 @@ struct CampusMapView: View {
     @EnvironmentObject var authManager: AuthManager
     @State private var isMap3D = false
     @State private var mostraPDFMensa = false
+    @Namespace private var mapScope
 
     var body: some View {
         ZStack {
             MapReader { reader in
-                Map(position: $locationManager.cameraPosition, bounds: locationManager.cameraBounds) {
+                Map(position: $locationManager.cameraPosition, bounds: locationManager.cameraBounds, scope: mapScope) {
                     
                     UserAnnotation()
                     
@@ -485,10 +486,25 @@ struct CampusMapView: View {
                     }
                 }
             }
+            .overlay(alignment: .topTrailing) {
+                VStack(spacing: 11) {
+                    MapUserLocationButton(scope: mapScope)
+                        .tint(.primary)
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(15)
+                    MapPitchToggle(scope: mapScope)
+                        .tint(.primary)
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(15)
+                    MapCompass(scope: mapScope)
+                        .tint(.primary)
+                        .cornerRadius(15)
+                }
+                .padding(11)
+            }
             .mapControls {
-                MapUserLocationButton()
-                MapCompass()
-                MapPitchToggle()
+                MapCompass(scope: mapScope)
+                    .mapControlVisibility(.hidden)
             }
             .onAppear {
                 locationManager.startTracking()
@@ -503,35 +519,49 @@ struct CampusMapView: View {
            .fullScreenCover(isPresented: $mostraPDFMensa) {
                MensaPDFView()
            }
-            VStack {
-                HStack{
-                    Button(action: {
-                       mostraMissioni = true
-                   }) {
-                       Image("missioni")
-                           .resizable()
-                           .aspectRatio(contentMode: .fit)
-                           .frame(width: 70)
-                           .padding()
-                   }
-                    Spacer()
-                }
+            VStack(spacing: 11) {
                 HStack {
-                     Button(action: {
+                    Button(action: {
                         mostraBacheca = true
                     }) {
-                        Image("bacheca")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 55)
-                            .padding()
+                        HStack {
+                            Image(systemName: "text.bubble")
+                                .foregroundColor(.primary)
+                            Text("Bacheca")
+                                .foregroundColor(.primary)
+                                .font(.subheadline)
+                        }
+                        .padding(11)
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(15)
                     }
-                    
+                    .padding(.leading, 15)
                     Spacer()
                 }
-                .padding(.bottom, 10)
+                
+                HStack {
+                    Button(action: {
+                        mostraMissioni = true
+                    }) {
+                        HStack {
+                            Image(systemName: "flag.checkered")
+                                .foregroundColor(.primary)
+                            Text("Missioni")
+                                .foregroundColor(.primary)
+                                .font(.subheadline)
+                        }
+                        .padding(11)
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(15)
+                    }
+                    .padding(.leading, 15)
+                    Spacer()
+                }
+
                 Spacer()
             }
+            .padding(.top, 11)
+            
             VStack {
                 Spacer()
                 Button {
@@ -539,9 +569,9 @@ struct CampusMapView: View {
                 } label: {
                     HStack {
                         Image(systemName: "magnifyingglass")
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.primary)
                         Text("Cerca aula…")
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.primary)
                             .font(.subheadline)
                         Spacer()
                     }
@@ -563,7 +593,9 @@ struct CampusMapView: View {
                     .presentationDragIndicator(.visible)
             }
         }
+        .mapScope(mapScope)
     }
+    
     private func handleTap(at coordinate: CLLocationCoordinate2D) {
         if isPointInPolygon(point: coordinate, polygon: edificioECoordinates) {
             selectedBuilding = "E"

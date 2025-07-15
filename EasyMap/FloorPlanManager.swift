@@ -182,16 +182,9 @@ class BuildingDataManager: ObservableObject {
                 ),
                 RoomImage(
                     name: "Lab 10",
-                    position: CGPoint(x: 0.3, y: 0.394),
-                    size: CGSize(width: 0.0295, height: 0.145),
+                    position: CGPoint(x: 0.279, y: 0.394),
+                    size: CGSize(width: 0.062, height: 0.145),
                     description: "Disegno e metodi per l'ingengeria industriale",
-                    buildingName: "E"
-                ),
-                RoomImage(
-                    name: "Lab 10",
-                    position: CGPoint(x: 0.26, y: 0.394),
-                    size: CGSize(width: 0.0295, height: 0.145),
-                    description: "Virtual Reality Lab",
                     buildingName: "E"
                 ),
                 RoomImage(
