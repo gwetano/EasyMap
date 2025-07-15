@@ -275,7 +275,7 @@ struct AnnuncioCardView: View {
                     .padding(.top, padding)
                 }
             }
-            .frame(width: screenWidth, height: availableHeight)
+            .frame(width: geometry.size.width, height: geometry.size.height)
         }
         .background(Color(UIColor.systemBackground))
     }

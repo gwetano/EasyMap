@@ -100,6 +100,7 @@ struct CampusMapView: View {
     @State private var isMap3D = false
     @State private var mostraPDFMensa = false
     @Namespace private var mapScope
+    @Environment(\.openURL) private var openURL
 
     var body: some View {
         ZStack {
@@ -633,6 +634,10 @@ struct CampusMapView: View {
             selectedBuilding = "B2"
         } else if isPointInPolygon(point: coordinate, polygon: edificioQ2Coordinates) {
             mostraPDFMensa = true
+        }else if isPointInPolygon(point: coordinate, polygon: bibliotecaScientificaCoordinates){
+            if let url = URL(string: "https://www.biblioteche.unisa.it/chiedi-al-bibliotecario?richiesta=3") {
+                    openURL(url)
+                }
         }
     }
 }
