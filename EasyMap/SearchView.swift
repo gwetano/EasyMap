@@ -55,7 +55,7 @@ struct SearchView: View {
                                         }
                                         .buttonStyle(BorderlessButtonStyle())
                                     }
-                                    .contentShape(Rectangle()) // 👈 rende tappabile tutta la riga
+                                    .contentShape(Rectangle())
                                     .onTapGesture {
                                         searchText = query
                                         if let aula = giornata?.aule.first(where: {
@@ -104,7 +104,6 @@ struct SearchView: View {
                 }
             }
             .searchable(text: $searchText, prompt: "Cerca aula…")
-            .padding(.bottom, 50)
             .task {
                 self.giornata = await leggiJSONDaURL()
                 loadRecents()
@@ -185,6 +184,7 @@ struct FloorPlanViewWithRoom: View {
                 }
             }
         }
+        .ignoresSafeArea()
         .sheet(item: $selectedRoom) { room in
             RoomDetailView(room: room)
         }
@@ -248,7 +248,6 @@ struct FloorPlanViewWithRoom: View {
     }
 }
 
-// MARK: - Safe collection access
 extension Collection {
     subscript(safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil

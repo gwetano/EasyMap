@@ -501,7 +501,7 @@ struct CampusMapView: View {
                         .tint(.primary)
                         .cornerRadius(15)
                 }
-                .padding(11)
+                .padding(.trailing , 11)
             }
             .mapControls {
                 MapCompass(scope: mapScope)
@@ -536,7 +536,7 @@ struct CampusMapView: View {
                         .background(.ultraThinMaterial)
                         .cornerRadius(15)
                     }
-                    .padding(.leading, 15)
+                    .padding(.leading, 11)
                     Spacer()
                 }
                 
@@ -555,13 +555,12 @@ struct CampusMapView: View {
                         .background(.ultraThinMaterial)
                         .cornerRadius(15)
                     }
-                    .padding(.leading, 15)
+                    .padding(.leading, 11)
                     Spacer()
                 }
 
                 Spacer()
             }
-            .padding(.top, 11)
             
             VStack {
                 Spacer()
