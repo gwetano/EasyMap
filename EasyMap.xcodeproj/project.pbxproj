@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -83,6 +83,10 @@
 		ED98B4662E09846C0024E3D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		ED386DD22E27A29D00FA3745 /* piani */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = piani; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		1F43EE092E06C9A000D00794 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -154,6 +158,7 @@
 				ED7C0E392E0D8EE10049F3D2 /* Profilo.swift */,
 				ED7C0E3B2E0D8F030049F3D2 /* Sessione.swift */,
 				1F43EE152E06C9A300D00794 /* Preview Content */,
+				ED386DD22E27A29D00FA3745 /* piani */,
 			);
 			path = EasyMap;
 			sourceTree = "<group>";
@@ -197,6 +202,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				ED386DD22E27A29D00FA3745 /* piani */,
 			);
 			name = EasyMap;
 			productName = EasyMap;
@@ -496,7 +504,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"EasyMap/Preview Content\"";
-				DEVELOPMENT_TEAM = KFM9VN82RF;
+				DEVELOPMENT_TEAM = ZU82SK9HYB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EasyMap/Info.plist;
@@ -515,7 +523,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = it.gaetano.UnisaApp;
+				PRODUCT_BUNDLE_IDENTIFIER = it.lorenzocampagna.easymap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -531,7 +539,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"EasyMap/Preview Content\"";
-				DEVELOPMENT_TEAM = KFM9VN82RF;
+				DEVELOPMENT_TEAM = ZU82SK9HYB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EasyMap/Info.plist;
@@ -550,7 +558,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = it.gaetano.UnisaApp;
+				PRODUCT_BUNDLE_IDENTIFIER = it.lorenzocampagna.easymap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

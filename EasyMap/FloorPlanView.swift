@@ -7,6 +7,125 @@
 
 import SwiftUI
 import MapKit
+import PDFKit
+
+struct FloorPlanPDFView: View {
+    let floor: Floor
+    @Binding var selectedRoom: RoomImage?
+    @StateObject private var roomStatusManager = RoomStatusManager.shared
+    
+    var body: some View {
+        GeometryReader { geometry in
+            if let pdfDocument = PDFDocument(url: Bundle.main.url(forResource: floor.imageName, withExtension: "pdf")!) {
+                PDFViewRepresentable(
+                    pdfDocument: pdfDocument,
+                    floor: floor,
+                    selectedRoom: $selectedRoom,
+                    roomStatusManager: roomStatusManager
+                )
+            } else {
+                Text("PDF non trovato")
+                    .foregroundColor(.red)
+            }
+        }
+        .task {
+            await roomStatusManager.loadData()
+        }
+    }
+}
+
+struct PDFViewRepresentable: UIViewRepresentable {
+    let pdfDocument: PDFDocument
+    let floor: Floor
+    @Binding var selectedRoom: RoomImage?
+    let roomStatusManager: RoomStatusManager
+    
+    func makeUIView(context: Context) -> PDFView {
+        let pdfView = PDFView()
+        pdfView.document = pdfDocument
+        pdfView.autoScales = false
+        pdfView.displayMode = .singlePage
+        pdfView.displayDirection = .vertical
+        
+        // Configura la vista PDF
+        pdfView.minScaleFactor = 0.4
+        pdfView.maxScaleFactor = 5.0
+        pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit
+        
+        // Aggiungi gesture recognizer per tocchi
+        let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleTap(_:)))
+        pdfView.addGestureRecognizer(tapGesture)
+        
+        // Aggiungi gesture recognizer per doppio tocco (reset zoom)
+        let doubleTapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleDoubleTap(_:)))
+        doubleTapGesture.numberOfTapsRequired = 2
+        pdfView.addGestureRecognizer(doubleTapGesture)
+        
+        // Assicurati che il singolo tocco non interferisca con il doppio tocco
+        tapGesture.require(toFail: doubleTapGesture)
+        
+        return pdfView
+    }
+    
+    func updateUIView(_ uiView: PDFView, context: Context) {
+        // Aggiorna la vista se necessario
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    class Coordinator: NSObject {
+        var parent: PDFViewRepresentable
+        
+        init(_ parent: PDFViewRepresentable) {
+            self.parent = parent
+        }
+        
+        @objc func handleTap(_ gesture: UITapGestureRecognizer) {
+            guard let pdfView = gesture.view as? PDFView,
+                  let page = pdfView.currentPage else { return }
+            
+            let point = gesture.location(in: pdfView)
+            let pagePoint = pdfView.convert(point, to: page)
+            
+            // Converti il punto in coordinate normalizzate (0-1)
+            let pageBounds = page.bounds(for: .mediaBox)
+            let normalizedX = pagePoint.x / pageBounds.width
+            let normalizedY = 1.0 - (pagePoint.y / pageBounds.height) // Inverti Y
+            
+            // Trova la stanza più vicina al punto toccato
+            let tappedRoom = findRoomAtPoint(CGPoint(x: normalizedX, y: normalizedY))
+            
+            if let room = tappedRoom {
+                parent.selectedRoom = room
+            }
+        }
+        
+        @objc func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
+            guard let pdfView = gesture.view as? PDFView else { return }
+            
+            // Reset zoom
+            pdfView.scaleFactor = pdfView.minScaleFactor
+        }
+        
+        private func findRoomAtPoint(_ point: CGPoint) -> RoomImage? {
+            for room in parent.floor.rooms {
+                let roomBounds = CGRect(
+                    x: room.position.x - room.size.width / 2,
+                    y: room.position.y - room.size.height / 2,
+                    width: room.size.width,
+                    height: room.size.height
+                )
+                
+                if roomBounds.contains(point) {
+                    return room
+                }
+            }
+            return nil
+        }
+    }
+}
 
 struct FloorPlanImageView: View {
     let floor: Floor
@@ -25,114 +144,15 @@ struct FloorPlanImageView: View {
 
     var body: some View {
         GeometryReader { geometry in
-            if let image = UIImage(named: floor.imageName) {
-                let imageSize = image.size
-                let aspectRatio = imageSize.width / imageSize.height
-                
-                let viewWidth = geometry.size.width
-                let viewHeight = geometry.size.height
-                
-                let imageHeight = viewHeight
-                let imageWidth = imageHeight * aspectRatio
-                
-                let initialOffsetX = isFirstLoad ? (viewWidth - imageWidth) / 2 : 0
-                let initialOffsetY: CGFloat = 0
-
-                ZStack {
-                    Color.black.opacity(0.05)
-                    
-                    ZStack {
-                        Image(uiImage: image)
-                            .resizable()
-                            .frame(width: imageWidth, height: imageHeight)
-                            .clipped()
-
-                        ForEach(floor.rooms) { room in
-                            Button(action: {
-                                selectedRoom = room
-                            }) {
-                                ZStack {
-                                    Rectangle()
-                                        .fill(roomStatusManager.getRoomColor(for: room).opacity(0.7))
-                                    if scale >= labelThreshold {
-                                        Text(room.name)
-                                            .font(.system(size: 8 / scale))
-                                            .foregroundColor(.primary)
-                                            .padding(2)
-                                            .background(Color.white.opacity(0.4))
-                                    }
-                                }
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                            .frame(
-                                width: room.size.width * imageWidth,
-                                height: room.size.height * imageHeight
-                            )
-                            .position(
-                                x: room.position.x * imageWidth,
-                                y: room.position.y * imageHeight
-                            )
-                        }
-                    }
-                    .frame(width: imageWidth, height: imageHeight)
-                    .scaleEffect(scale)
-                    .offset(x: initialOffsetX + offset.width, y: initialOffsetY + offset.height)
-                    .gesture(
-                        SimultaneousGesture(
-                            MagnificationGesture()
-                                .onChanged { value in
-                                    let newScale = min(max(lastScale * value, minScale), maxScale)
-                                    
-                                    let centerX = geometry.size.width / 2
-                                    let centerY = geometry.size.height / 2
-                                    
-                                    let imagePointX = (centerX - initialOffsetX - lastOffset.width) / lastScale
-                                    let imagePointY = (centerY - initialOffsetY - lastOffset.height) / lastScale
-                                    
-                                    let newOffsetX = centerX - initialOffsetX - imagePointX * newScale
-                                    let newOffsetY = centerY - initialOffsetY - imagePointY * newScale
-                                    
-                                    scale = newScale
-                                    offset = CGSize(width: newOffsetX, height: newOffsetY)
-                                }
-                                .onEnded { _ in
-                                    lastScale = scale
-                                    offset = limitOffset(offset, scale: scale, geometry: geometry, imageWidth: imageWidth, imageHeight: imageHeight, initialOffsetX: initialOffsetX, initialOffsetY: initialOffsetY)
-                                    lastOffset = offset
-                                },
-                            
-                            DragGesture()
-                                .onChanged { value in
-                                    let newOffset = CGSize(
-                                        width: lastOffset.width + value.translation.width,
-                                        height: lastOffset.height + value.translation.height
-                                    )
-                                    offset = limitOffset(newOffset, scale: scale, geometry: geometry, imageWidth: imageWidth, imageHeight: imageHeight, initialOffsetX: initialOffsetX, initialOffsetY: initialOffsetY)
-                                }
-                                .onEnded { _ in
-                                    lastOffset = offset
-                                }
-                        )
-                    )
-                    .onTapGesture(count: 2) {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            scale = 1.0
-                            lastScale = 1.0
-                            offset = .zero
-                            lastOffset = .zero
-                        }
-                    }
-                }
-                .frame(width: geometry.size.width, height: geometry.size.height)
-                .clipped()
-            } else {
-                Text("Immagine non trovata")
+            if Bundle.main.url(forResource: floor.imageName, withExtension: "pdf") != nil {
+                FloorPlanPDFView(floor: floor, selectedRoom: $selectedRoom)
+            }else {
+                Text(" PDF NON TROVATO")
                     .foregroundColor(.red)
             }
         }
         .task {
             await roomStatusManager.loadData()
-            isFirstLoad = false
         }
     }
     
@@ -225,7 +245,7 @@ struct BuildingRoomListView: View {
                                 .frame(width: 12, height: 12)
                         }
                         .padding(.vertical, 4)
-                        .contentShape(Rectangle()) // 👈 tutta la riga è tappabile
+                        .contentShape(Rectangle())
                         .onTapGesture {
                             let roomImage = RoomImage(
                                 name: aula.nome,
@@ -265,7 +285,6 @@ struct BuildingRoomListView: View {
         return now > todayAt3PM
     }
 }
-
 
 struct FloorPlanView: View {
     let buildingName: String
