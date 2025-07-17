@@ -1,10 +1,10 @@
-
 import SwiftUI
 
 struct SearchView: View {
     @State private var giornata: Giornata? = nil
     @State private var searchText: String = ""
     @State private var selectedBuildingName: String? = nil
+    @State private var selectedRoomName: String? = nil // Nuovo: per identificare l'aula selezionata
     @State private var recentSearches: [String] = []
 
     let edificiValidi: Set<String> = [
@@ -97,7 +97,7 @@ struct SearchView: View {
                                                 .font(.headline)
                                             Spacer()
                                             Circle()
-                                                .fill(aula.isOccupiedNow() ? .red : .green)
+                                                .fill(colorForRoom(aula))
                                                 .frame(width: 12, height: 12)
                                         }
                                         Text("Edificio: \(aula.edificio)")
@@ -115,6 +115,7 @@ struct SearchView: View {
                                     }
                                 }
                             }
+
                         } else if !searchText.isEmpty {
                             Text("Nessuna aula trovata.")
                                 .foregroundColor(.gray)
@@ -130,10 +131,13 @@ struct SearchView: View {
             }
             .sheet(isPresented: Binding<Bool>(
                 get: { selectedBuildingName != nil },
-                set: { if !$0 { selectedBuildingName = nil } }
+                set: { if !$0 { selectedBuildingName = nil; selectedRoomName = nil } }
             )) {
                 if let buildingName = selectedBuildingName {
-                    FloorPlanView(buildingName: buildingName)
+                    FloorPlanView(
+                        buildingName: buildingName,
+                        highlightedRoomName: selectedRoomName // Passa il nome dell'aula da evidenziare
+                    )
                 }
             }
         }
@@ -142,6 +146,7 @@ struct SearchView: View {
     private func handleAulaSelection(_ aula: Aula) {
         SearchHistoryManager.shared.salva(query: aula.nome)
         loadRecents()
+        selectedRoomName = aula.nome // Salva il nome dell'aula selezionata
         selectedBuildingName = aula.edificio
     }
 
@@ -162,9 +167,22 @@ struct SearchView: View {
             handleAulaSelection(aula)
         }
     }
+    private func colorForRoom(_ aula: Aula) -> Color {
+        guard let giornata = giornata else {
+            return .gray
+        }
+        if let jsonAula = giornata.aule.first(where: {
+            $0.nome.caseInsensitiveCompare(aula.nome) == .orderedSame &&
+            $0.edificio.caseInsensitiveCompare(aula.edificio) == .orderedSame
+        }) {
+            return jsonAula.isOccupiedNow() ? .red : .green
+        } else {
+            return .yellow
+        }
+    }
+
 }
 
 #Preview {
     SearchView()
 }
-

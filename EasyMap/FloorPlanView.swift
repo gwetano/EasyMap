@@ -1,29 +1,26 @@
-
-//
-//  FloorPlanView.swift
-//  EasyMap
-//
-//  Created by Studente on 27/06/25.
-//
-
 import SwiftUI
 import MapKit
 
 struct FloorPlanImageView: View {
     let floor: Floor
     @Binding var selectedRoom: RoomImage?
+    let highlightedRoomName: String?
     @StateObject private var roomStatusManager = RoomStatusManager.shared
-
+    
+    @State private var isHighlighted = false
+    @State private var highlightTimer: Timer?
+    
     @State private var scale: CGFloat = 1.0
     @State private var lastScale: CGFloat = 1.0
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
     @State private var isFirstLoad = true
-
+    @State private var hasAnimatedToHighlightedRoom = false
+    
     private let minScale: CGFloat = 1.0
     private let maxScale: CGFloat = 5.0
     private let labelThreshold: CGFloat = 1
-
+    
     var body: some View {
         GeometryReader { geometry in
             if let image = UIImage(named: floor.imageName) {
@@ -38,7 +35,7 @@ struct FloorPlanImageView: View {
                 
                 let initialOffsetX = isFirstLoad ? (viewWidth - imageWidth) / 2 : 0
                 let initialOffsetY: CGFloat = 0
-
+                
                 ZStack {
                     Color.black.opacity(0.05)
                     
@@ -47,15 +44,16 @@ struct FloorPlanImageView: View {
                             .resizable()
                             .frame(width: imageWidth, height: imageHeight)
                             .clipped()
-
+                        
                         ForEach(floor.rooms) { room in
                             Button(action: {
                                 selectedRoom = room
                             }) {
                                 ZStack {
                                     Rectangle()
-                                        .fill(roomStatusManager.getRoomColor(for: room).opacity(0.7))
-
+                                        .fill(roomStatusManager.getRoomColor(for: room)
+                                            .opacity(getOpacityForRoom(room)))
+                                    
                                     if scale >= labelThreshold {
                                         Text(room.name)
                                             .font(.system(size: 8 / scale))
@@ -75,7 +73,6 @@ struct FloorPlanImageView: View {
                                 y: room.position.y * imageHeight
                             )
                         }
-
                     }
                     .frame(width: imageWidth, height: imageHeight)
                     .scaleEffect(scale)
@@ -85,13 +82,10 @@ struct FloorPlanImageView: View {
                             MagnificationGesture()
                                 .onChanged { value in
                                     let newScale = min(max(lastScale * value, minScale), maxScale)
-                                    
                                     let centerX = geometry.size.width / 2
                                     let centerY = geometry.size.height / 2
-                                    
                                     let imagePointX = (centerX - initialOffsetX - lastOffset.width) / lastScale
                                     let imagePointY = (centerY - initialOffsetY - lastOffset.height) / lastScale
-                                    
                                     let newOffsetX = centerX - initialOffsetX - imagePointX * newScale
                                     let newOffsetY = centerY - initialOffsetY - imagePointY * newScale
                                     
@@ -128,6 +122,22 @@ struct FloorPlanImageView: View {
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height)
                 .clipped()
+                .onAppear {
+                    if !hasAnimatedToHighlightedRoom {
+                        centerOnHighlightedRoom(
+                            geometry: geometry,
+                            imageWidth: imageWidth,
+                            imageHeight: imageHeight,
+                            initialOffsetX: initialOffsetX,
+                            initialOffsetY: initialOffsetY
+                        )
+                        hasAnimatedToHighlightedRoom = true
+                    }
+                    startHighlightAnimation()
+                }
+                .onDisappear {
+                    stopHighlightAnimation()
+                }
             } else {
                 Text("Immagine non trovata")
                     .foregroundColor(.red)
@@ -136,6 +146,81 @@ struct FloorPlanImageView: View {
         .task {
             await roomStatusManager.loadData()
             isFirstLoad = false
+        }
+    }
+    
+    private func centerOnHighlightedRoom(
+        geometry: GeometryProxy,
+        imageWidth: CGFloat,
+        imageHeight: CGFloat,
+        initialOffsetX: CGFloat,
+        initialOffsetY: CGFloat
+    ) {
+        guard let highlightedRoomName = highlightedRoomName,
+              let highlightedRoom = floor.rooms.first(where: {
+                  $0.name.caseInsensitiveCompare(highlightedRoomName) == .orderedSame
+              }) else { return }
+
+        let roomCenterX = highlightedRoom.position.x * imageWidth
+        let roomCenterY = highlightedRoom.position.y * imageHeight
+        let viewCenterX = geometry.size.width / 2
+        let viewCenterY = geometry.size.height / 2
+
+        let targetScale: CGFloat = 1.0 
+
+        let targetOffsetX = viewCenterX - initialOffsetX - (roomCenterX * targetScale)
+        let targetOffsetY = viewCenterY - initialOffsetY - (roomCenterY * targetScale)
+
+        let targetOffset = CGSize(width: targetOffsetX, height: targetOffsetY)
+        let limitedOffset = limitOffset(
+            targetOffset,
+            scale: targetScale,
+            geometry: geometry,
+            imageWidth: imageWidth,
+            imageHeight: imageHeight,
+            initialOffsetX: initialOffsetX,
+            initialOffsetY: initialOffsetY
+        )
+
+        withAnimation(.easeInOut(duration: 1.0)) {
+            scale = targetScale       // rimane 1
+            offset = limitedOffset
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            lastScale = targetScale
+            lastOffset = limitedOffset
+        }
+    }
+
+    
+    private func getOpacityForRoom(_ room: RoomImage) -> Double {
+        guard shouldHighlightRoom(room) else { return 0.7 }
+        return isHighlighted ? 1.0 : 0.4
+    }
+    
+    private func shouldHighlightRoom(_ room: RoomImage) -> Bool {
+        guard let highlightedRoomName = highlightedRoomName else { return false }
+        return room.name.caseInsensitiveCompare(highlightedRoomName) == .orderedSame
+    }
+    
+    private func startHighlightAnimation() {
+        guard highlightedRoomName != nil else { return }
+        highlightTimer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: true) { _ in
+            withAnimation(.easeInOut(duration: 0.6)) {
+                isHighlighted.toggle()
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+            stopHighlightAnimation()
+        }
+    }
+    
+    private func stopHighlightAnimation() {
+        highlightTimer?.invalidate()
+        highlightTimer = nil
+        withAnimation {
+            isHighlighted = false
         }
     }
     
@@ -173,6 +258,7 @@ struct FloorPlanImageView: View {
         return CGSize(width: limitedOffsetX, height: limitedOffsetY)
     }
 }
+
 
 struct BuildingRoomListView: View {
     let buildingName: String
@@ -228,7 +314,7 @@ struct BuildingRoomListView: View {
                                 .frame(width: 12, height: 12)
                         }
                         .padding(.vertical, 4)
-                        .contentShape(Rectangle()) 
+                        .contentShape(Rectangle())
                         .onTapGesture {
                             let roomImage = RoomImage(
                                 name: aula.nome,
@@ -269,13 +355,19 @@ struct BuildingRoomListView: View {
     }
 }
 
-
 struct FloorPlanView: View {
     let buildingName: String
+    let highlightedRoomName: String? // Nuovo parametro
     @Environment(\.dismiss) private var dismiss
     @StateObject private var buildingManager = BuildingDataManager.shared
     @State private var selectedFloorIndex = 0
     @State private var selectedRoom: RoomImage?
+    
+    // Inizializzatore aggiornato
+    init(buildingName: String, highlightedRoomName: String? = nil) {
+        self.buildingName = buildingName
+        self.highlightedRoomName = highlightedRoomName
+    }
     
     private var building: Building? {
         buildingManager.getBuilding(named: buildingName)
@@ -345,7 +437,11 @@ struct FloorPlanView: View {
                     }
                     
                     if let floor = currentFloor {
-                        FloorPlanImageView(floor: floor, selectedRoom: $selectedRoom)
+                        FloorPlanImageView(
+                            floor: floor,
+                            selectedRoom: $selectedRoom,
+                            highlightedRoomName: highlightedRoomName
+                        )
                     }
                 } else {
                     BuildingRoomListView(buildingName: buildingName)
@@ -354,6 +450,20 @@ struct FloorPlanView: View {
         }
         .sheet(item: $selectedRoom) { room in
             RoomDetailView(room: room)
+        }
+        .onAppear {
+            // Trova automaticamente il piano corretto per l'aula evidenziata
+            if let highlightedRoomName = highlightedRoomName,
+               let building = building {
+                for (index, floor) in building.floors.enumerated() {
+                    if floor.rooms.contains(where: {
+                        $0.name.caseInsensitiveCompare(highlightedRoomName) == .orderedSame
+                    }) {
+                        selectedFloorIndex = index
+                        break
+                    }
+                }
+            }
         }
     }
 }
@@ -513,6 +623,17 @@ struct RoomDetailView: View {
         }
         return "Non specificata"
     }
+    
+    private func calculateOffsetToCenter(room: RoomImage, imageWidth: CGFloat, imageHeight: CGFloat, geometry: GeometryProxy, scale: CGFloat) -> CGSize {
+        let roomCenter = CGPoint(x: room.position.x * imageWidth, y: room.position.y * imageHeight)
+        let viewCenter = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
+        
+        let dx = viewCenter.x - roomCenter.x * scale
+        let dy = viewCenter.y - roomCenter.y * scale
+        
+        return CGSize(width: dx, height: dy)
+    }
+
 }
 
 struct PrenotazioneCard: View {
@@ -600,5 +721,5 @@ struct PrenotazioneCard: View {
 }
 
 #Preview {
-    FloorPlanView(buildingName: "E")
+    FloorPlanView(buildingName: "E", highlightedRoomName: "E1.01")
 }

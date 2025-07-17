@@ -52,26 +52,19 @@ struct ListaAule: View {
     var body: some View {
         NavigationStack {
             List {
-                if let aule = giornata?.aule {
-                    ForEach(aule.indices, id: \.self) { i in
-                        let aula = aule[i]
-                        if aula.edificio == "E" || aula.edificio == "E1" || aula.edificio == "E2" {
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Text(aula.nome)
-                                        .font(.headline)
-                                    Spacer()
-                                    Circle()
-                                        .fill(aula.isOccupiedNow() ? .red : .green)
-                                        .frame(width: 12, height: 12)
-                                }
-                                Text("Edificio: \(aula.edificio)")
-                                    .font(.subheadline)
-                            }
+                ForEach(allRooms(), id: \.name) { room in
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text(room.name)
+                                .font(.headline)
+                            Spacer()
+                            Circle()
+                                .fill(colorForRoom(room))
+                                .frame(width: 12, height: 12)
                         }
+                        Text("Edificio: \(room.buildingName)")
+                            .font(.subheadline)
                     }
-                } else {
-                    Text("Caricamento in corso o nessuna aula trovata").foregroundColor(.gray)
                 }
             }
             .navigationTitle("Lista Aule")
@@ -81,7 +74,36 @@ struct ListaAule: View {
             }
         }
     }
+    
+    /// restituisce tutte le aule conosciute dei 3 edifici
+    private func allRooms() -> [RoomImage] {
+        let buildings = ["E", "E1", "E2"]
+        var result: [RoomImage] = []
+        for b in buildings {
+            if let building = BuildingDataManager.shared.getBuilding(named: b) {
+                for floor in building.floors {
+                    result.append(contentsOf: floor.rooms)
+                }
+            }
+        }
+        return result
+    }
+    
+    private func colorForRoom(_ room: RoomImage) -> Color {
+        guard let giornata = giornata else {
+            return .gray
+        }
+        if let aula = giornata.aule.first(where: {
+            $0.nome.caseInsensitiveCompare(room.name) == .orderedSame &&
+            $0.edificio.caseInsensitiveCompare(room.buildingName) == .orderedSame
+        }) {
+            return aula.isOccupiedNow() ? .red : .green
+        } else {
+            return .yellow
+        }
+    }
 }
+
 
 func salvaJSONNelDispositivo(_ giornata: Giornata) {
     let encoder = JSONEncoder()
