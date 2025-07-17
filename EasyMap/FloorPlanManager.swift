@@ -51,7 +51,7 @@ class RoomStatusManager: ObservableObject {
             }
         }
         
-        return .orange
+        return .yellow
     }
     
     func getOccupancyStatus(for room: RoomImage) -> String {
@@ -240,6 +240,13 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
+                    name: "Aula Studio",
+                    position: CGPoint(x: 0.461, y: 0.6328),
+                    size: CGSize(width: 0.067, height: 0.073),
+                    description: "Ufficio docenti - Piano terra",
+                    buildingName: "E"
+                ),
+                RoomImage(
                     name: "Lab 14",
                     position: CGPoint(x: 0.3845, y: 0.576),
                     size: CGSize(width: 0.0295, height: 0.12),
@@ -379,7 +386,168 @@ class BuildingDataManager: ObservableObject {
                     size: CGSize(width: 0.0286, height: 0.1),
                     description: "Aula magna con proiettore e sistema audio",
                     buildingName: "E"
-                )
+                ),
+                RoomImage(
+                    name: "Lab 134",
+                    position: CGPoint(x: 0.526, y: 0.5),
+                    size: CGSize(width: 0.017, height: 0.1),
+                    description: "Aula magna con proiettore e sistema audio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab Salvatore Bellone",
+                    position: CGPoint(x: 0.555, y: 0.5),
+                    size: CGSize(width: 0.035, height: 0.1),
+                    description: "Aula magna con proiettore e sistema audio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 15",
+                    position: CGPoint(x: 0.5446, y: 0.638),
+                    size: CGSize(width: 0.0547, height: 0.1),
+                    description: "Fisica tecnica ambientale",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Sala videoconferenze",
+                    position: CGPoint(x: 0.614, y: 0.478),
+                    size: CGSize(width: 0.024, height: 0.055),
+                    description: "Aula magna con proiettore e sistema audio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Archivio 1",
+                    position: CGPoint(x: 0.614, y: 0.53),
+                    size: CGSize(width: 0.024, height: 0.035),
+                    description: "Aula magna con proiettore e sistema audio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Easy 1",
+                    position: CGPoint(x: 0.461, y: 0.6605),
+                    size: CGSize(width: 0.067, height: 0.031),
+                    description: "Aula Studio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Aula Maurizio Mangrella",
+                    position: CGPoint(x: 0.6465, y: 0.5),
+                    size: CGSize(width: 0.036, height: 0.1),
+                    description: "Aula magna con proiettore e sistema audio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Computer Science Lab",
+                    position: CGPoint(x: 0.705, y: 0.5),
+                    size: CGSize(width: 0.0245, height: 0.1),
+                    description: "Aula magna con proiettore e sistema audio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Embedded Intelligent System",
+                    position: CGPoint(x: 0.737, y: 0.5),
+                    size: CGSize(width: 0.035, height: 0.1),
+                    description: "Aula magna con proiettore e sistema audio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 155",
+                    position: CGPoint(x: 0.7965, y: 0.5),
+                    size: CGSize(width: 0.025, height: 0.1),
+                    description: "InBit",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 167",
+                    position: CGPoint(x: 0.829, y: 0.5),
+                    size: CGSize(width: 0.0368, height: 0.1),
+                    description: "Didattico Sistemi",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Aula 129",
+                    position: CGPoint(x: 0.37, y: 0.633),
+                    size: CGSize(width: 0.065, height: 0.095),
+                    description: "NE",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Aula 126",
+                    position: CGPoint(x: 0.369, y: 0.36),
+                    size: CGSize(width: 0.063, height: 0.1),
+                    description: "NE",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Aula Multimediale 132",
+                    position: CGPoint(x: 0.3855, y: 0.498),
+                    size: CGSize(width: 0.0315, height: 0.098),
+                    description: "Aula magna con proiettore e sistema audio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Aula Studio 130",
+                    position: CGPoint(x: 0.353, y: 0.498),
+                    size: CGSize(width: 0.0313, height: 0.098),
+                    description: "Aula magna con proiettore e sistema audio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Aula 118",
+                    position: CGPoint(x: 0.27, y: 0.36),
+                    size: CGSize(width: 0.047, height: 0.1),
+                    description: "NE",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Aula 120",
+                    position: CGPoint(x: 0.302, y: 0.36),
+                    size: CGSize(width: 0.013, height: 0.1),
+                    description: "Segreteria Codic",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Aula 119",
+                    position: CGPoint(x: 0.26, y: 0.498),
+                    size: CGSize(width: 0.025, height: 0.1),
+                    description: "Aula magna con proiettore e sistema audio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Biblioteca Berardi",
+                    position: CGPoint(x: 0.292, y: 0.498),
+                    size: CGSize(width: 0.035, height: 0.1),
+                    description: "Stanza 32",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Aula Studio 113",
+                    position: CGPoint(x: 0.2065, y: 0.498),
+                    size: CGSize(width: 0.025, height: 0.1),
+                    description: "Ingegneria Civile",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Aula 105",
+                    position: CGPoint(x: 0.116, y: 0.498),
+                    size: CGSize(width: 0.024, height: 0.1),
+                    description: "Ingegneria Civile",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Aula 106",
+                    position: CGPoint(x: 0.0835, y: 0.498),
+                    size: CGSize(width: 0.0353, height: 0.1),
+                    description: "Ingegneria Civile",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Aula 112",
+                    position: CGPoint(x: 0.174, y: 0.498),
+                    size: CGSize(width: 0.035, height: 0.1),
+                    description: "Ingegneria Civile",
+                    buildingName: "E"
+                ),
             ]
         )
         

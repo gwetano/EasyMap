@@ -4,7 +4,7 @@ struct SearchView: View {
     @State private var giornata: Giornata? = nil
     @State private var searchText: String = ""
     @State private var selectedBuildingName: String? = nil
-    @State private var selectedRoomName: String? = nil // Nuovo: per identificare l'aula selezionata
+    @State private var selectedRoomName: String? = nil
     @State private var recentSearches: [String] = []
 
     let edificiValidi: Set<String> = [
@@ -17,12 +17,10 @@ struct SearchView: View {
 
         var combined: [Aula] = []
 
-        // dal JSON
         if let jsonAule = giornata?.aule {
             combined.append(contentsOf: jsonAule)
         }
 
-        // da RoomImage
         let buildings = ["E", "E1", "E2"]
         for buildingName in buildings {
             if let building = BuildingDataManager.shared.getBuilding(named: buildingName) {
@@ -48,7 +46,6 @@ struct SearchView: View {
             }
         }
 
-        // filtro
         return combined.filter { aula in
             guard edificiValidi.contains(aula.edificio) else { return false }
             let nomeMatch = aula.nome.lowercased().contains(query)
@@ -136,7 +133,7 @@ struct SearchView: View {
                 if let buildingName = selectedBuildingName {
                     FloorPlanView(
                         buildingName: buildingName,
-                        highlightedRoomName: selectedRoomName // Passa il nome dell'aula da evidenziare
+                        highlightedRoomName: selectedRoomName
                     )
                 }
             }
@@ -146,7 +143,7 @@ struct SearchView: View {
     private func handleAulaSelection(_ aula: Aula) {
         SearchHistoryManager.shared.salva(query: aula.nome)
         loadRecents()
-        selectedRoomName = aula.nome // Salva il nome dell'aula selezionata
+        selectedRoomName = aula.nome 
         selectedBuildingName = aula.edificio
     }
 

@@ -357,13 +357,12 @@ struct BuildingRoomListView: View {
 
 struct FloorPlanView: View {
     let buildingName: String
-    let highlightedRoomName: String? // Nuovo parametro
+    let highlightedRoomName: String?
     @Environment(\.dismiss) private var dismiss
     @StateObject private var buildingManager = BuildingDataManager.shared
     @State private var selectedFloorIndex = 0
     @State private var selectedRoom: RoomImage?
     
-    // Inizializzatore aggiornato
     init(buildingName: String, highlightedRoomName: String? = nil) {
         self.buildingName = buildingName
         self.highlightedRoomName = highlightedRoomName
@@ -452,7 +451,6 @@ struct FloorPlanView: View {
             RoomDetailView(room: room)
         }
         .onAppear {
-            // Trova automaticamente il piano corretto per l'aula evidenziata
             if let highlightedRoomName = highlightedRoomName,
                let building = building {
                 for (index, floor) in building.floors.enumerated() {
