@@ -50,7 +50,8 @@ class RoomStatusManager: ObservableObject {
                 return aula.isOccupiedNow() ? .red : .green
             }
         }
-        return .green
+        
+        return .orange
     }
     
     func getOccupancyStatus(for room: RoomImage) -> String {
@@ -63,13 +64,22 @@ class RoomStatusManager: ObservableObject {
                 return aula.isOccupiedNow() ? "Occupata" : "Libera"
             }
         }
-        return "Libera"
+        
+        return "Dati non disponibili"
     }
     
     func getAula(for room: RoomImage) -> Aula? {
         guard let giornata = giornata else { return nil }
         
         return giornata.aule.first { aula in
+            aula.nome == room.name && aula.edificio == room.buildingName
+        }
+    }
+    
+    func isRoomInJSON(room: RoomImage) -> Bool {
+        guard let giornata = giornata else { return false }
+        
+        return giornata.aule.contains { aula in
             aula.nome == room.name && aula.edificio == room.buildingName
         }
     }
@@ -244,17 +254,101 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "Lab 11",
+                    name: "Lab 15",
                     position: CGPoint(x: 0.532, y: 0.605),
                     size: CGSize(width: 0.032, height: 0.145),
                     description: "Fisica tecnica ambientale",
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "Lab 9",
+                    name: "Lab 15/1",
                     position: CGPoint(x: 0.5645, y: 0.605),
                     size: CGSize(width: 0.028, height: 0.145),
                     description: "Fisica tecnica ambientale",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 17",
+                    position: CGPoint(x: 0.623, y: 0.605),
+                    size: CGSize(width: 0.0293, height: 0.145),
+                    description: "Fisica tecnica ambientale",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 18/1",
+                    position: CGPoint(x: 0.655, y: 0.605),
+                    size: CGSize(width: 0.0293, height: 0.145),
+                    description: "MIVIA",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 25",
+                    position: CGPoint(x: 0.7229, y: 0.605),
+                    size: CGSize(width: 0.0515, height: 0.145),
+                    description: "MIVIA",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab T-26",
+                    position: CGPoint(x: 0.818, y: 0.605),
+                    size: CGSize(width: 0.06, height: 0.145),
+                    description: "Ingegneria edile",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "SI",
+                    position: CGPoint(x: 0.773, y: 0.605),
+                    size: CGSize(width: 0.025, height: 0.145),
+                    description: "Sede Studenti Ingegneria",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 9",
+                    position: CGPoint(x: 0.264, y: 0.576),
+                    size: CGSize(width: 0.0295, height: 0.12),
+                    description: "Trasmissione del calore",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 11",
+                    position: CGPoint(x: 0.295, y: 0.576),
+                    size: CGSize(width: 0.0295, height: 0.12),
+                    description: "Tecniche del freddo",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 1",
+                    position: CGPoint(x: 0.0829, y: 0.576),
+                    size: CGSize(width: 0.0292, height: 0.12),
+                    description: "Trasmissione del calore",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 2",
+                    position: CGPoint(x: 0.1146, y: 0.576),
+                    size: CGSize(width: 0.0292, height: 0.12),
+                    description: "Trasmissione del calore",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 5a",
+                    position: CGPoint(x: 0.1815, y: 0.576),
+                    size: CGSize(width: 0.014, height: 0.12),
+                    description: "Tecniche del freddo",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 5b",
+                    position: CGPoint(x: 0.165, y: 0.576),
+                    size: CGSize(width: 0.014, height: 0.12),
+                    description: "Tecniche del freddo",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 7",
+                    position: CGPoint(x: 0.206, y: 0.576),
+                    size: CGSize(width: 0.0295, height: 0.12),
+                    description: "Tecniche del freddo",
                     buildingName: "E"
                 ),
             ]
@@ -439,14 +533,14 @@ class BuildingDataManager: ObservableObject {
             imageName: "edificio_e2_piano_0",
             rooms: [
                 RoomImage(
-                    name: "Aula A",
+                    name: "Aula B",
                     position: CGPoint(x: 0.607, y: 0.384),
                     size: CGSize(width: 0.176, height: 0.17),
                     description: "Aula per lezioni frontali con proiettore",
                     buildingName: "E2"
                 ),
                 RoomImage(
-                    name: "Aula B",
+                    name: "Aula A",
                     position: CGPoint(x: 0.615, y: 0.645),
                     size: CGSize(width: 0.16, height: 0.17),
                     description: "Aula per lezioni frontali con proiettore",

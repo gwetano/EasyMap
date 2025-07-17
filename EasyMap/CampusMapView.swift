@@ -58,6 +58,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        // guard let location = locations.last else { return }
         guard let location = locations.last else { return }
         
         if let missioniManager = missioniManager {
@@ -184,6 +185,11 @@ struct CampusMapView: View {
                     MapPolygon(coordinates: bibliotecaScientificaCoordinates)
                         .foregroundStyle(.brown.opacity(0.3))
                         .stroke(.brown, lineWidth: 2)
+                    
+                    MapPolygon(coordinates: bibliotecaUmanisticaCoordinates)
+                        .foregroundStyle(.brown.opacity(0.3))
+                        .stroke(.brown, lineWidth: 2)
+                    
                     
                     Annotation("E", coordinate: centroEdificioE) {
                         Text("E")
@@ -479,6 +485,22 @@ struct CampusMapView: View {
                             .scaleEffect(0.8)
                     }
                     .annotationTitles(.hidden)
+                    
+                    Annotation("Biblioteca Umanistica", coordinate: centroBiblioUma) {
+                        Text("Biblioteca Umanistica")
+                            .font(.caption2)
+                            .fontWeight(.medium)
+                            .foregroundColor(.brown)
+                            .padding(4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(.white.opacity(0.9))
+                                    .stroke(.brown, lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .scaleEffect(0.8)
+                    }
+                    .annotationTitles(.hidden)
                 }
                 .mapStyle(.imagery(elevation: .realistic))
                 .onTapGesture { screenCoordinate in
@@ -634,6 +656,10 @@ struct CampusMapView: View {
         } else if isPointInPolygon(point: coordinate, polygon: edificioQ2Coordinates) {
             mostraPDFMensa = true
         }else if isPointInPolygon(point: coordinate, polygon: bibliotecaScientificaCoordinates){
+            if let url = URL(string: "https://www.biblioteche.unisa.it/chiedi-al-bibliotecario?richiesta=3") {
+                    openURL(url)
+                }
+        }else if isPointInPolygon(point: coordinate, polygon: bibliotecaUmanisticaCoordinates){
             if let url = URL(string: "https://www.biblioteche.unisa.it/chiedi-al-bibliotecario?richiesta=3") {
                     openURL(url)
                 }
@@ -808,7 +834,6 @@ private let edificioQ2Coordinates: [CLLocationCoordinate2D] = [
     CLLocationCoordinate2D(latitude: 40.77272, longitude: 14.79329),
 ]
 
-
 private let bibliotecaScientificaCoordinates: [CLLocationCoordinate2D] = [
     CLLocationCoordinate2D(latitude: 40.77278, longitude: 14.78894),
     CLLocationCoordinate2D(latitude: 40.77254, longitude: 14.78837),
@@ -817,7 +842,18 @@ private let bibliotecaScientificaCoordinates: [CLLocationCoordinate2D] = [
     CLLocationCoordinate2D(latitude: 40.77278, longitude: 14.78894)
 ]
 
-
+private let bibliotecaUmanisticaCoordinates: [CLLocationCoordinate2D] = [
+    CLLocationCoordinate2D(latitude: 40.76944, longitude: 14.79116),
+    CLLocationCoordinate2D(latitude: 40.76920, longitude: 14.79057),
+    CLLocationCoordinate2D(latitude: 40.76926, longitude: 14.79056),
+    CLLocationCoordinate2D(latitude: 40.76914, longitude: 14.79024),
+    CLLocationCoordinate2D(latitude: 40.76870, longitude: 14.79054),
+    CLLocationCoordinate2D(latitude: 40.76866, longitude: 14.79076),
+    CLLocationCoordinate2D(latitude: 40.76872, longitude: 14.79092),
+    CLLocationCoordinate2D(latitude: 40.76884, longitude: 14.79088),
+    CLLocationCoordinate2D(latitude: 40.76906, longitude: 14.79138),
+    CLLocationCoordinate2D(latitude: 40.76944, longitude: 14.79116)
+]
 
 
 public let centroEdificioE = CLLocationCoordinate2D(latitude: 40.772885, longitude: 14.790675)
@@ -839,6 +875,7 @@ public let centroEdificioB1 = CLLocationCoordinate2D(latitude: 40.76954, longitu
 public let centroEdificioB2 = CLLocationCoordinate2D(latitude: 40.77007, longitude: 14.79259)
 public let centroEdificioQ2 = CLLocationCoordinate2D(latitude: 40.77289, longitude: 14.79374)
 public let centroBiblioSci = CLLocationCoordinate2D(latitude: 40.77245, longitude: 14.78879)
+public let centroBiblioUma = CLLocationCoordinate2D(latitude: 40.76901, longitude: 14.79086)
 
 
 struct IdentifiableString: Identifiable {

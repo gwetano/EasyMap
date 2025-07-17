@@ -311,38 +311,35 @@ struct FloorPlanView: View {
                 if let building = building, !building.floors.isEmpty {
                     if building.floors.count > 1 {
                         VStack(spacing: 8) {
-                            HStack{
-                                Text("\(building.floors[selectedFloorIndex].name)")
-                                    .font(.caption)
-                                    .fontWeight(.regular)
-                                    .foregroundColor(.primary)
-                            }
                             HStack(spacing: 20) {
-                                Text("Piano")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                
-                                Slider(
-                                    value: Binding(
-                                        get: { Double(selectedFloorIndex) },
-                                        set: {
-                                            selectedFloorIndex = Int($0.rounded())
-                                            selectedRoom = nil
-                                        }
-                                    ),
-                                    in: 0...Double(building.floors.count - 1),
-                                    step: 1
-                                )
-                                .accentColor(.blue)
-                                Text("\(building.floors[selectedFloorIndex].number)")
+                                Button(action: {
+                                    if selectedFloorIndex > 0 {
+                                        selectedFloorIndex -= 1
+                                        selectedRoom = nil
+                                    }
+                                }) {
+                                    Image(systemName: "minus.circle.fill")
+                                        .font(.title2)
+                                        .foregroundColor(.blue)
+                                }
+
+                                Text("Piano \(building.floors[selectedFloorIndex].number)")
                                     .font(.caption)
                                     .fontWeight(.medium)
-                                    .frame(minWidth: 20)
+
+                                Button(action: {
+                                    if selectedFloorIndex < building.floors.count - 1 {
+                                        selectedFloorIndex += 1
+                                        selectedRoom = nil
+                                    }
+                                }) {
+                                    Image(systemName: "plus.circle.fill")
+                                        .font(.title2)
+                                        .foregroundColor(.blue)
+                                }
                             }
                         }
-                        .padding(.horizontal)
-                        .padding(.vertical, 8)
-                        .background(Color(.systemBackground))
+                        .padding()
                     }
                     
                     if let floor = currentFloor {
