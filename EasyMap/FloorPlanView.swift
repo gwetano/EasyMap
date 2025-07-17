@@ -55,6 +55,7 @@ struct FloorPlanImageView: View {
                                 ZStack {
                                     Rectangle()
                                         .fill(roomStatusManager.getRoomColor(for: room).opacity(0.7))
+
                                     if scale >= labelThreshold {
                                         Text(room.name)
                                             .font(.system(size: 8 / scale))
@@ -74,6 +75,7 @@ struct FloorPlanImageView: View {
                                 y: room.position.y * imageHeight
                             )
                         }
+
                     }
                     .frame(width: imageWidth, height: imageHeight)
                     .scaleEffect(scale)
@@ -226,7 +228,7 @@ struct BuildingRoomListView: View {
                                 .frame(width: 12, height: 12)
                         }
                         .padding(.vertical, 4)
-                        .contentShape(Rectangle()) // 👈 tutta la riga è tappabile
+                        .contentShape(Rectangle()) 
                         .onTapGesture {
                             let roomImage = RoomImage(
                                 name: aula.nome,

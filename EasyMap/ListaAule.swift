@@ -19,6 +19,7 @@ struct Aula: Codable{
     var edificio     : String
     var posti        : Int
     var prenotazioni : [Prenotazione]
+    var description  : String?
     
     func isOccupiedNow() -> Bool {
         let dateFormatter = DateFormatter()

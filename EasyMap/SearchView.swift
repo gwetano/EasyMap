@@ -1,17 +1,10 @@
-//
-//  SearchView.swift
-//  EasyMap
-//
-//  Created by Francesco Apicella on 07/07/25.
-//
 
 import SwiftUI
 
 struct SearchView: View {
     @State private var giornata: Giornata? = nil
     @State private var searchText: String = ""
-    @State private var selectedAula: Aula? = nil
-    @State private var showingFloorPlan = false
+    @State private var selectedBuildingName: String? = nil
     @State private var recentSearches: [String] = []
 
     let edificiValidi: Set<String> = [
@@ -19,15 +12,48 @@ struct SearchView: View {
     ]
 
     var filteredAule: [Aula] {
-        guard let aule = giornata?.aule else { return [] }
-        let query = searchText.trimmingCharacters(in: .whitespaces).lowercased()
-        if query.isEmpty {
-            return []
-        } else {
-            return aule.filter { aula in
-                edificiValidi.contains(aula.edificio) &&
-                aula.nome.lowercased().contains(query)
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard !query.isEmpty else { return [] }
+
+        var combined: [Aula] = []
+
+        // dal JSON
+        if let jsonAule = giornata?.aule {
+            combined.append(contentsOf: jsonAule)
+        }
+
+        // da RoomImage
+        let buildings = ["E", "E1", "E2"]
+        for buildingName in buildings {
+            if let building = BuildingDataManager.shared.getBuilding(named: buildingName) {
+                for floor in building.floors {
+                    for room in floor.rooms {
+                        let alreadyExists = combined.contains {
+                            $0.nome.caseInsensitiveCompare(room.name) == .orderedSame &&
+                            $0.edificio.caseInsensitiveCompare(room.buildingName) == .orderedSame
+                        }
+                        if !alreadyExists {
+                            combined.append(
+                                Aula(
+                                    nome: room.name,
+                                    edificio: room.buildingName,
+                                    posti: 0,
+                                    prenotazioni: [],
+                                    description: room.description
+                                )
+                            )
+                        }
+                    }
+                }
             }
+        }
+
+        // filtro
+        return combined.filter { aula in
+            guard edificiValidi.contains(aula.edificio) else { return false }
+            let nomeMatch = aula.nome.lowercased().contains(query)
+            let descMatch = aula.description?.lowercased().contains(query) ?? false
+            return nomeMatch || descMatch
         }
     }
 
@@ -39,13 +65,11 @@ struct SearchView: View {
                         .padding()
                 } else {
                     List {
-                        
                         if searchText.isEmpty && !recentSearches.isEmpty {
                             Section(header: Text("Ricerche recenti").font(.headline)) {
                                 ForEach(recentSearches, id: \.self) { query in
                                     HStack {
                                         Text(query)
-                                            .foregroundColor(.primary)
                                         Spacer()
                                         Button {
                                             removeRecent(query)
@@ -58,18 +82,11 @@ struct SearchView: View {
                                     .contentShape(Rectangle())
                                     .onTapGesture {
                                         searchText = query
-                                        if let aula = giornata?.aule.first(where: {
-                                            $0.nome.caseInsensitiveCompare(query) == .orderedSame
-                                                && edificiValidi.contains($0.edificio)
-                                        }) {
-                                            handleAulaSelection(aula)
-                                        }
+                                        selectFirstMatchingAula(for: query)
                                     }
                                 }
                             }
                         }
-
-
 
                         if !filteredAule.isEmpty {
                             Section(header: Text("Risultati").font(.headline)) {
@@ -78,7 +95,6 @@ struct SearchView: View {
                                         HStack {
                                             Text(aula.nome)
                                                 .font(.headline)
-                                                .foregroundColor(.primary)
                                             Spacer()
                                             Circle()
                                                 .fill(aula.isOccupiedNow() ? .red : .green)
@@ -87,6 +103,11 @@ struct SearchView: View {
                                         Text("Edificio: \(aula.edificio)")
                                             .font(.subheadline)
                                             .foregroundColor(.secondary)
+                                        if let desc = aula.description, !desc.isEmpty {
+                                            Text(desc)
+                                                .font(.caption)
+                                                .foregroundColor(.secondary)
+                                        }
                                     }
                                     .contentShape(Rectangle())
                                     .onTapGesture {
@@ -100,7 +121,6 @@ struct SearchView: View {
                                 .padding()
                         }
                     }
-                    .background(.ultraThinMaterial)
                 }
             }
             .searchable(text: $searchText, prompt: "Cerca aula…")
@@ -108,20 +128,21 @@ struct SearchView: View {
                 self.giornata = await leggiJSONDaURL()
                 loadRecents()
             }
-            .sheet(isPresented: $showingFloorPlan) {
-                if let aula = selectedAula {
-                    FloorPlanViewWithRoom(buildingName: aula.edificio, selectedRoomName: aula.nome)
+            .sheet(isPresented: Binding<Bool>(
+                get: { selectedBuildingName != nil },
+                set: { if !$0 { selectedBuildingName = nil } }
+            )) {
+                if let buildingName = selectedBuildingName {
+                    FloorPlanView(buildingName: buildingName)
                 }
             }
         }
-        .background(.ultraThinMaterial)
     }
 
     private func handleAulaSelection(_ aula: Aula) {
         SearchHistoryManager.shared.salva(query: aula.nome)
         loadRecents()
-        selectedAula = aula
-        showingFloorPlan = true
+        selectedBuildingName = aula.edificio
     }
 
     private func removeRecent(_ query: String) {
@@ -132,128 +153,18 @@ struct SearchView: View {
     private func loadRecents() {
         recentSearches = SearchHistoryManager.shared.leggi() ?? []
     }
-}
 
-// MARK: - FloorPlanViewWithRoom
-
-struct FloorPlanViewWithRoom: View {
-    let buildingName: String
-    let selectedRoomName: String
-    
-    @Environment(\.dismiss) private var dismiss
-    @StateObject private var buildingManager = BuildingDataManager.shared
-    @State private var selectedFloorIndex = 0
-    @State private var selectedRoom: RoomImage?
-    
-    private var building: Building? {
-        buildingManager.getBuilding(named: buildingName)
-    }
-    
-    private var targetFloorAndRoom: (floorIndex: Int, room: RoomImage)? {
-        guard let building = building else { return nil }
-        
-        for (floorIndex, floor) in building.floors.enumerated() {
-            if let room = floor.rooms.first(where: { $0.name == selectedRoomName }) {
-                return (floorIndex, room)
-            }
+    private func selectFirstMatchingAula(for query: String) {
+        let lowerQuery = query.lowercased()
+        if let aula = filteredAule.first(where: {
+            $0.nome.lowercased() == lowerQuery || ($0.description?.lowercased() == lowerQuery)
+        }) {
+            handleAulaSelection(aula)
         }
-        return nil
-    }
-    
-    var body: some View {
-        NavigationView {
-            VStack(spacing: 0) {
-                header
-                
-                if let building = building, !building.floors.isEmpty {
-                    if building.floors.count > 1 {
-                        floorSelector(building: building)
-                    }
-                    
-                    if let floor = building.floors[safe: selectedFloorIndex] {
-                        FloorPlanImageView(floor: floor, selectedRoom: $selectedRoom)
-                    }
-                } else {
-                    BuildingRoomListView(buildingName: buildingName)
-                }
-            }
-            .onAppear {
-                if let target = targetFloorAndRoom {
-                    selectedFloorIndex = target.floorIndex
-                    selectedRoom = target.room
-                }
-            }
-        }
-        .ignoresSafeArea()
-        .sheet(item: $selectedRoom) { room in
-            RoomDetailView(room: room)
-        }
-    }
-    
-    private var header: some View {
-        HStack {
-            Button(action: { dismiss() }) {
-                Image(systemName: "chevron.backward")
-                    .font(.title2)
-                    .foregroundColor(.primary)
-                    .padding(.horizontal, 17)
-                    .padding(.vertical, 12)
-            }
-            
-            Text("Edificio \(buildingName)")
-                .font(.headline)
-                .fontWeight(.semibold)
-                .foregroundColor(.primary)
-            
-            Spacer()
-        }
-        .background(Color(.systemBackground))
-    }
-    
-    private func floorSelector(building: Building) -> some View {
-        VStack(spacing: 8) {
-            HStack {
-                Text("\(building.floors[selectedFloorIndex].name)")
-                    .font(.caption)
-                    .fontWeight(.regular)
-                    .foregroundColor(.primary)
-            }
-            HStack(spacing: 20) {
-                Text("Piano")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                
-                Slider(
-                    value: Binding(
-                        get: { Double(selectedFloorIndex) },
-                        set: {
-                            selectedFloorIndex = Int($0.rounded())
-                            selectedRoom = nil
-                        }
-                    ),
-                    in: 0...Double(building.floors.count - 1),
-                    step: 1
-                )
-                .accentColor(.blue)
-                
-                Text("\(building.floors[selectedFloorIndex].number)")
-                    .font(.caption)
-                    .fontWeight(.medium)
-                    .frame(minWidth: 20)
-            }
-        }
-        .padding(.horizontal)
-        .padding(.vertical, 8)
-        .background(Color(.systemBackground))
-    }
-}
-
-extension Collection {
-    subscript(safe index: Index) -> Element? {
-        return indices.contains(index) ? self[index] : nil
     }
 }
 
 #Preview {
     SearchView()
 }
+
