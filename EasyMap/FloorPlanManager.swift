@@ -243,7 +243,7 @@ class BuildingDataManager: ObservableObject {
                     name: "Aula Studio",
                     position: CGPoint(x: 0.461, y: 0.6328),
                     size: CGSize(width: 0.067, height: 0.073),
-                    description: "Ufficio docenti - Piano terra",
+                    description: "De Candida",
                     buildingName: "E"
                 ),
                 RoomImage(
@@ -437,17 +437,80 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
+                    name: "Lab 143",
+                    position: CGPoint(x: 0.6248, y: 0.3645),
+                    size: CGSize(width: 0.044, height: 0.098),
+                    description: "",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 054",
+                    position: CGPoint(x: 0.6578, y: 0.3645),
+                    size: CGSize(width: 0.017, height: 0.098),
+                    description: "Energy Storage and Energy source",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Ufficio Tortorella",
+                    position: CGPoint(x: 0.659, y: 0.638),
+                    size: CGSize(width: 0.017, height: 0.1),
+                    description: "",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "147",
+                    position: CGPoint(x: 0.641, y: 0.638),
+                    size: CGSize(width: 0.014, height: 0.1),
+                    description: "",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "148",
+                    position: CGPoint(x: 0.625, y: 0.638),
+                    size: CGSize(width: 0.014, height: 0.1),
+                    description: "",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Ufficio Percannella",
+                    position: CGPoint(x: 0.609, y: 0.638),
+                    size: CGSize(width: 0.013, height: 0.1),
+                    description: "",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "??",
+                    position: CGPoint(x: 0.699, y: 0.638),
+                    size: CGSize(width: 0.015, height: 0.1),
+                    description: "",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "S^3",
+                    position: CGPoint(x: 0.7163, y: 0.638),
+                    size: CGSize(width: 0.013, height: 0.1),
+                    description: "",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 161",
+                    position: CGPoint(x: 0.74, y: 0.638),
+                    size: CGSize(width: 0.0294, height: 0.1),
+                    description: "Laboratorio Didattico Software",
+                    buildingName: "E"
+                ),
+                RoomImage(
                     name: "Computer Science Lab",
                     position: CGPoint(x: 0.705, y: 0.5),
                     size: CGSize(width: 0.0245, height: 0.1),
-                    description: "Aula magna con proiettore e sistema audio",
+                    description: "",
                     buildingName: "E"
                 ),
                 RoomImage(
                     name: "Embedded Intelligent System",
                     position: CGPoint(x: 0.737, y: 0.5),
                     size: CGSize(width: 0.035, height: 0.1),
-                    description: "Aula magna con proiettore e sistema audio",
+                    description: "",
                     buildingName: "E"
                 ),
                 RoomImage(
@@ -462,6 +525,41 @@ class BuildingDataManager: ObservableObject {
                     position: CGPoint(x: 0.829, y: 0.5),
                     size: CGSize(width: 0.0368, height: 0.1),
                     description: "Didattico Sistemi",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 166",
+                    position: CGPoint(x: 0.832, y: 0.638),
+                    size: CGSize(width: 0.031, height: 0.105),
+                    description: "",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 163",
+                    position: CGPoint(x: 0.7915, y: 0.638),
+                    size: CGSize(width: 0.013, height: 0.105),
+                    description: "",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab",
+                    position: CGPoint(x: 0.7915, y: 0.365),
+                    size: CGSize(width: 0.013, height: 0.1),
+                    description: "Centro di calcolo e servizi di rete",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab",
+                    position: CGPoint(x: 0.807, y: 0.365),
+                    size: CGSize(width: 0.013, height: 0.1),
+                    description: "Ingegneria del controllo",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab",
+                    position: CGPoint(x: 0.832, y: 0.365),
+                    size: CGSize(width: 0.031, height: 0.1),
+                    description: "Simulazione ed ottimizzazione",
                     buildingName: "E"
                 ),
                 RoomImage(
@@ -507,6 +605,118 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
+                    name: "Stanza 91",
+                    position: CGPoint(x: 0.3016, y: 0.633),
+                    size: CGSize(width: 0.0123, height: 0.089),
+                    description: "",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Stanza 34",
+                    position: CGPoint(x: 0.2863, y: 0.633),
+                    size: CGSize(width: 0.0125, height: 0.089),
+                    description: "Ufficio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Stanza 35",
+                    position: CGPoint(x: 0.27, y: 0.633),
+                    size: CGSize(width: 0.0124, height: 0.089),
+                    description: "Ufficio Domenico Gentiluomo",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Stanza 36",
+                    position: CGPoint(x: 0.2534, y: 0.633),
+                    size: CGSize(width: 0.018, height: 0.089),
+                    description: "Ufficio Consolatina Liguori",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "114",
+                    position: CGPoint(x: 0.212, y: 0.633),
+                    size: CGSize(width: 0.0135, height: 0.089),
+                    description: "",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "115",
+                    position: CGPoint(x: 0.196, y: 0.633),
+                    size: CGSize(width: 0.0135, height: 0.089),
+                    description: "",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "116",
+                    position: CGPoint(x: 0.18, y: 0.633),
+                    size: CGSize(width: 0.0135, height: 0.089),
+                    description: "",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "117",
+                    position: CGPoint(x: 0.164, y: 0.633),
+                    size: CGSize(width: 0.0135, height: 0.089),
+                    description: "",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "110",
+                    position: CGPoint(x: 0.122, y: 0.633),
+                    size: CGSize(width: 0.0135, height: 0.089),
+                    description: "Ufficio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "109",
+                    position: CGPoint(x: 0.106, y: 0.633),
+                    size: CGSize(width: 0.0135, height: 0.089),
+                    description: "Ufficio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "108",
+                    position: CGPoint(x: 0.09, y: 0.633),
+                    size: CGSize(width: 0.0135, height: 0.089),
+                    description: "Ufficio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "107",
+                    position: CGPoint(x: 0.0725, y: 0.633),
+                    size: CGSize(width: 0.0147, height: 0.089),
+                    description: "Ufficio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "104",
+                    position: CGPoint(x: 0.122, y: 0.36),
+                    size: CGSize(width: 0.0135, height: 0.1),
+                    description: "Ufficio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "103",
+                    position: CGPoint(x: 0.106, y: 0.36),
+                    size: CGSize(width: 0.0135, height: 0.1),
+                    description: "Ufficio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "102",
+                    position: CGPoint(x: 0.09, y: 0.36),
+                    size: CGSize(width: 0.0135, height: 0.1),
+                    description: "Ufficio",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "101",
+                    position: CGPoint(x: 0.0725, y: 0.36),
+                    size: CGSize(width: 0.0147, height: 0.1),
+                    description: "Ufficio",
+                    buildingName: "E"
+                ),
+                RoomImage(
                     name: "Aula 119",
                     position: CGPoint(x: 0.26, y: 0.498),
                     size: CGSize(width: 0.025, height: 0.1),
@@ -528,6 +738,20 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
+                    name: "Lab IsThos",
+                    position: CGPoint(x: 0.201, y: 0.36),
+                    size: CGSize(width: 0.036, height: 0.1),
+                    description: "NE",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Lab 111/1",
+                    position: CGPoint(x: 0.169, y: 0.36),
+                    size: CGSize(width: 0.023, height: 0.1),
+                    description: "",
+                    buildingName: "E"
+                ),
+                RoomImage(
                     name: "Aula 105",
                     position: CGPoint(x: 0.116, y: 0.498),
                     size: CGSize(width: 0.024, height: 0.1),
@@ -538,6 +762,13 @@ class BuildingDataManager: ObservableObject {
                     name: "Aula 106",
                     position: CGPoint(x: 0.0835, y: 0.498),
                     size: CGSize(width: 0.0353, height: 0.1),
+                    description: "Ingegneria Civile",
+                    buildingName: "E"
+                ),
+                RoomImage(
+                    name: "Easy 2",
+                    position: CGPoint(x: 0.045, y: 0.498),
+                    size: CGSize(width: 0.0125, height: 0.195),
                     description: "Ingegneria Civile",
                     buildingName: "E"
                 ),

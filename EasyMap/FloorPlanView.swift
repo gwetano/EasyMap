@@ -360,7 +360,7 @@ struct FloorPlanView: View {
     let highlightedRoomName: String?
     @Environment(\.dismiss) private var dismiss
     @StateObject private var buildingManager = BuildingDataManager.shared
-    @State private var selectedFloorIndex = 0
+    @State private var selectedFloorIndex = 1
     @State private var selectedRoom: RoomImage?
     
     init(buildingName: String, highlightedRoomName: String? = nil) {
