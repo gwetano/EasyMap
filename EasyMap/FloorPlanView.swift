@@ -161,17 +161,19 @@ struct FloorPlanImageView: View {
                   $0.name.caseInsensitiveCompare(highlightedRoomName) == .orderedSame
               }) else { return }
 
-        let roomCenterX = highlightedRoom.position.x * imageWidth
-        let roomCenterY = highlightedRoom.position.y * imageHeight
+        let targetScale: CGFloat = 1.0
+
+        let roomCenterX = highlightedRoom.position.x * imageWidth * targetScale
+        let roomCenterY = highlightedRoom.position.y * imageHeight * targetScale
+        
         let viewCenterX = geometry.size.width / 2
         let viewCenterY = geometry.size.height / 2
-
-        let targetScale: CGFloat = 1.0 
-
-        let targetOffsetX = viewCenterX - initialOffsetX - (roomCenterX * targetScale)
-        let targetOffsetY = viewCenterY - initialOffsetY - (roomCenterY * targetScale)
+        
+        let targetOffsetX = viewCenterX - roomCenterX - initialOffsetX
+        let targetOffsetY = viewCenterY - roomCenterY - initialOffsetY
 
         let targetOffset = CGSize(width: targetOffsetX, height: targetOffsetY)
+        
         let limitedOffset = limitOffset(
             targetOffset,
             scale: targetScale,
@@ -183,7 +185,7 @@ struct FloorPlanImageView: View {
         )
 
         withAnimation(.easeInOut(duration: 1.0)) {
-            scale = targetScale       // rimane 1
+            scale = targetScale
             offset = limitedOffset
         }
 
@@ -233,9 +235,11 @@ struct FloorPlanImageView: View {
         
         if scaledImageWidth > geometry.size.width {
             let maxPanDistance = (scaledImageWidth - geometry.size.width) / 2
-            maxOffsetX = maxPanDistance - initialOffsetX
-            minOffsetX = -maxPanDistance - initialOffsetX
+            // ci muoviamo da -maxPanDistance a +maxPanDistance rispetto al centro
+            maxOffsetX = maxPanDistance
+            minOffsetX = -maxPanDistance
         } else {
+            // un'immagine più piccola della vista rimane centrata
             maxOffsetX = -initialOffsetX
             minOffsetX = -initialOffsetX
         }
@@ -255,7 +259,9 @@ struct FloorPlanImageView: View {
         let limitedOffsetX = max(minOffsetX, min(maxOffsetX, offset.width))
         let limitedOffsetY = max(minOffsetY, min(maxOffsetY, offset.height))
         
-        return CGSize(width: limitedOffsetX, height: limitedOffsetY)
+        let result = CGSize(width: limitedOffsetX, height: limitedOffsetY)
+        
+        return result
     }
 }
 
@@ -360,7 +366,7 @@ struct FloorPlanView: View {
     let highlightedRoomName: String?
     @Environment(\.dismiss) private var dismiss
     @StateObject private var buildingManager = BuildingDataManager.shared
-    @State private var selectedFloorIndex = 1
+    @State private var selectedFloorIndex = 0
     @State private var selectedRoom: RoomImage?
     
     init(buildingName: String, highlightedRoomName: String? = nil) {

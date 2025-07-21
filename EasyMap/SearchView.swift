@@ -11,8 +11,19 @@ struct SearchView: View {
         "E", "E1", "E2", "D", "D1", "D2", "D3", "C", "C1", "C2", "B", "B1", "B2", "F", "F1", "F2", "F3"
     ]
 
+    private func normalizeText(_ text: String) -> String {
+        let normalized = text.lowercased()
+        return normalized.replacingOccurrences(of: "laboratorio", with: "lab")
+    }
+    
+    private func textsMatch(_ text1: String, _ text2: String) -> Bool {
+        let normalized1 = normalizeText(text1)
+        let normalized2 = normalizeText(text2)
+        return normalized1.contains(normalized2) || normalized2.contains(normalized1)
+    }
+
     var filteredAule: [Aula] {
-        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !query.isEmpty else { return [] }
 
         var combined: [Aula] = []
@@ -48,8 +59,10 @@ struct SearchView: View {
 
         return combined.filter { aula in
             guard edificiValidi.contains(aula.edificio) else { return false }
-            let nomeMatch = aula.nome.lowercased().contains(query)
-            let descMatch = aula.description?.lowercased().contains(query) ?? false
+            
+            let nomeMatch = textsMatch(aula.nome, query)
+            let descMatch = aula.description.map { textsMatch($0, query) } ?? false
+            
             return nomeMatch || descMatch
         }
     }
@@ -143,7 +156,7 @@ struct SearchView: View {
     private func handleAulaSelection(_ aula: Aula) {
         SearchHistoryManager.shared.salva(query: aula.nome)
         loadRecents()
-        selectedRoomName = aula.nome 
+        selectedRoomName = aula.nome
         selectedBuildingName = aula.edificio
     }
 
@@ -157,9 +170,8 @@ struct SearchView: View {
     }
 
     private func selectFirstMatchingAula(for query: String) {
-        let lowerQuery = query.lowercased()
         if let aula = filteredAule.first(where: {
-            $0.nome.lowercased() == lowerQuery || ($0.description?.lowercased() == lowerQuery)
+            textsMatch($0.nome, query) || textsMatch($0.description ?? "", query)
         }) {
             handleAulaSelection(aula)
         }
@@ -177,7 +189,6 @@ struct SearchView: View {
             return .yellow
         }
     }
-
 }
 
 #Preview {
