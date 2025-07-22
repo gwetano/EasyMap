@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -63,6 +63,7 @@
 		1F43EE2A2E06C9A300D00794 /* EasyMapUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyMapUITests.swift; sourceTree = "<group>"; };
 		1F43EE2C2E06C9A300D00794 /* EasyMapUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyMapUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1F43EE392E06CA0C00D00794 /* CampusMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampusMapView.swift; sourceTree = "<group>"; };
+		1F6D822C2E2F857A0015FE1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1F803B572E0AFA4300415689 /* AnnuncioStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnuncioStore.swift; sourceTree = "<group>"; };
 		1FAE63952E1FF2210057A03E /* MensaPDFView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MensaPDFView.swift; sourceTree = "<group>"; };
 		1FAE63972E1FF2350057A03E /* PDFKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFKitView.swift; sourceTree = "<group>"; };
@@ -80,12 +81,7 @@
 		ED7C0E372E0D8E900049F3D2 /* LoginRegistrazione.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRegistrazione.swift; sourceTree = "<group>"; };
 		ED7C0E392E0D8EE10049F3D2 /* Profilo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profilo.swift; sourceTree = "<group>"; };
 		ED7C0E3B2E0D8F030049F3D2 /* Sessione.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sessione.swift; sourceTree = "<group>"; };
-		ED98B4662E09846C0024E3D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		ED386DD22E27A29D00FA3745 /* piani */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = piani; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		1F43EE092E06C9A000D00794 /* Frameworks */ = {
@@ -143,7 +139,6 @@
 				1FE656EA2E168E8F004C7BDD /* FloorPlanManager.swift */,
 				9939DFB02E1BD7610016624E /* SearchView.swift */,
 				1FCB506C2E0DD7A30024E5B2 /* FloorPlanView.swift */,
-				ED98B4662E09846C0024E3D2 /* Info.plist */,
 				1FCB50692E0DBF450024E5B2 /* Models.swift */,
 				1F43EE0F2E06C9A000D00794 /* EasyMapApp.swift */,
 				1F803B572E0AFA4300415689 /* AnnuncioStore.swift */,
@@ -158,7 +153,7 @@
 				ED7C0E392E0D8EE10049F3D2 /* Profilo.swift */,
 				ED7C0E3B2E0D8F030049F3D2 /* Sessione.swift */,
 				1F43EE152E06C9A300D00794 /* Preview Content */,
-				ED386DD22E27A29D00FA3745 /* piani */,
+				1F6D822C2E2F857A0015FE1F /* Info.plist */,
 			);
 			path = EasyMap;
 			sourceTree = "<group>";
@@ -202,9 +197,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				ED386DD22E27A29D00FA3745 /* piani */,
 			);
 			name = EasyMap;
 			productName = EasyMap;

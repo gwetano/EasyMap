@@ -17,137 +17,155 @@ struct FloorPlanImageView: View {
     @State private var isFirstLoad = true
     @State private var hasAnimatedToHighlightedRoom = false
     
+    @State private var mostraTutorial = false
+    
     private let minScale: CGFloat = 1.0
     private let maxScale: CGFloat = 5.0
     private let labelThreshold: CGFloat = 1
     
     var body: some View {
-        GeometryReader { geometry in
-            if let image = UIImage(named: floor.imageName) {
-                let imageSize = image.size
-                let aspectRatio = imageSize.width / imageSize.height
-                
-                let viewWidth = geometry.size.width
-                let viewHeight = geometry.size.height
-                
-                let imageHeight = viewHeight
-                let imageWidth = imageHeight * aspectRatio
-                
-                let initialOffsetX = isFirstLoad ? (viewWidth - imageWidth) / 2 : 0
-                let initialOffsetY: CGFloat = 0
-                
-                ZStack {
-                    Color.black.opacity(0.05)
+        ZStack{
+            GeometryReader { geometry in
+                if let image = UIImage(named: floor.imageName) {
+                    let imageSize = image.size
+                    let aspectRatio = imageSize.width / imageSize.height
+                    
+                    let viewWidth = geometry.size.width
+                    let viewHeight = geometry.size.height
+                    
+                    let imageHeight = viewHeight
+                    let imageWidth = imageHeight * aspectRatio
+                    
+                    let initialOffsetX = isFirstLoad ? (viewWidth - imageWidth) / 2 : 0
+                    let initialOffsetY: CGFloat = 0
                     
                     ZStack {
-                        Image(uiImage: image)
-                            .resizable()
-                            .frame(width: imageWidth, height: imageHeight)
-                            .clipped()
+                        Color.black.opacity(0.05)
                         
-                        ForEach(floor.rooms) { room in
-                            Button(action: {
-                                selectedRoom = room
-                            }) {
-                                ZStack {
-                                    Rectangle()
-                                        .fill(roomStatusManager.getRoomColor(for: room)
-                                            .opacity(getOpacityForRoom(room)))
-                                    
-                                    if scale >= labelThreshold {
-                                        Text(room.name)
-                                            .font(.system(size: 8 / scale))
-                                            .foregroundColor(.primary)
-                                            .padding(2)
-                                            .background(Color.white.opacity(0.4))
+                        ZStack {
+                            Image(uiImage: image)
+                                .resizable()
+                                .frame(width: imageWidth, height: imageHeight)
+                                .clipped()
+                            
+                            ForEach(floor.rooms) { room in
+                                Button(action: {
+                                    selectedRoom = room
+                                }) {
+                                    ZStack {
+                                        Rectangle()
+                                            .fill(roomStatusManager.getRoomColor(for: room)
+                                                .opacity(getOpacityForRoom(room)))
+                                        
+                                        if scale >= labelThreshold {
+                                            Text(room.name)
+                                                .font(.system(size: 8 / scale))
+                                                .foregroundColor(.primary)
+                                                .padding(2)
+                                                .background(Color.white.opacity(0.4))
+                                        }
                                     }
                                 }
+                                .buttonStyle(PlainButtonStyle())
+                                .frame(
+                                    width: room.size.width * imageWidth,
+                                    height: room.size.height * imageHeight
+                                )
+                                .position(
+                                    x: room.position.x * imageWidth,
+                                    y: room.position.y * imageHeight
+                                )
                             }
-                            .buttonStyle(PlainButtonStyle())
-                            .frame(
-                                width: room.size.width * imageWidth,
-                                height: room.size.height * imageHeight
+                        }
+                        .frame(width: imageWidth, height: imageHeight)
+                        .scaleEffect(scale)
+                        .offset(x: initialOffsetX + offset.width, y: initialOffsetY + offset.height)
+                        .gesture(
+                            SimultaneousGesture(
+                                MagnificationGesture()
+                                    .onChanged { value in
+                                        let newScale = min(max(lastScale * value, minScale), maxScale)
+                                        let centerX = geometry.size.width / 2
+                                        let centerY = geometry.size.height / 2
+                                        let imagePointX = (centerX - initialOffsetX - lastOffset.width) / lastScale
+                                        let imagePointY = (centerY - initialOffsetY - lastOffset.height) / lastScale
+                                        let newOffsetX = centerX - initialOffsetX - imagePointX * newScale
+                                        let newOffsetY = centerY - initialOffsetY - imagePointY * newScale
+                                        
+                                        scale = newScale
+                                        offset = CGSize(width: newOffsetX, height: newOffsetY)
+                                    }
+                                    .onEnded { _ in
+                                        lastScale = scale
+                                        offset = limitOffset(offset, scale: scale, geometry: geometry, imageWidth: imageWidth, imageHeight: imageHeight, initialOffsetX: initialOffsetX, initialOffsetY: initialOffsetY)
+                                        lastOffset = offset
+                                    },
+                                
+                                DragGesture()
+                                    .onChanged { value in
+                                        let newOffset = CGSize(
+                                            width: lastOffset.width + value.translation.width,
+                                            height: lastOffset.height + value.translation.height
+                                        )
+                                        offset = limitOffset(newOffset, scale: scale, geometry: geometry, imageWidth: imageWidth, imageHeight: imageHeight, initialOffsetX: initialOffsetX, initialOffsetY: initialOffsetY)
+                                    }
+                                    .onEnded { _ in
+                                        lastOffset = offset
+                                    }
                             )
-                            .position(
-                                x: room.position.x * imageWidth,
-                                y: room.position.y * imageHeight
-                            )
+                        )
+                        .onTapGesture(count: 2) {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                scale = 1.0
+                                lastScale = 1.0
+                                offset = .zero
+                                lastOffset = .zero
+                            }
                         }
                     }
-                    .frame(width: imageWidth, height: imageHeight)
-                    .scaleEffect(scale)
-                    .offset(x: initialOffsetX + offset.width, y: initialOffsetY + offset.height)
-                    .gesture(
-                        SimultaneousGesture(
-                            MagnificationGesture()
-                                .onChanged { value in
-                                    let newScale = min(max(lastScale * value, minScale), maxScale)
-                                    let centerX = geometry.size.width / 2
-                                    let centerY = geometry.size.height / 2
-                                    let imagePointX = (centerX - initialOffsetX - lastOffset.width) / lastScale
-                                    let imagePointY = (centerY - initialOffsetY - lastOffset.height) / lastScale
-                                    let newOffsetX = centerX - initialOffsetX - imagePointX * newScale
-                                    let newOffsetY = centerY - initialOffsetY - imagePointY * newScale
-                                    
-                                    scale = newScale
-                                    offset = CGSize(width: newOffsetX, height: newOffsetY)
-                                }
-                                .onEnded { _ in
-                                    lastScale = scale
-                                    offset = limitOffset(offset, scale: scale, geometry: geometry, imageWidth: imageWidth, imageHeight: imageHeight, initialOffsetX: initialOffsetX, initialOffsetY: initialOffsetY)
-                                    lastOffset = offset
-                                },
-                            
-                            DragGesture()
-                                .onChanged { value in
-                                    let newOffset = CGSize(
-                                        width: lastOffset.width + value.translation.width,
-                                        height: lastOffset.height + value.translation.height
-                                    )
-                                    offset = limitOffset(newOffset, scale: scale, geometry: geometry, imageWidth: imageWidth, imageHeight: imageHeight, initialOffsetX: initialOffsetX, initialOffsetY: initialOffsetY)
-                                }
-                                .onEnded { _ in
-                                    lastOffset = offset
-                                }
-                        )
-                    )
-                    .onTapGesture(count: 2) {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            scale = 1.0
-                            lastScale = 1.0
-                            offset = .zero
-                            lastOffset = .zero
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .clipped()
+                    .onAppear {
+                        if !hasAnimatedToHighlightedRoom {
+                            centerOnHighlightedRoom(
+                                geometry: geometry,
+                                imageWidth: imageWidth,
+                                imageHeight: imageHeight,
+                                initialOffsetX: initialOffsetX,
+                                initialOffsetY: initialOffsetY
+                            )
+                            hasAnimatedToHighlightedRoom = true
+                        }
+                        startHighlightAnimation()
+                        
+                        if !UserDefaults.standard.bool(forKey: "hasMostratoFloorPlanTutorial") {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                mostraTutorial = true
+                            }
                         }
                     }
-                }
-                .frame(width: geometry.size.width, height: geometry.size.height)
-                .clipped()
-                .onAppear {
-                    if !hasAnimatedToHighlightedRoom {
-                        centerOnHighlightedRoom(
-                            geometry: geometry,
-                            imageWidth: imageWidth,
-                            imageHeight: imageHeight,
-                            initialOffsetX: initialOffsetX,
-                            initialOffsetY: initialOffsetY
-                        )
-                        hasAnimatedToHighlightedRoom = true
+                    .onDisappear {
+                        stopHighlightAnimation()
                     }
-                    startHighlightAnimation()
+                } else {
+                    Text("Immagine non trovata")
+                        .foregroundColor(.red)
                 }
-                .onDisappear {
-                    stopHighlightAnimation()
+            }
+            .task {
+                await roomStatusManager.loadData()
+                isFirstLoad = false
+            }
+            
+            if mostraTutorial {
+                TutorialOverlay {
+                    mostraTutorial = false
+                    UserDefaults.standard.set(true, forKey: "hasMostratoFloorPlanTutorial")
                 }
-            } else {
-                Text("Immagine non trovata")
-                    .foregroundColor(.red)
             }
         }
-        .task {
-            await roomStatusManager.loadData()
-            isFirstLoad = false
-        }
     }
+    
     
     private func centerOnHighlightedRoom(
         geometry: GeometryProxy,

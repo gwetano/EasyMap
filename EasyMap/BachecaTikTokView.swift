@@ -9,6 +9,8 @@ struct BachecaTikTokView: View {
     @State private var mostraLoginView = false
     @State private var mostraProfilo = false
     
+    @State private var mostraTutorial = false
+    
     @EnvironmentObject var authManager: AuthManager
 
     var body: some View {
@@ -18,63 +20,77 @@ struct BachecaTikTokView: View {
             let availableHeight = geometry.size.height - safeAreaTop - headerHeight
             let availableWidth = geometry.size.width
             
-            VStack(spacing: 0) {
-                HStack {
-                    Button(action: {
-                        dismiss()
-                    }) {
-                        Image(systemName: "chevron.backward")
-                            .font(.title2)
-                            .foregroundColor(.primary)
-                            .padding(.horizontal, 17)
-                            .padding(.vertical, 12)
-                    }
-                    
-                    Spacer()
-                    
-                    HStack(spacing: 2) {
+            ZStack {
+                VStack(spacing: 0) {
+                    HStack {
                         Button(action: {
-                            mostraProfilo = true
+                            dismiss()
                         }) {
-                            Image(systemName: "person.crop.circle")
+                            Image(systemName: "chevron.backward")
                                 .font(.title2)
                                 .foregroundColor(.primary)
-                                .padding(.horizontal, 12)
+                                .padding(.horizontal, 17)
                                 .padding(.vertical, 12)
-                                .padding(.bottom, -5)
                         }
                         
-                        Button {
-                            if authManager.isAuthenticated {
-                                mostraCreazione = true
-                            } else {
-                                showLoginAlert = true
+                        Spacer()
+                        
+                        HStack(spacing: 2) {
+                            Button(action: {
+                                mostraProfilo = true
+                            }) {
+                                Image(systemName: "person.crop.circle")
+                                    .font(.title2)
+                                    .foregroundColor(.primary)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 12)
+                                    .padding(.bottom, -5)
                             }
-                        } label: {
-                            Image(systemName: "square.and.pencil")
-                                .font(.title2)
-                                .foregroundColor(.primary)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 12)
+                            
+                            Button {
+                                if authManager.isAuthenticated {
+                                    mostraCreazione = true
+                                } else {
+                                    showLoginAlert = true
+                                }
+                            } label: {
+                                Image(systemName: "square.and.pencil")
+                                    .font(.title2)
+                                    .foregroundColor(.primary)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 12)
+                            }
+                            
                         }
-                        
+                        .padding(.trailing, 5)
                     }
-                    .padding(.trailing, 5)
-                }
-                .frame(height: headerHeight)
-                .background(Color(.systemBackground))
+                    .frame(height: headerHeight)
+                    .background(Color(.systemBackground))
 
-                TabView {
-                    ForEach(store.annunci) { annuncio in
-                        AnnuncioCardView(
-                            annuncio: annuncio,
-                            availableSize: CGSize(width: availableWidth, height: availableHeight)
-                        )
+                    TabView {
+                        ForEach(store.annunci) { annuncio in
+                            AnnuncioCardView(
+                                annuncio: annuncio,
+                                availableSize: CGSize(width: availableWidth, height: availableHeight)
+                            )
+                        }
+                    }
+                    .tabViewStyle(.page(indexDisplayMode: .never))
+                    .onAppear{
+                        store.caricaDaServer()
+                        if !UserDefaults.standard.bool(forKey: "hasMostratoBachecaTutorial") {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                mostraTutorial = true
+                            }
+                        }
                     }
                 }
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .onAppear{
-                    store.caricaDaServer()
+                
+                if mostraTutorial {
+                    TutorialOverlay {
+                        mostraTutorial = false
+                        UserDefaults.standard.set(true, forKey: "hasMostratoBachecaTutorial")
+                    }
                 }
             }
         }
@@ -118,6 +134,132 @@ struct BachecaTikTokView: View {
                 .onEnded { value in
                     if value.translation.width > 100 {
                         dismiss()
+                    }
+                }
+        )
+    }
+}
+
+struct TutorialOverlay: View {
+    let onDismiss: () -> Void
+    @State private var animazioneOffset: CGFloat = 0
+    @State private var swipeOffset: CGFloat = 0
+    @State private var opacityTransition: CGFloat = 1
+    @State private var hasStartedSwipe: Bool = false
+    
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.7)
+                .ignoresSafeArea()
+            
+            VStack(spacing: 30) {
+                VStack(spacing: 20) {
+                    Text("Scorri orizzontalmente")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                    
+                    Text("Swipe per navigare")
+                        .font(.body)
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                }
+                
+                HStack(spacing: 15) {
+                    Image(systemName: "chevron.left")
+                        .font(.title)
+                        .foregroundColor(.white)
+                        .opacity(opacityTransition)
+                        .offset(x: animazioneOffset)
+                    
+                    Image(systemName: "hand.point.up.left.fill")
+                        .font(.largeTitle)
+                        .foregroundColor(.white)
+                        .offset(x: swipeOffset)
+                    
+                    Image(systemName: "chevron.right")
+                        .font(.title)
+                        .foregroundColor(.white)
+                        .opacity(opacityTransition)
+                        .offset(x: -animazioneOffset)
+                }
+                .onAppear {
+                    withAnimation(
+                        Animation.easeInOut(duration: 1.5)
+                            .repeatForever(autoreverses: true)
+                    ) {
+                        animazioneOffset = 20
+                    }
+                }
+                
+                VStack(spacing: 12) {
+                    if !hasStartedSwipe {
+                        Text("Prova ora! Scorri a destra o sinistra")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                            .transition(.opacity)
+                    } else {
+                        Text("Continua a scorrere...")
+                            .font(.headline)
+                            .foregroundColor(.green)
+                            .multilineTextAlignment(.center)
+                            .transition(.opacity)
+                    }
+                    
+                    HStack {
+                        Rectangle()
+                            .fill(Color.white.opacity(0.3))
+                            .frame(height: 4)
+                            .overlay(
+                                HStack {
+                                    Rectangle()
+                                        .fill(Color.green)
+                                        .frame(width: max(0, abs(swipeOffset) * 2), height: 4)
+                                    Spacer()
+                                }
+                            )
+                    }
+                    .frame(maxWidth: 200)
+                    .cornerRadius(2)
+                }
+                .animation(.easeInOut(duration: 0.3), value: hasStartedSwipe)
+            }
+            .padding()
+            .offset(x: swipeOffset * 0.1)
+        }
+        .gesture(
+            DragGesture()
+                .onChanged { value in
+                    swipeOffset = value.translation.width
+                    
+                    if !hasStartedSwipe && abs(value.translation.width) > 20 {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            hasStartedSwipe = true
+                            opacityTransition = 0
+                        }
+                    }
+                }
+                .onEnded { value in
+                    if abs(value.translation.width) > 100 {
+                        withAnimation(.easeOut(duration: 0.3)) {
+                            swipeOffset = value.translation.width > 0 ? 1000 : -1000
+                        }
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            onDismiss()
+                        }
+                    } else {
+                        withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                            swipeOffset = 0
+                        }
+                        
+                        if hasStartedSwipe && abs(value.translation.width) < 50 {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                hasStartedSwipe = false
+                                opacityTransition = 1
+                            }
+                        }
                     }
                 }
         )
