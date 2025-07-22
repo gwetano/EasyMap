@@ -5,7 +5,6 @@
 //  Created by Francesco Apicella on 24/06/25.
 //
 
-import Foundation
 import SwiftUI
 
 class AnnuncioStore: ObservableObject {

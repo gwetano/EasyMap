@@ -45,7 +45,7 @@ struct MensaPDFView: View {
                 if isLoading {
                     VStack(spacing: 20) {
                         ProgressView()
-                        Text("Caricamento del menu...")
+                        Text("Sto cucinando...")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }

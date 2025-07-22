@@ -402,10 +402,10 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "Lab 137",
+                    name: "Aula 137",
                     position: CGPoint(x: 0.5446, y: 0.638),
                     size: CGSize(width: 0.0547, height: 0.1),
-                    description: "Laboratorio 137",
+                    description: "Non elettrificata",
                     buildingName: "E"
                 ),
                 RoomImage(
@@ -430,7 +430,7 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "Aula Maurizio Mangrella",
+                    name: "Aula Mangrella - Teledottorato",
                     position: CGPoint(x: 0.6465, y: 0.5),
                     size: CGSize(width: 0.036, height: 0.1),
                     description: "Aula Maurizio Mangrella",
@@ -454,7 +454,7 @@ class BuildingDataManager: ObservableObject {
                     name: "Ufficio Tortorella",
                     position: CGPoint(x: 0.659, y: 0.638),
                     size: CGSize(width: 0.017, height: 0.1),
-                    description: "Ufficio Tortorella",
+                    description: "Ufficio Francesco Tortorella",
                     buildingName: "E"
                 ),
                 RoomImage(
@@ -475,7 +475,7 @@ class BuildingDataManager: ObservableObject {
                     name: "Ufficio Percannella",
                     position: CGPoint(x: 0.609, y: 0.638),
                     size: CGSize(width: 0.013, height: 0.1),
-                    description: "Ufficio Percannella",
+                    description: "Ufficio Gennaro Percannella",
                     buildingName: "E"
                 ),
                 RoomImage(
@@ -521,10 +521,10 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "Lab 167",
+                    name: "Aula 167 - Sala Seminari Graffi",
                     position: CGPoint(x: 0.829, y: 0.5),
                     size: CGSize(width: 0.0368, height: 0.1),
-                    description: "Didattico Sistemi",
+                    description: "Sala Seminari",
                     buildingName: "E"
                 ),
                 RoomImage(
@@ -591,10 +591,10 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "Aula 118",
+                    name: "Laboratorio 118 - Grafica computerizzata",
                     position: CGPoint(x: 0.27, y: 0.36),
                     size: CGSize(width: 0.047, height: 0.1),
-                    description: "Aula 118 - multimediale",
+                    description: "Grafica computerizzata",
                     buildingName: "E"
                 ),
                 RoomImage(
@@ -717,14 +717,14 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "Aula 119",
+                    name: "Spazio per attivita' complementari_119",
                     position: CGPoint(x: 0.26, y: 0.498),
                     size: CGSize(width: 0.025, height: 0.1),
                     description: "",
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "Biblioteca Berardi",
+                    name: "Sala 125 'Biblioteca Berardi'",
                     position: CGPoint(x: 0.292, y: 0.498),
                     size: CGSize(width: 0.035, height: 0.1),
                     description: "Stanza 32 - Biblioteca Berardi",
@@ -759,7 +759,7 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "Aula 106",
+                    name: "Spazio per attivita' complementari_106",
                     position: CGPoint(x: 0.0835, y: 0.498),
                     size: CGSize(width: 0.0353, height: 0.1),
                     description: "Aula 106",
@@ -773,7 +773,7 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "Aula 112",
+                    name: "Spazio per attivita' complementari_112",
                     position: CGPoint(x: 0.174, y: 0.498),
                     size: CGSize(width: 0.035, height: 0.1),
                     description: "Aula 112",
