@@ -863,21 +863,21 @@ class BuildingDataManager: ObservableObject {
                     name: "Aula Infografica",
                     position: CGPoint(x: 0.352, y: 0.517),
                     size: CGSize(width: 0.217, height: 0.44),
-                    description: "Aula seminari con disposizione a ferro di cavallo",
+                    description: "Aula con Pc",
                     buildingName: "E1"
                 ),
                 RoomImage(
                     name: "Aula N",
                     position: CGPoint(x: 0.654, y: 0.759),
                     size: CGSize(width: 0.212, height: 0.105),
-                    description: "Aula per lezioni frontali con proiettore",
+                    description: "Aula non elettrificata",
                     buildingName: "E1"
                 ),
                 RoomImage(
                     name: "Aula 102 CAD",
                     position: CGPoint(x: 0.654, y: 0.651),
                     size: CGSize(width: 0.212, height: 0.095),
-                    description: "Aula per lezioni frontali con proiettore",
+                    description: "Aula con pc",
                     buildingName: "E1"
                 ),
             ]
@@ -935,21 +935,21 @@ class BuildingDataManager: ObservableObject {
                     name: "Aula B",
                     position: CGPoint(x: 0.607, y: 0.384),
                     size: CGSize(width: 0.176, height: 0.17),
-                    description: "Aula per lezioni frontali con proiettore",
+                    description: "Aula non elettrificata",
                     buildingName: "E2"
                 ),
                 RoomImage(
                     name: "Aula A",
                     position: CGPoint(x: 0.615, y: 0.645),
                     size: CGSize(width: 0.16, height: 0.17),
-                    description: "Aula per lezioni frontali con proiettore",
+                    description: "Aula non elettrificata",
                     buildingName: "E2"
                 ),
                 RoomImage(
                     name: "Aula C",
                     position: CGPoint(x: 0.354, y: 0.388),
                     size: CGSize(width: 0.185, height: 0.185),
-                    description: "Aula per lezioni frontali con proiettore",
+                    description: "Aula elettrificata con prese sotto i banchi",
                     buildingName: "E2"
                 )
             ]
@@ -964,28 +964,28 @@ class BuildingDataManager: ObservableObject {
                     name: "Aula I",
                     position: CGPoint(x: 0.6265, y: 0.361),
                     size: CGSize(width: 0.22, height: 0.216),
-                    description: "Aula seminari con disposizione a ferro di cavallo",
+                    description: "Aula elettrificata",
                     buildingName: "E2"
                 ),
                 RoomImage(
                     name: "Aula H",
                     position: CGPoint(x: 0.632, y: 0.67),
                     size: CGSize(width: 0.21, height: 0.217),
-                    description: "Aula per lezioni frontali con proiettore",
+                    description: "Aula elettrificata",
                     buildingName: "E2"
                 ),
                 RoomImage(
                     name: "Aula L",
                     position: CGPoint(x: 0.323, y: 0.427),
                     size: CGSize(width: 0.22, height: 0.11),
-                    description: "Aula seminari con disposizione a ferro di cavallo",
+                    description: "Aula non elettrificata",
                     buildingName: "E2"
                 ),
                 RoomImage(
                     name: "Aula M",
                     position: CGPoint(x: 0.323, y: 0.308),
                     size: CGSize(width: 0.219, height: 0.11),
-                    description: "Aula per lezioni frontali con proiettore",
+                    description: "Aula non elettrificata",
                     buildingName: "E2"
                 )
             ]
