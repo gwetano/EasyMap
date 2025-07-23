@@ -75,7 +75,7 @@ struct ListaAule: View {
         }
     }
     
-    /// restituisce tutte le aule conosciute dei 3 edifici
+    
     private func allRooms() -> [RoomImage] {
         let buildings = ["E", "E1", "E2"]
         var result: [RoomImage] = []

@@ -58,7 +58,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        // guard let location = locations.last else { return }
+
         guard let location = locations.last else { return }
         
         if let missioniManager = missioniManager {
