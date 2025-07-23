@@ -289,17 +289,17 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "Lab 25",
+                    name: "Laboratorio T25 - Informatica di base",
                     position: CGPoint(x: 0.7229, y: 0.605),
                     size: CGSize(width: 0.0515, height: 0.145),
-                    description: "Laboratorio di Didattica di base T25",
+                    description: "Laboratorio con Pc",
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "Lab T-26",
+                    name: "Laboratorio T26",
                     position: CGPoint(x: 0.818, y: 0.605),
                     size: CGSize(width: 0.06, height: 0.145),
-                    description: "Ingegneria edile-architettura",
+                    description: "Laboratorio di Ingegneria edile-architettura",
                     buildingName: "E"
                 ),
                 RoomImage(
@@ -874,7 +874,7 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E1"
                 ),
                 RoomImage(
-                    name: "Aula 102 CAD",
+                    name: "Aula 102 - CAD",
                     position: CGPoint(x: 0.654, y: 0.651),
                     size: CGSize(width: 0.212, height: 0.095),
                     description: "Aula con pc",
