@@ -754,7 +754,9 @@ struct NavigationMissioneView: View {
     let missione: Missione
     @ObservedObject var missioniManager: MissioniGPSManager
     @Environment(\.dismiss) private var dismiss
-    
+
+    @StateObject private var adManager = AdManager.shared
+
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
@@ -774,7 +776,16 @@ struct NavigationMissioneView: View {
                         .multilineTextAlignment(.center)
                 }
                 .padding()
-                
+                .navigationBarTitleDisplayMode(.inline)
+
+                .onChange(of: missioniManager.missioneCompletataRecente?.id) { _ in
+                    guard let recent = missioniManager.missioneCompletataRecente else { return }
+                    if recent.titolo == missione.titolo {
+                        adManager.requestAd {
+                        }
+                    }
+                }
+
                 if let bearing = missioniManager.bearingToMission(missione),
                    let distanza = missioniManager.distanzaDaMissione(missione) {
                     VStack(spacing: 16) {
@@ -826,6 +837,9 @@ struct NavigationMissioneView: View {
                     }
                 }
             }
+        }
+        .fullScreenCover(isPresented: $adManager.isPresentingAd) {
+            AdFullscreenView(manager: adManager)
         }
     }
 }

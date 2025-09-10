@@ -89,6 +89,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
 struct CampusMapView: View {
     @State private var showSearchSheet = false
+    @StateObject private var adManager = AdManager.shared
     
     @StateObject private var locationManager = LocationManager()
     @State private var selectedBuilding: String? = nil
@@ -542,25 +543,11 @@ struct CampusMapView: View {
            .fullScreenCover(isPresented: $mostraPDFMensa) {
                MensaPDFView()
            }
+           .fullScreenCover(isPresented: $adManager.isPresentingAd) {
+               AdFullscreenView(manager: adManager)
+           }
+
             VStack(spacing: 11) {
-                HStack {
-                    Button(action: {
-                        mostraBacheca = true
-                    }) {
-                        HStack {
-                            Image(systemName: "text.bubble")
-                                .foregroundColor(.primary)
-                            Text("Bacheca")
-                                .foregroundColor(.primary)
-                                .font(.subheadline)
-                        }
-                        .padding(11)
-                        .background(.ultraThinMaterial)
-                        .cornerRadius(15)
-                    }
-                    .padding(.leading, 11)
-                    Spacer()
-                }
                 
                 HStack {
                     Button(action: {
@@ -654,15 +641,26 @@ struct CampusMapView: View {
         } else if isPointInPolygon(point: coordinate, polygon: edificioB2Coordinates) {
             selectedBuilding = "B2"
         } else if isPointInPolygon(point: coordinate, polygon: edificioQ2Coordinates) {
-            mostraPDFMensa = true
+            let showAd = Bool.random()
+            if showAd {
+                adManager.requestAd {
+                    mostraPDFMensa = true
+                }
+            } else {
+                mostraPDFMensa = true
+            }
         }else if isPointInPolygon(point: coordinate, polygon: bibliotecaScientificaCoordinates){
             if let url = URL(string: "https://www.biblioteche.unisa.it/chiedi-al-bibliotecario?richiesta=3") {
-                    openURL(url)
-                }
+                        adManager.requestAd {
+                            openURL(url)
+                        }
+                    }
         }else if isPointInPolygon(point: coordinate, polygon: bibliotecaUmanisticaCoordinates){
             if let url = URL(string: "https://www.biblioteche.unisa.it/chiedi-al-bibliotecario?richiesta=3") {
+                adManager.requestAd {
                     openURL(url)
                 }
+            }
         }
     }
 }

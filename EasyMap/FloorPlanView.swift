@@ -16,9 +16,7 @@ struct FloorPlanImageView: View {
     @State private var lastOffset: CGSize = .zero
     @State private var isFirstLoad = true
     @State private var hasAnimatedToHighlightedRoom = false
-    
-    @State private var mostraTutorial = false
-    
+        
     private let minScale: CGFloat = 1.0
     private let maxScale: CGFloat = 5.0
     private let labelThreshold: CGFloat = 1
@@ -138,11 +136,6 @@ struct FloorPlanImageView: View {
                         }
                         startHighlightAnimation()
                         
-                        if !UserDefaults.standard.bool(forKey: "hasMostratoFloorPlanTutorial") {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                mostraTutorial = true
-                            }
-                        }
                     }
                     .onDisappear {
                         stopHighlightAnimation()
@@ -155,13 +148,6 @@ struct FloorPlanImageView: View {
             .task {
                 await roomStatusManager.loadData()
                 isFirstLoad = false
-            }
-            
-            if mostraTutorial {
-                TutorialOverlay {
-                    mostraTutorial = false
-                    UserDefaults.standard.set(true, forKey: "hasMostratoFloorPlanTutorial")
-                }
             }
         }
     }
@@ -382,6 +368,7 @@ struct BuildingRoomListView: View {
 struct FloorPlanView: View {
     let buildingName: String
     let highlightedRoomName: String?
+    @StateObject private var adManager = AdManager.shared
     @Environment(\.dismiss) private var dismiss
     @StateObject private var buildingManager = BuildingDataManager.shared
     @State private var selectedFloorIndex = 0
@@ -492,8 +479,12 @@ struct FloorPlanView: View {
 
 struct RoomDetailView: View {
     let room: RoomImage
+    @StateObject private var adManager = AdManager.shared
+    @StateObject private var daily = DailyUnlockManager.shared
     @Environment(\.dismiss) private var dismiss
     @StateObject private var roomStatusManager = RoomStatusManager.shared
+    
+    @State private var shouldShowRewardedAd = false
     
     var body: some View {
         NavigationView {
@@ -587,46 +578,85 @@ struct RoomDetailView: View {
                     }
                     
                     if let aula = roomStatusManager.getAula(for: room) {
-                        if !aula.prenotazioni.isEmpty {
-                            Divider()
-                            
-                            VStack(alignment: .leading, spacing: 12) {
-                                HStack {
-                                    Image(systemName: "calendar.badge.clock")
-                                        .foregroundColor(.orange)
-                                        .frame(width: 24)
-                                    Text("Prenotazioni di oggi")
-                                        .font(.headline)
-                                        .fontWeight(.semibold)
-                                }
-                                .padding(.horizontal)
-                                
-                                ForEach(aula.prenotazioni.indices, id: \.self) { index in
-                                    let prenotazione = aula.prenotazioni[index]
-                                    PrenotazioneCard(prenotazione: prenotazione)
+                        Divider()
+                        ZStack {
+                            Group {
+                                if !aula.prenotazioni.isEmpty {
+                                    VStack(alignment: .leading, spacing: 12) {
+                                        HStack {
+                                            Image(systemName: "calendar.badge.clock")
+                                                .foregroundColor(.orange)
+                                                .frame(width: 24)
+                                            Text("Prenotazioni di oggi")
+                                                .font(.headline)
+                                                .fontWeight(.semibold)
+                                        }
+                                        .padding(.horizontal)
+
+                                        ForEach(aula.prenotazioni.indices, id: \.self) { index in
+                                            let prenotazione = aula.prenotazioni[index]
+                                            PrenotazioneCard(prenotazione: prenotazione)
+                                        }
+                                    }
+                                } else {
+                                    VStack(spacing: 12) {
+                                        HStack {
+                                            Image(systemName: "calendar.badge.checkmark")
+                                                .foregroundColor(.green)
+                                                .frame(width: 24)
+                                            Text("Nessuna prenotazione oggi")
+                                                .font(.headline)
+                                                .fontWeight(.semibold)
+                                        }
+                                        .padding(.horizontal)
+
+                                        Text("L'aula è libera per la giornata")
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)
+                                            .padding(.horizontal)
+                                    }
                                 }
                             }
-                        } else {
-                            Divider()
-                            
-                            VStack(spacing: 12) {
-                                HStack {
-                                    Image(systemName: "calendar.badge.checkmark")
-                                        .foregroundColor(.green)
-                                        .frame(width: 24)
-                                    Text("Nessuna prenotazione oggi")
+                            .blur(radius: daily.isUnlockedToday ? 0 : 20)
+                            .allowsHitTesting(daily.isUnlockedToday)
+
+                            if !daily.isUnlockedToday {
+                                VStack(spacing: 12) {
+                                    Image(systemName: "lock.fill")
+                                        .font(.title)
+                                        .foregroundColor(.primary)
+
+                                    Text("Prenotazioni bloccate")
                                         .font(.headline)
-                                        .fontWeight(.semibold)
+
+                                    Text("Guarda un annuncio di 20 secondi per sbloccarle per tutta la giornata.")
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                        .multilineTextAlignment(.center)
+                                        .padding(.horizontal)
+
+                                    Button {
+                                        shouldShowRewardedAd = true
+                                    } label: {
+                                        Text("SBLOCCA ORA")
+                                            .font(.headline)
+                                            .padding(.horizontal, 16)
+                                            .padding(.vertical, 10)
+                                            .background(Color.blue)
+                                            .foregroundColor(.white)
+                                            .cornerRadius(10)
+                                    }
                                 }
-                                .padding(.horizontal)
-                                
-                                Text("L'aula è libera per la giornata")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                    .padding(.horizontal)
+                                .frame(maxWidth: .infinity)
+                                .frame(minHeight: 340, alignment: .center)
+                                .animation(.easeInOut(duration: 0.2), value: daily.isUnlockedToday)
+                                .padding()
+                                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                                .padding()
                             }
                         }
                     }
+
                     
                     Spacer(minLength: 20)
                 }
@@ -636,6 +666,14 @@ struct RoomDetailView: View {
         }
         .task {
             await roomStatusManager.loadData()
+        }
+        .fullScreenCover(isPresented: $shouldShowRewardedAd) {
+            RewardedAdFullscreenView(manager: adManager) {
+                shouldShowRewardedAd = false
+            }
+        }
+        .onAppear {
+            daily.refresh()
         }
     }
     
