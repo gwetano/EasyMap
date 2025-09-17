@@ -32,6 +32,8 @@
 		ED7C0E382E0D8E900049F3D2 /* LoginRegistrazione.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7C0E372E0D8E900049F3D2 /* LoginRegistrazione.swift */; };
 		ED7C0E3A2E0D8EE10049F3D2 /* Profilo.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7C0E392E0D8EE10049F3D2 /* Profilo.swift */; };
 		ED7C0E3C2E0D8F030049F3D2 /* Sessione.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7C0E3B2E0D8F030049F3D2 /* Sessione.swift */; };
+		EDB177612E72B2F30020377F /* AdManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB177602E72B2F30020377F /* AdManager.swift */; };
+		EDB177632E72B3150020377F /* DailyUnlockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB177622E72B3150020377F /* DailyUnlockManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +83,8 @@
 		ED7C0E372E0D8E900049F3D2 /* LoginRegistrazione.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRegistrazione.swift; sourceTree = "<group>"; };
 		ED7C0E392E0D8EE10049F3D2 /* Profilo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profilo.swift; sourceTree = "<group>"; };
 		ED7C0E3B2E0D8F030049F3D2 /* Sessione.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sessione.swift; sourceTree = "<group>"; };
+		EDB177602E72B2F30020377F /* AdManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdManager.swift; sourceTree = "<group>"; };
+		EDB177622E72B3150020377F /* DailyUnlockManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyUnlockManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,11 +135,13 @@
 		1F43EE0E2E06C9A000D00794 /* EasyMap */ = {
 			isa = PBXGroup;
 			children = (
+				EDB177602E72B2F30020377F /* AdManager.swift */,
 				1FAE63992E1FF24F0057A03E /* PDFViewerView.swift */,
 				1FAE63972E1FF2350057A03E /* PDFKitView.swift */,
 				1FAE63952E1FF2210057A03E /* MensaPDFView.swift */,
 				ED7A0ED22E1BC3E800951658 /* AnnuncioCardProfiloView.swift */,
 				1FB352242E1826BD00A581EA /* MissionView.swift */,
+				EDB177622E72B3150020377F /* DailyUnlockManager.swift */,
 				1FE656EA2E168E8F004C7BDD /* FloorPlanManager.swift */,
 				9939DFB02E1BD7610016624E /* SearchView.swift */,
 				1FCB506C2E0DD7A30024E5B2 /* FloorPlanView.swift */,
@@ -331,6 +337,8 @@
 				ED7C0E3A2E0D8EE10049F3D2 /* Profilo.swift in Sources */,
 				1FE656EB2E168EA2004C7BDD /* FloorPlanManager.swift in Sources */,
 				1FCB506D2E0DD7A30024E5B2 /* FloorPlanView.swift in Sources */,
+				EDB177612E72B2F30020377F /* AdManager.swift in Sources */,
+				EDB177632E72B3150020377F /* DailyUnlockManager.swift in Sources */,
 				99CE50FE2E0B02A100A4819B /* BachecaTikTokView.swift in Sources */,
 				1FB352252E1826C400A581EA /* MissionView.swift in Sources */,
 			);

@@ -781,5 +781,5 @@ struct PrenotazioneCard: View {
 }
 
 #Preview {
-    FloorPlanView(buildingName: "E", highlightedRoomName: "E1.01")
+    FloorPlanView(buildingName: "D3", highlightedRoomName: "F3.01")
 }

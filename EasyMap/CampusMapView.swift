@@ -547,48 +547,58 @@ struct CampusMapView: View {
                AdFullscreenView(manager: adManager)
            }
 
-            VStack(spacing: 11) {
+            VStack {
+                Spacer()
                 
-                HStack {
-                    Button(action: {
-                        mostraMissioni = true
-                    }) {
+                HStack(spacing: 0) {
+                    // Spacer 5% dal bordo sinistro
+                    Spacer()
+                        .frame(maxWidth: .infinity)
+                        .layoutPriority(0.05)
+                    
+                    // Barra di ricerca 80%
+                    Button {
+                        showSearchSheet.toggle()
+                    } label: {
                         HStack {
-                            Image(systemName: "flag.checkered")
+                            Image(systemName: "magnifyingglass")
                                 .foregroundColor(.primary)
-                            Text("Missioni")
+                            Text("Cerca aula…")
                                 .foregroundColor(.primary)
                                 .font(.subheadline)
+                            Spacer()
                         }
                         .padding(11)
                         .background(.ultraThinMaterial)
                         .cornerRadius(15)
                     }
-                    .padding(.leading, 11)
+                    .frame(maxWidth: .infinity)
+                    .layoutPriority(0.8)
+                    
+                    // Spacer 5% tra i due pulsanti
                     Spacer()
-                }
-
-                Spacer()
-            }
-            
-            VStack {
-                Spacer()
-                Button {
-                    showSearchSheet.toggle()
-                } label: {
-                    HStack {
-                        Image(systemName: "magnifyingglass")
+                        .frame(maxWidth: .infinity)
+                        .layoutPriority(0.05)
+                    
+                    // Tasto missioni 10%
+                    Button(action: {
+                        mostraMissioni = true
+                    }) {
+                        Image(systemName: "flag.checkered")
                             .foregroundColor(.primary)
-                        Text("Cerca aula…")
-                            .foregroundColor(.primary)
-                            .font(.subheadline)
-                        Spacer()
+                            .padding(11)
+                            .background(.ultraThinMaterial)
+                            .cornerRadius(15)
                     }
-                    .padding(11)
-                    .background(.ultraThinMaterial)
-                    .cornerRadius(15)
-                    .padding(.horizontal, 15)
+                    .frame(maxWidth: .infinity)
+                    .layoutPriority(0.1)
+                    
+                    // Spacer 5% dal bordo destro
+                    Spacer()
+                        .frame(maxWidth: .infinity)
+                        .layoutPriority(0.05)
                 }
+                .padding(.horizontal, 15)
             }
             .fullScreenCover(isPresented: $mostraBacheca) {
                 BachecaTikTokView(store: store)

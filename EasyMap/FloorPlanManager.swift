@@ -101,11 +101,600 @@ class BuildingDataManager: ObservableObject {
             return createBuildingE1()
         case "E2":
             return createBuildingE2()
+        case "F3":
+            return createBuildingF3()
+        case "D3":
+            return createBuildingD3()
+        case "C1":
+            return createBuildingC1()
+        case "C2":
+            return createBuildingC2()
+        case "F2":
+            return createBuildingF2()
+        case "F1":
+            return createBuildingF1()
+        case "D1":
+            return createBuildingD1()
+        case "D2":
+            return createBuildingD2()
+/*
+        case "F":
+            return createBuildingF()
+        case "D":
+            return createBuildingD()
+        case "C":
+            return createBuildingC()
+        case "B":
+            return createBuildingB()
+        case "B1":
+            return createBuildingB1()
+        case "B2":
+            return createBuildingB2()*/
         default:
             return nil
         }
     }
 
+    private func createBuildingC1() -> Building {
+        let floor0 = Floor(
+            number: 0,
+            name: "Piano Terra",
+            imageName: "edificio_c1_piano_0",
+            rooms: [
+                RoomImage(
+                    name: "Aula delle Lauree - Nicola Cilento",
+                    position: CGPoint(x: 0.4955, y: 0.4162),
+                    size: CGSize(width: 0.4228, height: 0.1628),
+                    description: "Aula",
+                    buildingName: "C1"
+                ),
+                RoomImage(
+                    name: "Aula Pecoraro",
+                    position: CGPoint(x: 0.6239, y: 0.6661),
+                    size: CGSize(width: 0.1633, height: 0.1640),
+                    description: "Aula",
+                    buildingName: "C1"
+                )
+            ]
+        )
+        
+        return Building(
+            name: "C1",
+            floors: [floor0])
+    }
+    
+    private func createBuildingD1() -> Building {
+        let floor0 = Floor(
+            number: 0,
+            name: "Piano Terra",
+            imageName: "edificio_d1_piano_0",
+            rooms: [
+                RoomImage(
+                    name: "Aula A - ECONOMIA",
+                    position: CGPoint(x: 0.6488, y: 0.4455),
+                    size: CGSize(width: 0.1839, height: 0.3125),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D1"
+                ),
+                RoomImage(
+                    name: "Aula B - ECONOMIA",
+                    position: CGPoint(x: 0.4067, y: 0.2950),
+                    size: CGSize(width: 0.2855, height: 0.1307),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D1"
+                )
+            ]
+        )
+        
+        let floor1 = Floor(
+            number: 1,
+            name: "Primo Piano",
+            imageName: "edificio_d1_piano_1",
+            rooms: [
+                RoomImage(
+                    name: "Aula Informatica - DISES",
+                    position: CGPoint(x: 0.3501, y: 0.3226),
+                    size: CGSize(width: 0.2121, height: 0.1214),
+                    description: "Nessuna descrizione",
+                    buildingName: "D1"
+                ),
+                RoomImage(
+                    name: "Aula D",
+                    position: CGPoint(x: 0.6312, y: 0.4060),
+                    size: CGSize(width: 0.2173, height: 0.1193),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D1"
+                ),
+                RoomImage(
+                    name: "Laboratorio Informatico E Multimediale",
+                    position: CGPoint(x: 0.6568, y: 0.4917),
+                    size: CGSize(width: 0.1660, height: 0.0475),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D1"
+                )
+            ]
+        )
+
+        
+        let floor2 = Floor(
+            number: 2,
+            name: "Secondo Piano",
+            imageName: "edificio_d1_piano_2",
+            rooms: [
+                RoomImage(
+                    name: "Centro Elaborazione Dati",
+                    position: CGPoint(x: 0.5942, y: 0.4321),
+                    size: CGSize(width: 0.1229, height: 0.0994),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D1"
+                ),
+                RoomImage(
+                    name: "Aula del Consiglio",
+                    position: CGPoint(x: 0.5930, y: 0.5418),
+                    size: CGSize(width: 0.1249, height: 0.1013),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D1"
+                ),
+                RoomImage(
+                    name: "Biblioteca",
+                    position: CGPoint(x: 0.5926, y: 0.6491),
+                    size: CGSize(width: 0.1227, height: 0.0942),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D1"
+                )
+            ]
+        )
+
+
+        return Building(
+            name: "D1",
+            floors: [floor0,floor1,floor2])
+    }
+    
+    private func createBuildingD2() -> Building {
+        let floorm1 = Floor(
+            number: -1,
+            name: "Sottoscala",
+            imageName: "edificio_d2_piano_-1",
+            rooms: [
+                RoomImage(
+                    name: "Aula SP7",
+                    position: CGPoint(x: 0.3039, y: 0.5892),
+                    size: CGSize(width: 0.0922, height: 0.1045),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D2"
+                ),
+                RoomImage(
+                    name: "Aula SP8",
+                    position: CGPoint(x: 0.3434, y: 0.4969),
+                    size: CGSize(width: 0.1671, height: 0.0596),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D2"
+                ),
+                RoomImage(
+                    name: "Aula SP9",
+                    position: CGPoint(x: 0.3936, y: 0.5883),
+                    size: CGSize(width: 0.0674, height: 0.1048),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D2"
+                ),
+                RoomImage(
+                    name: "Aula SPB",
+                    position: CGPoint(x: 0.6188, y: 0.5912),
+                    size: CGSize(width: 0.2467, height: 0.2493),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D2"
+                )
+            ]
+        )
+        
+        let floor0 = Floor(
+            number: 0,
+            name: "Piano Terra",
+            imageName: "edificio_d2_piano_0",
+            rooms: [
+                RoomImage(
+                    name: "Aula SP3",
+                    position: CGPoint(x: 0.6091, y: 0.3693),
+                    size: CGSize(width: 0.1732, height: 0.1535),
+                    description: "Nessuna descrizione",
+                    buildingName: "D2"
+                ),
+                RoomImage(
+                    name: "Aula SP4",
+                    position: CGPoint(x: 0.3742, y: 0.3671),
+                    size: CGSize(width: 0.1641, height: 0.1527),
+                    description: "Nessuna descrizione",
+                    buildingName: "D2"
+                ),
+                RoomImage(
+                    name: "Laboratorio SP5",
+                    position: CGPoint(x: 0.3746, y: 0.5686),
+                    size: CGSize(width: 0.1621, height: 0.0640),
+                    description: "Nessuna descrizione",
+                    buildingName: "D2"
+                ),
+                RoomImage(
+                    name: "Aula SP6",
+                    position: CGPoint(x: 0.3758, y: 0.6503),
+                    size: CGSize(width: 0.1613, height: 0.0808),
+                    description: "Nessuna descrizione",
+                    buildingName: "D2"
+                ),
+                RoomImage(
+                    name: "Aula SPA",
+                    position: CGPoint(x: 0.6702, y: 0.6713),
+                    size: CGSize(width: 0.2830, height: 0.2692),
+                    description: "Nessuna descrizione",
+                    buildingName: "D2"
+                )
+            ]
+        )
+
+        
+        let floor1 = Floor(
+            number: 1,
+            name: "Primo Piano",
+            imageName: "edificio_d2_piano_1",
+            rooms: [
+                RoomImage(
+                    name: "Aula Valdo D'Arienzo (Ex SP2)",
+                    position: CGPoint(x: 0.6452, y: 0.4250),
+                    size: CGSize(width: 0.1545, height: 0.0832),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D2"
+                ),
+                RoomImage(
+                    name: "Aula Angelo Saturno (Ex SP1)",
+                    position: CGPoint(x: 0.6453, y: 0.3262),
+                    size: CGSize(width: 0.1528, height: 0.0939),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D2"
+                ),RoomImage(
+                    name: "Aula del Consiglio - 'Vittorio Foa'",
+                    position: CGPoint(x: 0.3492, y: 0.4279),
+                    size: CGSize(width: 0.1547, height: 0.0916),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D2"
+                ),RoomImage(
+                    name: "Aula delle Lauree - 'Gabriele De Rosa'",
+                    position: CGPoint(x: 0.7073, y: 0.6347),
+                    size: CGSize(width: 0.1690, height: 0.1858),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D2"
+                ),RoomImage(
+                    name: "Aula Multimediale D2LAB",
+                    position: CGPoint(x: 0.3542, y: 0.3078),
+                    size: CGSize(width: 0.1486, height: 0.1333),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D2"
+                )
+            ]
+        )
+
+
+        return Building(
+            name: "D2",
+            floors: [floorm1,floor0,floor1])
+    }
+    
+    private func createBuildingF1() -> Building {
+        let floor0 = Floor(
+            number: 0,
+            name: "Piano Terra",
+            imageName: "edificio_f1_piano_0",
+            rooms: [
+                RoomImage(
+                    name: "Aula 1",
+                    position: CGPoint(x: 0.3614, y: 0.6009),
+                    size: CGSize(width: 0.2048, height: 0.2844),
+                    description: "",
+                    buildingName: "F1"
+                ),
+                RoomImage(
+                    name: "Aula 2",
+                    position: CGPoint(x: 0.6419, y: 0.6404),
+                    size: CGSize(width: 0.1961, height: 0.2004),
+                    description: "",
+                    buildingName: "F1"
+                )
+                ,
+                RoomImage(
+                    name: "Laboratorio 3 - Farmiolab",
+                    position: CGPoint(x: 0.6590, y: 0.3122),
+                    size: CGSize(width: 0.1659, height: 0.1199),
+                    description: "",
+                    buildingName: "F1"
+                )
+                ,
+                RoomImage(
+                    name: "Laboratorio 4 - Farmiolab",
+                    position: CGPoint(x: 0.6638, y: 0.4145),
+                    size: CGSize(width: 0.1535, height: 0.0667),
+                    description: "",
+                    buildingName: "F1"
+                )
+            ]
+        )
+        
+        let floor1 = Floor(
+            number: 1,
+            name: "Primo Piano",
+            imageName: "edificio_f1_piano_1",
+            rooms: [
+                RoomImage(
+                    name: "Aula 8",
+                    position: CGPoint(x: 0.6197, y: 0.3168),
+                    size: CGSize(width: 0.1603, height: 0.0738),
+                    description: "",
+                    buildingName: "F1"
+                ),
+                RoomImage(
+                    name: "Aula 7",
+                    position: CGPoint(x: 0.6191, y: 0.3949),
+                    size: CGSize(width: 0.1599, height: 0.0662),
+                    description: "",
+                    buildingName: "F1"
+                ),
+                RoomImage(
+                    name: "Aula 6",
+                    position: CGPoint(x: 0.6196, y: 0.5656),
+                    size: CGSize(width: 0.1605, height: 0.0701),
+                    description: "",
+                    buildingName: "F1"
+                ),
+                RoomImage(
+                    name: "Aula 5",
+                    position: CGPoint(x: 0.6203, y: 0.6449),
+                    size: CGSize(width: 0.1615, height: 0.0728),
+                    description: "",
+                    buildingName: "F1"
+                ),
+                RoomImage(
+                    name: "Aula 4",
+                    position: CGPoint(x: 0.3827, y: 0.6707),
+                    size: CGSize(width: 0.1694, height: 0.1018),
+                    description: "",
+                    buildingName: "F1"
+                ),
+                RoomImage(
+                    name: "Aula 3",
+                    position: CGPoint(x: 0.3828, y: 0.5669),
+                    size: CGSize(width: 0.1711, height: 0.0897),
+                    description: "",
+                    buildingName: "F1"
+                ),
+                RoomImage(
+                    name: "Aula 9",
+                    position: CGPoint(x: 0.3536, y: 0.4767),
+                    size: CGSize(width: 0.1135, height: 0.0706),
+                    description: "",
+                    buildingName: "F1"
+                )
+            ]
+        )
+        
+        let floor2 = Floor(
+            number: 2,
+            name: "Secondo Piano",
+            imageName: "edificio_f1_piano_2",
+            rooms: [
+                RoomImage(
+                    name: "Aula 10",
+                    position: CGPoint(x: 0.3656, y: 0.5661),
+                    size: CGSize(width: 0.2107, height: 0.0834),
+                    description: "",
+                    buildingName: "F1"
+                ),
+                RoomImage(
+                    name: "Aula 11",
+                    position: CGPoint(x: 0.3877, y: 0.4786),
+                    size: CGSize(width: 0.1664, height: 0.0723),
+                    description: "",
+                    buildingName: "F1"
+                ),
+                RoomImage(
+                    name: "Aula AGR/1",
+                    position: CGPoint(x: 0.6427, y: 0.2871),
+                    size: CGSize(width: 0.2038, height: 0.1019),
+                    description: "",
+                    buildingName: "F1"
+                ),
+                RoomImage(
+                    name: "Aula AGR/2",
+                    position: CGPoint(x: 0.6421, y: 0.3907),
+                    size: CGSize(width: 0.2010, height: 0.0866),
+                    description: "",
+                    buildingName: "F1"
+                )
+            ]
+        )
+        
+        return Building(
+            name: "F1",
+            floors: [floor0,floor1,floor2])
+    }
+    
+    private func createBuildingC2() -> Building {
+        let floor0 = Floor(
+            number: 0,
+            name: "Piano Terra",
+            imageName: "edificio_c2_piano_0",
+            rooms: [
+                RoomImage(
+                    name: "Aula 1 - Marrazzo",
+                    position: CGPoint(x: 0.6571, y: 0.3434),
+                    size: CGSize(width: 0.3118, height: 0.2983),
+                    description: "Aula",
+                    buildingName: "C2"
+                ),
+                RoomImage(
+                    name: "Aula 6",
+                    position: CGPoint(x: 0.3228, y: 0.4123),
+                    size: CGSize(width: 0.1846, height: 0.1890),
+                    description: "Aula",
+                    buildingName: "C2"
+                ),
+                RoomImage(
+                    name: "Aula 5 - Pugliese",
+                    position: CGPoint(x: 0.5996, y: 0.6788),
+                    size: CGSize(width: 0.1821, height: 0.1744),
+                    description: "Aula",
+                    buildingName: "C2"
+                )
+            ]
+        )
+        
+        return Building(
+            name: "C2",
+            floors: [floor0])
+    }
+    
+    private func createBuildingD3() -> Building {
+        let floor0 = Floor(
+            number: 0,
+            name: "Piano Terra",
+            imageName: "edificio_d3_piano_0",
+            rooms: [
+                RoomImage(
+                    name: "Aula 6",
+                    position: CGPoint(x: 0.6562, y: 0.3572),
+                    size: CGSize(width: 0.2301, height: 0.2355),
+                    description: "Aula",
+                    buildingName: "D3"
+                ),
+                RoomImage(
+                    name: "Cappella",
+                    position: CGPoint(x: 0.4126, y: 0.6349),
+                    size: CGSize(width: 0.2622, height: 0.1769),
+                    description: "Cappella Unisa",
+                    buildingName: "D3"
+                ),
+                RoomImage(
+                    name: "Sala Comunitaria Ufficio Equipe",
+                    position: CGPoint(x: 0.5961, y: 0.6334),
+                    size: CGSize(width: 0.1013, height: 0.1698),
+                    description: "Ufficio Equipe",
+                    buildingName: "D3"
+                ),
+                RoomImage(
+                    name: "Ufficio Carriere DIPSUM",
+                    position: CGPoint(x: 0.7121, y: 0.6354),
+                    size: CGSize(width: 0.1147, height: 0.1668),
+                    description: "DIPSUM",
+                    buildingName: "D3"
+                )
+                
+            ]
+        )
+        
+        let floor1 = Floor(
+            number: 1,
+            name: "Primo Piano",
+            imageName: "edificio_d3_piano_1",
+            rooms: [
+                RoomImage(
+                    name: "Aula 10",
+                    position: CGPoint(x: 0.5977, y: 0.3439),
+                    size: CGSize(width: 0.0979, height: 0.2269),
+                    description: "Aula",
+                    buildingName: "D3"
+                ),
+                RoomImage(
+                    name: "Aula 9",
+                    position: CGPoint(x: 0.7089, y: 0.6504),
+                    size: CGSize(width: 0.1225, height: 0.2314),
+                    description: "Aula",
+                    buildingName: "D3"
+                ),
+                RoomImage(
+                    name: "Aula 8",
+                    position: CGPoint(x: 0.5697, y: 0.6507),
+                    size: CGSize(width: 0.1307, height: 0.2313),
+                    description: "Aula",
+                    buildingName: "D3"
+                ),
+                RoomImage(
+                    name: "Aula 7",
+                    position: CGPoint(x: 0.4369, y: 0.6513),
+                    size: CGSize(width: 0.1159, height: 0.2314),
+                    description: "Aula",
+                    buildingName: "D3"
+                ),
+                RoomImage(
+                    name: "Laboratorio Multimediale A.Russo",
+                    position: CGPoint(x: 0.2997, y: 0.6526),
+                    size: CGSize(width: 0.1368, height: 0.2287),
+                    description: "Laboratorio",
+                    buildingName: "D3"
+                ),
+                RoomImage(
+                    name: "Ufficio Didattica, Organi Collegiali, Alta Formazione Carriere ",
+                    position: CGPoint(x: 0.7127, y: 0.3433),
+                    size: CGSize(width: 0.1207, height: 0.2278),
+                    description: "Laboratorio",
+                    buildingName: "D3"
+                )
+                
+            ]
+        )
+        
+        let floor2 = Floor(
+            number: 2,
+            name: "Secondo Piano",
+            imageName: "edificio_d3_piano_2",
+            rooms: [
+                RoomImage(
+                    name: "Aula 13",
+                    position: CGPoint(x: 0.6043, y: 0.3425),
+                    size: CGSize(width: 0.1072, height: 0.2263),
+                    description: "Aula",
+                    buildingName: "D3"
+                ),
+                RoomImage(
+                    name: "Aula 12",
+                    position: CGPoint(x: 0.5632, y: 0.6584),
+                    size: CGSize(width: 0.1185, height: 0.2178),
+                    description: "Aula",
+                    buildingName: "D3"
+                ),
+                RoomImage(
+                    name: "Aula 11",
+                    position: CGPoint(x: 0.4387, y: 0.6601),
+                    size: CGSize(width: 0.1204, height: 0.2224),
+                    description: "Aula",
+                    buildingName: "D3"
+                ),
+                RoomImage(
+                    name: "Ufficio Carriere DIPSUM Ex Facolta Lettere",
+                    position: CGPoint(x: 0.3017, y: 0.6523),
+                    size: CGSize(width: 0.1420, height: 0.2336),
+                    description: "Ufficio",
+                    buildingName: "D3"
+                ),
+                RoomImage(
+                    name: "DIPSUM Direzione Sala Giunta",
+                    position: CGPoint(x: 0.7207, y: 0.3462),
+                    size: CGSize(width: 0.1063, height: 0.2311),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D3"
+                ),
+                RoomImage(
+                    name: "Studi Docenti e PTA",
+                    position: CGPoint(x: 0.6987, y: 0.6514),
+                    size: CGSize(width: 0.1412, height: 0.2326),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D3"
+                )
+                
+            ]
+        )
+        
+        return Building(
+            name: "D3",
+            floors: [floor0,floor1,floor2]
+            )
+    }
     
     private func createBuildingE() -> Building {
         let floor0 = Floor(
@@ -994,5 +1583,347 @@ class BuildingDataManager: ObservableObject {
             name: "E2",
             floors: [floor0, floor1])
     }
+    
+    private func createBuildingF2() -> Building {
+        let floorm1 = Floor(
+            number: -1,
+            name: "Sottoscala",
+            imageName: "edificio_f2_piano_-1",
+            rooms: [
+                RoomImage(
+                    name: "LAB CASA",
+                    position: CGPoint(x: 0.3894, y: 0.2293),
+                    size: CGSize(width: 0.1415, height: 0.1540),
+                    description: "Context Area Security Analytics",
+                    buildingName: "F2"
+                ),
+                RoomImage(
+                    name: "Laboratorio di Matematica",
+                    position: CGPoint(x: 0.5086, y: 0.2701),
+                    size: CGSize(width: 0.0853, height: 0.2375),
+                    description: "Laboratorio di Matematica",
+                    buildingName: "F2"
+                ),
+                RoomImage(
+                    name: "L12",
+                    position: CGPoint(x: 0.6355, y: 0.2475),
+                    size: CGSize(width: 0.1480, height: 0.1940),
+                    description: "Laboratorio 12",
+                    buildingName: "F2"
+                ),
+                RoomImage(
+                    name: "Laboratorio L11",
+                    position: CGPoint(x: 0.8039, y: 0.2695),
+                    size: CGSize(width: 0.1722, height: 0.2385),
+                    description: "Laboratorio 11",
+                    buildingName: "F2"
+                ),
+                RoomImage(
+                    name: "CG Lab",
+                    position: CGPoint(x: 0.7672, y: 0.4367),
+                    size: CGSize(width: 0.2392, height: 0.0777),
+                    description: "Nessuna Descrizione",
+                    buildingName: "F2"
+                ),
+                RoomImage(
+                    name: "Lab GIS",
+                    position: CGPoint(x: 0.7695, y: 0.5760),
+                    size: CGSize(width: 0.2406, height: 0.1845),
+                    description: "Nessuna Descrizione",
+                    buildingName: "F2"
+                ),
+                RoomImage(
+                    name: "Laboratorio Sammet",
+                    position: CGPoint(x: 0.7211, y: 0.7913),
+                    size: CGSize(width: 0.3416, height: 0.2349),
+                    description: "Nessuna Descrizione",
+                    buildingName: "F2"
+                ),
+                RoomImage(
+                    name: "Laboratorio Hopper",
+                    position: CGPoint(x: 0.3034, y: 0.7949),
+                    size: CGSize(width: 0.3394, height: 0.2277),
+                    description: "Nessuna Descrizione",
+                    buildingName: "F2"
+                ),
+                RoomImage(
+                    name: "CORSIA",
+                    position: CGPoint(x: 0.2510, y: 0.6273),
+                    size: CGSize(width: 0.2358, height: 0.0915),
+                    description: "Consorzio Di Ricerca Sistemi ad Agenti",
+                    buildingName: "F2"
+                ),
+                RoomImage(
+                    name: "SESE Lab",
+                    position: CGPoint(x: 0.2128, y: 0.4149),
+                    size: CGSize(width: 0.1558, height: 0.1337),
+                    description: "Nessuna Descrizione",
+                    buildingName: "F2"
+                )
+            ]
+        )
+        
+        let floor0 = Floor(
+            number: 0,
+            name: "Piano Terra",
+            imageName: "edificio_f2_piano_0",
+            rooms: [
+                RoomImage(
+                    name: "Aula F1",
+                    position: CGPoint(x: 0.4837, y: 0.2487),
+                    size: CGSize(width: 0.2344, height: 0.1281),
+                    description: "Nessuna Descrizione",
+                    buildingName: "F2"
+                ),
+                RoomImage(
+                    name: "Aula F2",
+                    position: CGPoint(x: 0.7475, y: 0.2379),
+                    size: CGSize(width: 0.2811, height: 0.1078),
+                    description: "Nessuna Descrizione",
+                    buildingName: "F2"
+                ),
+                RoomImage(
+                    name: "Aula F3",
+                    position: CGPoint(x: 0.7701, y: 0.3525),
+                    size: CGSize(width: 0.2339, height: 0.1042),
+                    description: "Nessuna Descrizione",
+                    buildingName: "F2"
+                ),
+                RoomImage(
+                    name: "Aula F4",
+                    position: CGPoint(x: 0.7838, y: 0.5005),
+                    size: CGSize(width: 0.2096, height: 0.1729),
+                    description: "Nessuna Descrizione",
+                    buildingName: "F2"
+                ),
+                RoomImage(
+                    name: "Aula F5",
+                    position: CGPoint(x: 0.8078, y: 0.7252),
+                    size: CGSize(width: 0.1617, height: 0.2559),
+                    description: "Nessuna Descrizione",
+                    buildingName: "F2"
+                ),
+                RoomImage(
+                    name: "Aula F6",
+                    position: CGPoint(x: 0.6585, y: 0.7497),
+                    size: CGSize(width: 0.1241, height: 0.2081),
+                    description: "Nessuna Descrizione",
+                    buildingName: "F2"
+                ),
+                RoomImage(
+                    name: "Aula F7",
+                    position: CGPoint(x: 0.5165, y: 0.7484),
+                    size: CGSize(width: 0.1498, height: 0.2112),
+                    description: "Nessuna Descrizione",
+                    buildingName: "F2"
+                ),
+                RoomImage(
+                    name: "Aula F8",
+                    position: CGPoint(x: 0.3271, y: 0.7251),
+                    size: CGSize(width: 0.2086, height: 0.2567),
+                    description: "Nessuna Descrizione",
+                    buildingName: "F2"
+                )
+            ]
+        )
+        
+        return Building(
+            name: "F2",
+            floors: [floorm1,floor0])
+    }
+    
+    private func createBuildingF3() -> Building {
+        let floorm1 = Floor(
+            number: -1,
+            name: "Sottoscala",
+            imageName: "edificio_f3_piano_-1",
+            rooms: [
+                RoomImage(
+                    name: "Aula P1 - Aula Magna G. Sodano",
+                    position: CGPoint(x: 0.6195, y: 0.4111),
+                    size: CGSize(width: 0.1970, height: 0.1934),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "Aula P0",
+                    position: CGPoint(x: 0.6187, y: 0.5433),
+                    size: CGSize(width: 0.1977, height: 0.0559),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "Aula P2",
+                    position: CGPoint(x: 0.6193, y: 0.6744),
+                    size: CGSize(width: 0.1981, height: 0.1894),
+                    description: "",
+                    buildingName: "F3"
+                )
+            ]
+        )
+        
+        let floor0 = Floor(
+            number: 0,
+            name: "Piano Terra",
+            imageName: "edificio_f3_piano_0",
+            rooms: [
+                RoomImage(
+                    name: "Aula P6",
+                    position: CGPoint(x: 0.6134, y: 0.6769),
+                    size: CGSize(width: 0.1599, height: 0.1042),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "Aula P5 - M. Transirico",
+                    position: CGPoint(x: 0.6129, y: 0.5636),
+                    size: CGSize(width: 0.1603, height: 0.1026),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "Aula P4 - Marinaro",
+                    position: CGPoint(x: 0.6130, y: 0.4044),
+                    size: CGSize(width: 0.1621, height: 0.1981),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "Aula P3 - Parmenter",
+                    position: CGPoint(x: 0.3641, y: 0.4013),
+                    size: CGSize(width: 0.2014, height: 0.1886),
+                    description: "",
+                    buildingName: "F3"
+                )
+            ]
+        )
+        
+        let floor1 = Floor(
+            number: 1,
+            name: "Primo Piano",
+            imageName: "edificio_f3_piano_1",
+            rooms: [
+                RoomImage(
+                    name: "Aula P10",
+                    position: CGPoint(x: 0.3672, y: 0.4545),
+                    size: CGSize(width: 0.1977, height: 0.0775),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "Aula P9",
+                    position: CGPoint(x: 0.3071, y: 0.3577),
+                    size: CGSize(width: 0.0791, height: 0.0986),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "Aula P8",
+                    position: CGPoint(x: 0.4082, y: 0.3466),
+                    size: CGSize(width: 0.1089, height: 0.0774),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "Aula P7",
+                    position: CGPoint(x: 0.6364, y: 0.3455),
+                    size: CGSize(width: 0.1914, height: 0.0761),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "Aula P11",
+                    position: CGPoint(x: 0.6324, y: 0.4438),
+                    size: CGSize(width: 0.1977, height: 0.1016),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "Laboratorio P12 - Multimediale",
+                    position: CGPoint(x: 0.6321, y: 0.5601),
+                    size: CGSize(width: 0.1972, height: 0.1124),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "Laboratorio P13",
+                    position: CGPoint(x: 0.6329, y: 0.6980),
+                    size: CGSize(width: 0.1954, height: 0.1474),
+                    description: "",
+                    buildingName: "F3"
+                )
+            ]
+        )
+        
+        let floor2 = Floor(
+            number: 2,
+            name: "Secondo Piano",
+            imageName: "edificio_f3_piano_2",
+            rooms: [
+                RoomImage(
+                    name: "Aula P17",
+                    position: CGPoint(x: 0.3160, y: 0.4448),
+                    size: CGSize(width: 0.0957, height: 0.0970),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "SAC18",
+                    position: CGPoint(x: 0.4187, y: 0.4338),
+                    size: CGSize(width: 0.0957, height: 0.0750),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "SAC19",
+                    position: CGPoint(x: 0.5870, y: 0.4398),
+                    size: CGSize(width: 0.1108, height: 0.0864),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "Aula P20",
+                    position: CGPoint(x: 0.5872, y: 0.5393),
+                    size: CGSize(width: 0.1091, height: 0.0916),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "Aula P21",
+                    position: CGPoint(x: 0.5876, y: 0.6379),
+                    size: CGSize(width: 0.1098, height: 0.0874),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "Aula P14",
+                    position: CGPoint(x: 0.7027, y: 0.4460),
+                    size: CGSize(width: 0.0544, height: 0.1058),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "Aula P15",
+                    position: CGPoint(x: 0.7044, y: 0.6343),
+                    size: CGSize(width: 0.0544, height: 0.1002),
+                    description: "",
+                    buildingName: "F3"
+                ),
+                RoomImage(
+                    name: "Aula P16",
+                    position: CGPoint(x: 0.5880, y: 0.7428),
+                    size: CGSize(width: 0.1126, height: 0.0560),
+                    description: "",
+                    buildingName: "F3"
+                )
+            ]
+        )
+        
+        return Building(
+            name: "F3",
+            floors: [floorm1,floor0,floor1,floor2]
+            )
+    }
+    
 }
 
