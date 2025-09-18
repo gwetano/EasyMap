@@ -117,15 +117,15 @@ class BuildingDataManager: ObservableObject {
             return createBuildingD1()
         case "D2":
             return createBuildingD2()
-/*
-        case "F":
-            return createBuildingF()
         case "D":
             return createBuildingD()
         case "C":
             return createBuildingC()
         case "B":
             return createBuildingB()
+/*
+        case "F":
+            return createBuildingF()
         case "B1":
             return createBuildingB1()
         case "B2":
@@ -133,6 +133,528 @@ class BuildingDataManager: ObservableObject {
         default:
             return nil
         }
+    }
+    
+    private func createBuildingB() -> Building {
+        let floor0 = Floor(
+            number: 0,
+            name: "Piano Terra",
+            imageName: "edificio_b_piano_0",
+            rooms: [
+                RoomImage(
+                    name: "Aula 18",
+                    position: CGPoint(x: 0.2099, y: 0.4413),
+                    size: CGSize(width: 0.0445, height: 0.1392),
+                    description: "",
+                    buildingName: "B"
+                ),
+                RoomImage(
+                    name: "Aula 17",
+                    position: CGPoint(x: 0.2597, y: 0.4410),
+                    size: CGSize(width: 0.0449, height: 0.1372),
+                    description: "",
+                    buildingName: "B"
+                ),
+                RoomImage(
+                    name: "Aula 12 - DISPAC",
+                    position: CGPoint(x: 0.2352, y: 0.6463),
+                    size: CGSize(width: 0.0961, height: 0.1603),
+                    description: "",
+                    buildingName: "B"
+                ),
+                RoomImage(
+                    name: "Aula 16",
+                    position: CGPoint(x: 0.3529, y: 0.4413),
+                    size: CGSize(width: 0.0451, height: 0.1389),
+                    description: "",
+                    buildingName: "B"
+                ),
+                RoomImage(
+                    name: "Aula 15",
+                    position: CGPoint(x: 0.4036, y: 0.4408),
+                    size: CGSize(width: 0.0459, height: 0.1386),
+                    description: "",
+                    buildingName: "B"
+                ),
+                RoomImage(
+                    name: "Aula 13",
+                    position: CGPoint(x: 0.3540, y: 0.6455),
+                    size: CGSize(width: 0.0466, height: 0.1617),
+                    description: "",
+                    buildingName: "B"
+                ),
+                RoomImage(
+                    name: "Aula 14 - Multimediale",
+                    position: CGPoint(x: 0.4035, y: 0.6455),
+                    size: CGSize(width: 0.0441, height: 0.1623),
+                    description: "",
+                    buildingName: "B"
+                ),
+                RoomImage(
+                    name: "Associazione Studenti Giurisprudenza",
+                    position: CGPoint(x: 0.3075, y: 0.6542),
+                    size: CGSize(width: 0.0394, height: 0.1453),
+                    description: "",
+                    buildingName: "B"
+                ),
+                RoomImage(
+                    name: "Agora",
+                    position: CGPoint(x: 0.5920, y: 0.6526),
+                    size: CGSize(width: 0.0404, height: 0.1480),
+                    description: "",
+                    buildingName: "B"
+                ),
+                RoomImage(
+                    name: "Aula Mancini",
+                    position: CGPoint(x: 0.5472, y: 0.4421),
+                    size: CGSize(width: 0.0468, height: 0.1385),
+                    description: "",
+                    buildingName: "B"
+                ),
+                RoomImage(
+                    name: "Aula D'Ambrosio",
+                    position: CGPoint(x: 0.4973, y: 0.4425),
+                    size: CGSize(width: 0.0437, height: 0.1392),
+                    description: "",
+                    buildingName: "B"
+                ),
+                RoomImage(
+                    name: "Aula Pugliatti",
+                    position: CGPoint(x: 0.6390, y: 0.4417),
+                    size: CGSize(width: 0.0463, height: 0.1412),
+                    description: "",
+                    buildingName: "B"
+                ),
+                RoomImage(
+                    name: "Aula Castellano",
+                    position: CGPoint(x: 0.6902, y: 0.4418),
+                    size: CGSize(width: 0.0466, height: 0.1381),
+                    description: "",
+                    buildingName: "B"
+                ),
+                RoomImage(
+                    name: "Aula 6 - Di Rago",
+                    position: CGPoint(x: 0.5217, y: 0.6442),
+                    size: CGSize(width: 0.0933, height: 0.1651),
+                    description: "",
+                    buildingName: "B"
+                ),
+                RoomImage(
+                    name: "Aula De Capraris",
+                    position: CGPoint(x: 0.6899, y: 0.6440),
+                    size: CGSize(width: 0.0454, height: 0.1639),
+                    description: "",
+                    buildingName: "B"
+                ),
+                RoomImage(
+                    name: "Aula Fenucci",
+                    position: CGPoint(x: 0.8194, y: 0.5232),
+                    size: CGSize(width: 0.1192, height: 0.3090),
+                    description: "",
+                    buildingName: "B"
+                )
+                ,
+                RoomImage(
+                    name: "Aula Volterra",
+                    position: CGPoint(x: 0.6392, y: 0.6446),
+                    size: CGSize(width: 0.0459, height: 0.1618),
+                    description: "",
+                    buildingName: "B"
+                )
+                
+
+            ]
+        )
+        
+        return Building(
+            name: "B",
+            floors: [floor0])
+    }
+    
+    private func createBuildingC() -> Building {
+        let floor0 = Floor(
+            number: 0,
+            name: "Piano Terra",
+            imageName: "edificio_c_piano_0",
+            rooms: [
+                RoomImage(
+                    name: "Aula 14",
+                    position: CGPoint(x: 0.0949, y: 0.4480),
+                    size: CGSize(width: 0.0294, height: 0.1202),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula 13",
+                    position: CGPoint(x: 0.1269, y: 0.4491),
+                    size: CGSize(width: 0.0286, height: 0.1241),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula 12",
+                    position: CGPoint(x: 0.1843, y: 0.4482),
+                    size: CGSize(width: 0.0284, height: 0.1214),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula 11",
+                    position: CGPoint(x: 0.2160, y: 0.4487),
+                    size: CGSize(width: 0.0293, height: 0.1216),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula 1 -  SCIENZE DELLA FORMAZIONE",
+                    position: CGPoint(x: 0.1109, y: 0.6295),
+                    size: CGSize(width: 0.0609, height: 0.1433),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula 2 /3",
+                    position: CGPoint(x: 0.2003, y: 0.6281),
+                    size: CGSize(width: 0.0609, height: 0.1414),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Associazione Futura",
+                    position: CGPoint(x: 0.1557, y: 0.6334),
+                    size: CGSize(width: 0.0239, height: 0.1283),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula 10",
+                    position: CGPoint(x: 0.2739, y: 0.4492),
+                    size: CGSize(width: 0.0292, height: 0.1201),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula 9",
+                    position: CGPoint(x: 0.3045, y: 0.4482),
+                    size: CGSize(width: 0.0289, height: 0.1265),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula 8 - SF",
+                    position: CGPoint(x: 0.3629, y: 0.4486),
+                    size: CGSize(width: 0.0281, height: 0.1221),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula 7 - SF",
+                    position: CGPoint(x: 0.3941, y: 0.4490),
+                    size: CGSize(width: 0.0284, height: 0.1212),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula 4 - SCIENZE DELLA FORMAZIONE",
+                    position: CGPoint(x: 0.2892, y: 0.6293),
+                    size: CGSize(width: 0.0585, height: 0.1403),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula 5/6",
+                    position: CGPoint(x: 0.3787, y: 0.6280),
+                    size: CGSize(width: 0.0589, height: 0.1408),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula Studio",
+                    position: CGPoint(x: 0.4737, y: 0.4559),
+                    size: CGSize(width: 0.0725, height: 0.1321),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Information Desk",
+                    position: CGPoint(x: 0.4734, y: 0.6447),
+                    size: CGSize(width: 0.0523, height: 0.0230),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula 4 - ECONOMIA",
+                    position: CGPoint(x: 0.5556, y: 0.6297),
+                    size: CGSize(width: 0.0589, height: 0.1393),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula 7 - ECONOMIA",
+                    position: CGPoint(x: 0.5403, y: 0.4496),
+                    size: CGSize(width: 0.0281, height: 0.1260),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula 8 - ECONOMIA",
+                    position: CGPoint(x: 0.5707, y: 0.4492),
+                    size: CGSize(width: 0.0281, height: 0.1237),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Forma Mentis",
+                    position: CGPoint(x: 0.5999, y: 0.6349),
+                    size: CGSize(width: 0.0247, height: 0.1272),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula SSC 3",
+                    position: CGPoint(x: 0.6290, y: 0.6301),
+                    size: CGSize(width: 0.0283, height: 0.1401),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula SSC 4",
+                    position: CGPoint(x: 0.6601, y: 0.6295),
+                    size: CGSize(width: 0.0283, height: 0.1405),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula 2",
+                    position: CGPoint(x: 0.6292, y: 0.4486),
+                    size: CGSize(width: 0.0284, height: 0.1239),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula SSC 1",
+                    position: CGPoint(x: 0.6602, y: 0.4499),
+                    size: CGSize(width: 0.0282, height: 0.1247),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula SSC 8",
+                    position: CGPoint(x: 0.7178, y: 0.4491),
+                    size: CGSize(width: 0.0297, height: 0.1218),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula SSC 10",
+                    position: CGPoint(x: 0.7499, y: 0.4491),
+                    size: CGSize(width: 0.0286, height: 0.1223),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula SSC 5",
+                    position: CGPoint(x: 0.7337, y: 0.6287),
+                    size: CGSize(width: 0.0587, height: 0.1403),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula SSC 9",
+                    position: CGPoint(x: 0.8073, y: 0.4488),
+                    size: CGSize(width: 0.0276, height: 0.1236),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula 11",
+                    position: CGPoint(x: 0.8383, y: 0.4492),
+                    size: CGSize(width: 0.0291, height: 0.1239),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Cartoleria CUSL",
+                    position: CGPoint(x: 0.7783, y: 0.6298),
+                    size: CGSize(width: 0.0245, height: 0.1402),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula SSC 6/7",
+                    position: CGPoint(x: 0.8228, y: 0.6296),
+                    size: CGSize(width: 0.0589, height: 0.1391),
+                    description: "",
+                    buildingName: "C"
+                )
+            ]
+        )
+        
+        let floor1 = Floor(
+            number: 1,
+            name: "Primo Piano",
+            imageName: "edificio_c_piano_1",
+            rooms: [
+                RoomImage(
+                    name: "Aula Alfonso Catania",
+                    position: CGPoint(x: 0.8152, y: 0.5179),
+                    size: CGSize(width: 0.0279, height: 0.0839),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Aula Dario Santamaria",
+                    position: CGPoint(x: 0.7861, y: 0.5188),
+                    size: CGSize(width: 0.0249, height: 0.0853),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Segreteria Scientifica Didattica",
+                    position: CGPoint(x: 0.7941, y: 0.6431),
+                    size: CGSize(width: 0.0410, height: 0.0910),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Segreteria Amministrativa",
+                    position: CGPoint(x: 0.8241, y: 0.6418),
+                    size: CGSize(width: 0.0137, height: 0.0916),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Mersa SNA Lab",
+                    position: CGPoint(x: 0.7362, y: 0.4007),
+                    size: CGSize(width: 0.0223, height: 0.0817),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Laboratorio Di Analisi Dati",
+                    position: CGPoint(x: 0.7121, y: 0.4002),
+                    size: CGSize(width: 0.0219, height: 0.0817),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Biblioteca Antonio Santucci",
+                    position: CGPoint(x: 0.7190, y: 0.5204),
+                    size: CGSize(width: 0.0555, height: 0.0883),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Osservatorio sui diritti umani",
+                    position: CGPoint(x: 0.7264, y: 0.6421),
+                    size: CGSize(width: 0.0122, height: 0.0913),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Center For European Studies",
+                    position: CGPoint(x: 0.7119, y: 0.6418),
+                    size: CGSize(width: 0.0128, height: 0.0943),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Centro Studi Sui Diritti Dell'Antico Oriente Mediterraneo",
+                    position: CGPoint(x: 0.6952, y: 0.6442),
+                    size: CGSize(width: 0.0151, height: 0.0932),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Laboratorio Made in Italy",
+                    position: CGPoint(x: 0.6449, y: 0.3985),
+                    size: CGSize(width: 0.0123, height: 0.0855),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Giuliano Grieco",
+                    position: CGPoint(x: 0.6297, y: 0.3985),
+                    size: CGSize(width: 0.0137, height: 0.0876),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Laboratorio Didattico e di Ricerca Gaetano Vardano",
+                    position: CGPoint(x: 0.6146, y: 0.3987),
+                    size: CGSize(width: 0.0110, height: 0.0872),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Biblioteca Alberto Trabocchi",
+                    position: CGPoint(x: 0.6483, y: 0.5170),
+                    size: CGSize(width: 0.0322, height: 0.0872),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Biblioteca Alessandro Graziani",
+                    position: CGPoint(x: 0.6175, y: 0.5184),
+                    size: CGSize(width: 0.0239, height: 0.0859),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Laboratorio Ligogi",
+                    position: CGPoint(x: 0.6519, y: 0.6420),
+                    size: CGSize(width: 0.0271, height: 0.0943),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Osservatorio Giuridico Sull'Impresa",
+                    position: CGPoint(x: 0.6297, y: 0.6420),
+                    size: CGSize(width: 0.0124, height: 0.0943),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "LABESS",
+                    position: CGPoint(x: 0.5765, y: 0.4247),
+                    size: CGSize(width: 0.0117, height: 0.1386),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Sala Master",
+                    position: CGPoint(x: 0.5549, y: 0.4244),
+                    size: CGSize(width: 0.0263, height: 0.1380),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Laboratorio Indico",
+                    position: CGPoint(x: 0.5320, y: 0.4229),
+                    size: CGSize(width: 0.0139, height: 0.1356),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "OPSAT",
+                    position: CGPoint(x: 0.5686, y: 0.6168),
+                    size: CGSize(width: 0.0269, height: 0.1454),
+                    description: "",
+                    buildingName: "C"
+                ),
+                RoomImage(
+                    name: "Laboratorio Archeologia",
+                    position: CGPoint(x: 0.5384, y: 0.6171),
+                    size: CGSize(width: 0.0280, height: 0.1461),
+                    description: "",
+                    buildingName: "C"
+                )
+            ]
+        )
+        
+        return Building(
+            name: "C",
+            floors: [floor0,floor1])
     }
 
     private func createBuildingC1() -> Building {
@@ -161,6 +683,154 @@ class BuildingDataManager: ObservableObject {
         return Building(
             name: "C1",
             floors: [floor0])
+    }
+    
+    private func createBuildingD() -> Building {
+        let floor0 = Floor(
+            number: 0,
+            name: "Piano Terra",
+            imageName: "edificio_d_piano_0",
+            rooms: [
+                RoomImage(
+                    name: "Aula 1",
+                    position: CGPoint(x: 0.5124, y: 0.4347),
+                    size: CGSize(width: 0.1075, height: 0.1490),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Aula 2",
+                    position: CGPoint(x: 0.5154, y: 0.6604),
+                    size: CGSize(width: 0.1154, height: 0.1846),
+                    description: "Aula",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Aula 3",
+                    position: CGPoint(x: 0.3838, y: 0.4386),
+                    size: CGSize(width: 0.0601, height: 0.1555),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Aula 4",
+                    position: CGPoint(x: 0.3427, y: 0.6565),
+                    size: CGSize(width: 0.0879, height: 0.1867),
+                    description: "Aula",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Aula 5",
+                    position: CGPoint(x: 0.3241, y: 0.4351),
+                    size: CGSize(width: 0.0504, height: 0.1530),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Aula Ex Centro Stampa",
+                    position: CGPoint(x: 0.1923, y: 0.5545),
+                    size: CGSize(width: 0.1074, height: 0.3921),
+                    description: "Aula",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Sui Generis - Associazione",
+                    position: CGPoint(x: 0.5952, y: 0.6776),
+                    size: CGSize(width: 0.0365, height: 0.1574),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Aula C11",
+                    position: CGPoint(x: 0.6726, y: 0.5553),
+                    size: CGSize(width: 0.1107, height: 0.3979),
+                    description: "Aula",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Laboratorio P",
+                    position: CGPoint(x: 0.8446, y: 0.4998),
+                    size: CGSize(width: 0.1306, height: 0.2818),
+                    description: "Aula",
+                    buildingName: "D"
+                )
+            ]
+        )
+        
+        let floor1 = Floor(
+            number: 1,
+            name: "Primo Piano",
+            imageName: "edificio_d_piano_1",
+            rooms: [
+                RoomImage(
+                    name: "Laboratorio F",
+                    position: CGPoint(x: 0.3472, y: 0.3656),
+                    size: CGSize(width: 0.0498, height: 0.0967),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Laboratorio H",
+                    position: CGPoint(x: 0.3462, y: 0.5253),
+                    size: CGSize(width: 0.1052, height: 0.1268),
+                    description: "Aula",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Laboratorio E",
+                    position: CGPoint(x: 0.4671, y: 0.4516),
+                    size: CGSize(width: 0.0414, height: 0.2698),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Laboratorio C",
+                    position: CGPoint(x: 0.5220, y: 0.4545),
+                    size: CGSize(width: 0.0601, height: 0.2746),
+                    description: "Aula",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Laboratorio D",
+                    position: CGPoint(x: 0.4841, y: 0.6926),
+                    size: CGSize(width: 0.0809, height: 0.1095),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Laboratorio B",
+                    position: CGPoint(x: 0.6126, y: 0.4519),
+                    size: CGSize(width: 0.0237, height: 0.2720),
+                    description: "Aula",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Laboratorio A",
+                    position: CGPoint(x: 0.6679, y: 0.4516),
+                    size: CGSize(width: 0.0799, height: 0.2764),
+                    description: "Nessuna Descrizione",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Laboratorio Sperimentazione",
+                    position: CGPoint(x: 0.3197, y: 0.6927),
+                    size: CGSize(width: 0.0491, height: 0.1098),
+                    description: "Aula",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Ufficio Amministrativo",
+                    position: CGPoint(x: 0.3064, y: 0.3657),
+                    size: CGSize(width: 0.0224, height: 0.0989),
+                    description: "Aula",
+                    buildingName: "D"
+                )
+            ]
+        )
+        
+        return Building(
+            name: "D",
+            floors: [floor0,floor1])
     }
     
     private func createBuildingD1() -> Building {

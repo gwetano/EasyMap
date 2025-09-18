@@ -32,7 +32,7 @@ struct SearchView: View {
             combined.append(contentsOf: jsonAule)
         }
 
-        let buildings = ["E", "E1", "E2"]
+        let buildings = ["E", "E1", "E2","B","C","C1","C2","D","D1","D2","D3","F1","F2","F3"]
         for buildingName in buildings {
             if let building = BuildingDataManager.shared.getBuilding(named: buildingName) {
                 for floor in building.floors {
