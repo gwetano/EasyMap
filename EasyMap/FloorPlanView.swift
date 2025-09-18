@@ -18,9 +18,11 @@ struct FloorPlanImageView: View {
     @State private var isFirstLoad = true
     @State private var hasAnimatedToHighlightedRoom = false
     
-    // Nuove variabili per lo slider
     @State private var sliderValue: Double = 0.5
     @State private var imageWidth: CGFloat = 0
+    
+    // Lista di edifici che necessitano dello slider
+    private let buildingsWithHorizontalSlider = ["E", "D", "C", "B"]
     
     private let minScale: CGFloat = 1.0
     private let maxScale: CGFloat = 5.0
@@ -39,10 +41,9 @@ struct FloorPlanImageView: View {
                     let imageHeight = viewHeight
                     let calculatedImageWidth = imageHeight * aspectRatio
                     
-                    // Memorizza la larghezza dell'immagine
-                    let _ = DispatchQueue.main.async {
-                        self.imageWidth = calculatedImageWidth
-                    }
+                    // Calcola se serve lo slider direttamente qui
+                    let needsSlider = buildingsWithHorizontalSlider.contains(buildingName) &&
+                                    calculatedImageWidth > viewWidth * 1.2
                     
                     let initialOffsetX = isFirstLoad ? (viewWidth - calculatedImageWidth) / 2 : 0
                     let initialOffsetY: CGFloat = 0
@@ -107,7 +108,7 @@ struct FloorPlanImageView: View {
                                         lastScale = scale
                                         offset = limitOffset(offset, scale: scale, geometry: geometry, imageWidth: calculatedImageWidth, imageHeight: imageHeight, initialOffsetX: initialOffsetX, initialOffsetY: initialOffsetY)
                                         lastOffset = offset
-                                        updateSliderValue(geometry: geometry, imageWidth: calculatedImageWidth, initialOffsetX: initialOffsetX)
+                                        updateSliderValue(geometry: geometry, imageWidth: calculatedImageWidth, initialOffsetX: initialOffsetX, needsSlider: needsSlider)
                                     },
                                 
                                 DragGesture()
@@ -120,7 +121,7 @@ struct FloorPlanImageView: View {
                                     }
                                     .onEnded { _ in
                                         lastOffset = offset
-                                        updateSliderValue(geometry: geometry, imageWidth: calculatedImageWidth, initialOffsetX: initialOffsetX)
+                                        updateSliderValue(geometry: geometry, imageWidth: calculatedImageWidth, initialOffsetX: initialOffsetX, needsSlider: needsSlider)
                                     }
                             )
                         )
@@ -153,8 +154,8 @@ struct FloorPlanImageView: View {
                         stopHighlightAnimation()
                     }
                     
-                    // Slider per l'edificio E
-                    if buildingName == "E" && scale == 1.0{
+                    // Slider per edifici che ne hanno bisogno
+                    if needsSlider && scale == 1.0 {
                         VStack {
                             Spacer()
                             
@@ -163,10 +164,10 @@ struct FloorPlanImageView: View {
                                 .padding(.bottom, 20)
                                 .accentColor(.blue)
                                 .onChange(of: sliderValue) { newValue in
-                                    scrollWithSlider(geometry: geometry, imageWidth: calculatedImageWidth, initialOffsetX: initialOffsetX)
+                                    scrollWithSlider(geometry: geometry, imageWidth: calculatedImageWidth, initialOffsetX: initialOffsetX, needsSlider: needsSlider)
                                 }
                                 .onAppear {
-                                    updateSliderValue(geometry: geometry, imageWidth: calculatedImageWidth, initialOffsetX: initialOffsetX)
+                                    updateSliderValue(geometry: geometry, imageWidth: calculatedImageWidth, initialOffsetX: initialOffsetX, needsSlider: needsSlider)
                                 }
                         }
                     }
@@ -182,7 +183,7 @@ struct FloorPlanImageView: View {
         }
     }
     
-    // AGGIUNGO TUTTE LE FUNZIONI MANCANTI:
+   
     
     private func getOpacityForRoom(_ room: RoomImage) -> Double {
         guard shouldHighlightRoom(room) else { return 0.7 }
@@ -294,8 +295,8 @@ struct FloorPlanImageView: View {
         }
     }
     
-    private func updateSliderValue(geometry: GeometryProxy, imageWidth: CGFloat, initialOffsetX: CGFloat) {
-        guard buildingName == "E" else { return }
+    private func updateSliderValue(geometry: GeometryProxy, imageWidth: CGFloat, initialOffsetX: CGFloat, needsSlider: Bool) {
+        guard needsSlider else { return }
         
         let scaledImageWidth = imageWidth * scale
         guard scaledImageWidth > geometry.size.width else {
@@ -304,18 +305,22 @@ struct FloorPlanImageView: View {
         }
         
         let maxPanDistance = (scaledImageWidth - geometry.size.width) / 2
-        let normalizedOffset = (offset.width + maxPanDistance) / (2 * maxPanDistance)
+        
+        
+        let normalizedOffset = 1 - ((offset.width + maxPanDistance) / (2 * maxPanDistance))
         sliderValue = Double(max(0, min(1, normalizedOffset)))
     }
     
-    private func scrollWithSlider(geometry: GeometryProxy, imageWidth: CGFloat, initialOffsetX: CGFloat) {
-        guard buildingName == "E" else { return }
+    private func scrollWithSlider(geometry: GeometryProxy, imageWidth: CGFloat, initialOffsetX: CGFloat, needsSlider: Bool) {
+        guard needsSlider else { return }
         
         let scaledImageWidth = imageWidth * scale
         guard scaledImageWidth > geometry.size.width else { return }
         
         let maxPanDistance = (scaledImageWidth - geometry.size.width) / 2
-        let newOffsetX = (CGFloat(sliderValue) * 2 * maxPanDistance) - maxPanDistance
+        
+       
+        let newOffsetX = maxPanDistance - (CGFloat(sliderValue) * 2 * maxPanDistance)
         
         withAnimation(.easeInOut(duration: 0.2)) {
             offset.width = newOffsetX
