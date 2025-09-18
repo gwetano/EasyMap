@@ -3,6 +3,7 @@ import MapKit
 
 struct FloorPlanImageView: View {
     let floor: Floor
+    let buildingName: String
     @Binding var selectedRoom: RoomImage?
     let highlightedRoomName: String?
     @StateObject private var roomStatusManager = RoomStatusManager.shared
@@ -16,7 +17,11 @@ struct FloorPlanImageView: View {
     @State private var lastOffset: CGSize = .zero
     @State private var isFirstLoad = true
     @State private var hasAnimatedToHighlightedRoom = false
-        
+    
+    // Nuove variabili per lo slider
+    @State private var sliderValue: Double = 0.5
+    @State private var imageWidth: CGFloat = 0
+    
     private let minScale: CGFloat = 1.0
     private let maxScale: CGFloat = 5.0
     private let labelThreshold: CGFloat = 1
@@ -32,9 +37,14 @@ struct FloorPlanImageView: View {
                     let viewHeight = geometry.size.height
                     
                     let imageHeight = viewHeight
-                    let imageWidth = imageHeight * aspectRatio
+                    let calculatedImageWidth = imageHeight * aspectRatio
                     
-                    let initialOffsetX = isFirstLoad ? (viewWidth - imageWidth) / 2 : 0
+                    // Memorizza la larghezza dell'immagine
+                    let _ = DispatchQueue.main.async {
+                        self.imageWidth = calculatedImageWidth
+                    }
+                    
+                    let initialOffsetX = isFirstLoad ? (viewWidth - calculatedImageWidth) / 2 : 0
                     let initialOffsetY: CGFloat = 0
                     
                     ZStack {
@@ -43,7 +53,7 @@ struct FloorPlanImageView: View {
                         ZStack {
                             Image(uiImage: image)
                                 .resizable()
-                                .frame(width: imageWidth, height: imageHeight)
+                                .frame(width: calculatedImageWidth, height: imageHeight)
                                 .clipped()
                             
                             ForEach(floor.rooms) { room in
@@ -66,16 +76,16 @@ struct FloorPlanImageView: View {
                                 }
                                 .buttonStyle(PlainButtonStyle())
                                 .frame(
-                                    width: room.size.width * imageWidth,
+                                    width: room.size.width * calculatedImageWidth,
                                     height: room.size.height * imageHeight
                                 )
                                 .position(
-                                    x: room.position.x * imageWidth,
+                                    x: room.position.x * calculatedImageWidth,
                                     y: room.position.y * imageHeight
                                 )
                             }
                         }
-                        .frame(width: imageWidth, height: imageHeight)
+                        .frame(width: calculatedImageWidth, height: imageHeight)
                         .scaleEffect(scale)
                         .offset(x: initialOffsetX + offset.width, y: initialOffsetY + offset.height)
                         .gesture(
@@ -95,8 +105,9 @@ struct FloorPlanImageView: View {
                                     }
                                     .onEnded { _ in
                                         lastScale = scale
-                                        offset = limitOffset(offset, scale: scale, geometry: geometry, imageWidth: imageWidth, imageHeight: imageHeight, initialOffsetX: initialOffsetX, initialOffsetY: initialOffsetY)
+                                        offset = limitOffset(offset, scale: scale, geometry: geometry, imageWidth: calculatedImageWidth, imageHeight: imageHeight, initialOffsetX: initialOffsetX, initialOffsetY: initialOffsetY)
                                         lastOffset = offset
+                                        updateSliderValue(geometry: geometry, imageWidth: calculatedImageWidth, initialOffsetX: initialOffsetX)
                                     },
                                 
                                 DragGesture()
@@ -105,10 +116,11 @@ struct FloorPlanImageView: View {
                                             width: lastOffset.width + value.translation.width,
                                             height: lastOffset.height + value.translation.height
                                         )
-                                        offset = limitOffset(newOffset, scale: scale, geometry: geometry, imageWidth: imageWidth, imageHeight: imageHeight, initialOffsetX: initialOffsetX, initialOffsetY: initialOffsetY)
+                                        offset = limitOffset(newOffset, scale: scale, geometry: geometry, imageWidth: calculatedImageWidth, imageHeight: imageHeight, initialOffsetX: initialOffsetX, initialOffsetY: initialOffsetY)
                                     }
                                     .onEnded { _ in
                                         lastOffset = offset
+                                        updateSliderValue(geometry: geometry, imageWidth: calculatedImageWidth, initialOffsetX: initialOffsetX)
                                     }
                             )
                         )
@@ -118,6 +130,7 @@ struct FloorPlanImageView: View {
                                 lastScale = 1.0
                                 offset = .zero
                                 lastOffset = .zero
+                                sliderValue = 0.5
                             }
                         }
                     }
@@ -127,7 +140,7 @@ struct FloorPlanImageView: View {
                         if !hasAnimatedToHighlightedRoom {
                             centerOnHighlightedRoom(
                                 geometry: geometry,
-                                imageWidth: imageWidth,
+                                imageWidth: calculatedImageWidth,
                                 imageHeight: imageHeight,
                                 initialOffsetX: initialOffsetX,
                                 initialOffsetY: initialOffsetY
@@ -135,10 +148,27 @@ struct FloorPlanImageView: View {
                             hasAnimatedToHighlightedRoom = true
                         }
                         startHighlightAnimation()
-                        
                     }
                     .onDisappear {
                         stopHighlightAnimation()
+                    }
+                    
+                    // Slider per l'edificio E
+                    if buildingName == "E" && scale == 1.0{
+                        VStack {
+                            Spacer()
+                            
+                            Slider(value: $sliderValue, in: 0...1)
+                                .padding(.horizontal, 40)
+                                .padding(.bottom, 20)
+                                .accentColor(.blue)
+                                .onChange(of: sliderValue) { newValue in
+                                    scrollWithSlider(geometry: geometry, imageWidth: calculatedImageWidth, initialOffsetX: initialOffsetX)
+                                }
+                                .onAppear {
+                                    updateSliderValue(geometry: geometry, imageWidth: calculatedImageWidth, initialOffsetX: initialOffsetX)
+                                }
+                        }
                     }
                 } else {
                     Text("Immagine non trovata")
@@ -152,6 +182,71 @@ struct FloorPlanImageView: View {
         }
     }
     
+    // AGGIUNGO TUTTE LE FUNZIONI MANCANTI:
+    
+    private func getOpacityForRoom(_ room: RoomImage) -> Double {
+        guard shouldHighlightRoom(room) else { return 0.7 }
+        return isHighlighted ? 1.0 : 0.4
+    }
+    
+    private func shouldHighlightRoom(_ room: RoomImage) -> Bool {
+        guard let highlightedRoomName = highlightedRoomName else { return false }
+        return room.name.caseInsensitiveCompare(highlightedRoomName) == .orderedSame
+    }
+    
+    private func startHighlightAnimation() {
+        guard highlightedRoomName != nil else { return }
+        highlightTimer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: true) { _ in
+            withAnimation(.easeInOut(duration: 0.6)) {
+                isHighlighted.toggle()
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+            self.stopHighlightAnimation()
+        }
+    }
+    
+    private func stopHighlightAnimation() {
+        highlightTimer?.invalidate()
+        highlightTimer = nil
+        withAnimation {
+            isHighlighted = false
+        }
+    }
+    
+    private func limitOffset(_ offset: CGSize, scale: CGFloat, geometry: GeometryProxy, imageWidth: CGFloat, imageHeight: CGFloat, initialOffsetX: CGFloat, initialOffsetY: CGFloat) -> CGSize {
+        let scaledImageWidth = imageWidth * scale
+        let scaledImageHeight = imageHeight * scale
+        
+        let maxOffsetX: CGFloat
+        let minOffsetX: CGFloat
+        
+        if scaledImageWidth > geometry.size.width {
+            let maxPanDistance = (scaledImageWidth - geometry.size.width) / 2
+            maxOffsetX = maxPanDistance
+            minOffsetX = -maxPanDistance
+        } else {
+            maxOffsetX = -initialOffsetX
+            minOffsetX = -initialOffsetX
+        }
+        
+        let maxOffsetY: CGFloat
+        let minOffsetY: CGFloat
+        
+        if scaledImageHeight > geometry.size.height {
+            let maxPanDistance = (scaledImageHeight - geometry.size.height) / 2
+            maxOffsetY = maxPanDistance - initialOffsetY
+            minOffsetY = -maxPanDistance - initialOffsetY
+        } else {
+            maxOffsetY = -initialOffsetY
+            minOffsetY = -initialOffsetY
+        }
+        
+        let limitedOffsetX = max(minOffsetX, min(maxOffsetX, offset.width))
+        let limitedOffsetY = max(minOffsetY, min(maxOffsetY, offset.height))
+        
+        return CGSize(width: limitedOffsetX, height: limitedOffsetY)
+    }
     
     private func centerOnHighlightedRoom(
         geometry: GeometryProxy,
@@ -198,77 +293,36 @@ struct FloorPlanImageView: View {
             lastOffset = limitedOffset
         }
     }
-
     
-    private func getOpacityForRoom(_ room: RoomImage) -> Double {
-        guard shouldHighlightRoom(room) else { return 0.7 }
-        return isHighlighted ? 1.0 : 0.4
-    }
-    
-    private func shouldHighlightRoom(_ room: RoomImage) -> Bool {
-        guard let highlightedRoomName = highlightedRoomName else { return false }
-        return room.name.caseInsensitiveCompare(highlightedRoomName) == .orderedSame
-    }
-    
-    private func startHighlightAnimation() {
-        guard highlightedRoomName != nil else { return }
-        highlightTimer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: true) { _ in
-            withAnimation(.easeInOut(duration: 0.6)) {
-                isHighlighted.toggle()
-            }
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
-            stopHighlightAnimation()
-        }
-    }
-    
-    private func stopHighlightAnimation() {
-        highlightTimer?.invalidate()
-        highlightTimer = nil
-        withAnimation {
-            isHighlighted = false
-        }
-    }
-    
-    private func limitOffset(_ offset: CGSize, scale: CGFloat, geometry: GeometryProxy, imageWidth: CGFloat, imageHeight: CGFloat, initialOffsetX: CGFloat, initialOffsetY: CGFloat) -> CGSize {
+    private func updateSliderValue(geometry: GeometryProxy, imageWidth: CGFloat, initialOffsetX: CGFloat) {
+        guard buildingName == "E" else { return }
+        
         let scaledImageWidth = imageWidth * scale
-        let scaledImageHeight = imageHeight * scale
-        
-        let maxOffsetX: CGFloat
-        let minOffsetX: CGFloat
-        
-        if scaledImageWidth > geometry.size.width {
-            let maxPanDistance = (scaledImageWidth - geometry.size.width) / 2
-            // ci muoviamo da -maxPanDistance a +maxPanDistance rispetto al centro
-            maxOffsetX = maxPanDistance
-            minOffsetX = -maxPanDistance
-        } else {
-            // un'immagine più piccola della vista rimane centrata
-            maxOffsetX = -initialOffsetX
-            minOffsetX = -initialOffsetX
+        guard scaledImageWidth > geometry.size.width else {
+            sliderValue = 0.5
+            return
         }
         
-        let maxOffsetY: CGFloat
-        let minOffsetY: CGFloat
+        let maxPanDistance = (scaledImageWidth - geometry.size.width) / 2
+        let normalizedOffset = (offset.width + maxPanDistance) / (2 * maxPanDistance)
+        sliderValue = Double(max(0, min(1, normalizedOffset)))
+    }
+    
+    private func scrollWithSlider(geometry: GeometryProxy, imageWidth: CGFloat, initialOffsetX: CGFloat) {
+        guard buildingName == "E" else { return }
         
-        if scaledImageHeight > geometry.size.height {
-            let maxPanDistance = (scaledImageHeight - geometry.size.height) / 2
-            maxOffsetY = maxPanDistance - initialOffsetY
-            minOffsetY = -maxPanDistance - initialOffsetY
-        } else {
-            maxOffsetY = -initialOffsetY
-            minOffsetY = -initialOffsetY
+        let scaledImageWidth = imageWidth * scale
+        guard scaledImageWidth > geometry.size.width else { return }
+        
+        let maxPanDistance = (scaledImageWidth - geometry.size.width) / 2
+        let newOffsetX = (CGFloat(sliderValue) * 2 * maxPanDistance) - maxPanDistance
+        
+        withAnimation(.easeInOut(duration: 0.2)) {
+            offset.width = newOffsetX
+            lastOffset.width = newOffsetX
         }
-        
-        let limitedOffsetX = max(minOffsetX, min(maxOffsetX, offset.width))
-        let limitedOffsetY = max(minOffsetY, min(maxOffsetY, offset.height))
-        
-        let result = CGSize(width: limitedOffsetX, height: limitedOffsetY)
-        
-        return result
     }
 }
-
 
 struct BuildingRoomListView: View {
     let buildingName: String
@@ -345,23 +399,6 @@ struct BuildingRoomListView: View {
                 RoomDetailView(room: room)
             }
         }
-    }
-
-    func giornoCorrenteAbbreviato() -> String {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "it_IT")
-        formatter.dateFormat = "E"
-        let giorno = formatter.string(from: Date()).capitalized
-        return giorno.prefix(1).uppercased() + giorno.dropFirst().lowercased()
-    }
-    
-    func dopoLe15() -> Bool {
-        let now = Date()
-        var calendar = Calendar.current
-        calendar.locale = Locale(identifier: "it_IT")
-
-        let todayAt3PM = calendar.date(bySettingHour: 15, minute: 0, second: 0, of: now)!
-        return now > todayAt3PM
     }
 }
 
@@ -449,6 +486,7 @@ struct FloorPlanView: View {
                     if let floor = currentFloor {
                         FloorPlanImageView(
                             floor: floor,
+                            buildingName: buildingName,
                             selectedRoom: $selectedRoom,
                             highlightedRoomName: highlightedRoomName
                         )
@@ -781,5 +819,5 @@ struct PrenotazioneCard: View {
 }
 
 #Preview {
-    FloorPlanView(buildingName: "D3", highlightedRoomName: "F3.01")
+    FloorPlanView(buildingName: "E", highlightedRoomName: "F3.01")
 }
