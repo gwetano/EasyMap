@@ -10,10 +10,18 @@ import MapKit
 import Foundation
 import CoreLocation
 
+// Struct per gestire i dati del parcheggio
+struct ParkingSpot {
+    let coordinate: CLLocationCoordinate2D
+    let timestamp: Date
+    let address: String?
+}
+
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let manager = CLLocationManager()
     
     @Published var missioniManager: MissioniGPSManager?
+    @Published var parkingSpot: ParkingSpot?
     
     private let unisaCoordinate = CLLocationCoordinate2D(latitude: 40.772705, longitude: 14.791365)
 
@@ -35,6 +43,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         super.init()
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
+        loadParkingSpot()
     }
 
     func startTracking() {
@@ -55,6 +64,90 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func setMissioniManager(_ manager: MissioniGPSManager) {
         self.missioniManager = manager
+    }
+    
+    // Funzioni per gestire il parcheggio
+    func addParkingAtCurrentLocation() {
+        guard let location = manager.location else { return }
+        
+        let parking = ParkingSpot(
+            coordinate: location.coordinate,
+            timestamp: Date(),
+            address: nil
+        )
+        
+        self.parkingSpot = parking
+        saveParkingSpot()
+        
+        // Reverse geocoding per ottenere l'indirizzo (opzionale)
+        reverseGeocodeLocation(location.coordinate)
+    }
+    
+    func addParkingAtCoordinate(_ coordinate: CLLocationCoordinate2D) {
+        let parking = ParkingSpot(
+            coordinate: coordinate,
+            timestamp: Date(),
+            address: nil
+        )
+        
+        self.parkingSpot = parking
+        saveParkingSpot()
+        
+        // Reverse geocoding per ottenere l'indirizzo (opzionale)
+        reverseGeocodeLocation(coordinate)
+    }
+    
+    func removeParkingSpot() {
+        parkingSpot = nil
+        UserDefaults.standard.removeObject(forKey: "ParkingSpot")
+    }
+    
+    private func reverseGeocodeLocation(_ coordinate: CLLocationCoordinate2D) {
+        let geocoder = CLGeocoder()
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        
+        geocoder.reverseGeocodeLocation(location) { [weak self] placemarks, error in
+            if let placemark = placemarks?.first,
+               let address = placemark.name {
+                DispatchQueue.main.async {
+                    if var currentParking = self?.parkingSpot {
+                        let updatedParking = ParkingSpot(
+                            coordinate: currentParking.coordinate,
+                            timestamp: currentParking.timestamp,
+                            address: address
+                        )
+                        self?.parkingSpot = updatedParking
+                        self?.saveParkingSpot()
+                    }
+                }
+            }
+        }
+    }
+    
+    private func saveParkingSpot() {
+        guard let parking = parkingSpot else { return }
+        
+        let data: [String: Any] = [
+            "latitude": parking.coordinate.latitude,
+            "longitude": parking.coordinate.longitude,
+            "timestamp": parking.timestamp.timeIntervalSince1970,
+            "address": parking.address ?? ""
+        ]
+        
+        UserDefaults.standard.set(data, forKey: "ParkingSpot")
+    }
+    
+    private func loadParkingSpot() {
+        guard let data = UserDefaults.standard.dictionary(forKey: "ParkingSpot"),
+              let latitude = data["latitude"] as? Double,
+              let longitude = data["longitude"] as? Double,
+              let timestamp = data["timestamp"] as? TimeInterval else { return }
+        
+        let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        let date = Date(timeIntervalSince1970: timestamp)
+        let address = data["address"] as? String
+        
+        parkingSpot = ParkingSpot(coordinate: coordinate, timestamp: date, address: address)
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -87,7 +180,116 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
 }
 
+// Vista per la selezione manuale del parcheggio
+struct ParkingSelectionView: View {
+    @Binding var isPresented: Bool
+    @ObservedObject var locationManager: LocationManager
+    @State private var tempCameraPosition: MapCameraPosition
+    @State private var selectedCoordinate: CLLocationCoordinate2D?
+    @Namespace private var mapScope
+    
+    init(isPresented: Binding<Bool>, locationManager: LocationManager) {
+        self._isPresented = isPresented
+        self.locationManager = locationManager
+        
+        // Inizializza la camera position per la vista di selezione
+        let initialPosition = MapCameraPosition.camera(
+            MapCamera(
+                centerCoordinate: CLLocationCoordinate2D(latitude: 40.772705, longitude: 14.791365),
+                distance: 1000,
+                heading: 0,
+                pitch: 0
+            )
+        )
+        self._tempCameraPosition = State(initialValue: initialPosition)
+    }
+    
+    var body: some View {
+        NavigationView {
+            ZStack {
+                MapReader { reader in
+                    Map(position: $tempCameraPosition, scope: mapScope) {
+                        UserAnnotation()
+                        
+                        // Mostra il marker temporaneo se selezionato
+                        if let coordinate = selectedCoordinate {
+                            Annotation("Parcheggio", coordinate: coordinate) {
+                                Image(systemName: "car.fill")
+                                    .foregroundColor(.blue)
+                                    .padding(8)
+                                    .background(Circle().fill(.white))
+                                    .overlay(Circle().stroke(.blue, lineWidth: 2))
+                                    .shadow(radius: 3)
+                            }
+                        }
+                    }
+                    .mapStyle(.imagery(elevation: .flat))
+                    .onTapGesture { screenCoordinate in
+                        if let coordinate = reader.convert(screenCoordinate, from: .local) {
+                            selectedCoordinate = coordinate
+                        }
+                    }
+                }
+                .mapScope(mapScope)
+                
+                // Crosshair al centro per indicare la posizione
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Image(systemName: "plus")
+                            .font(.title2)
+                            .foregroundColor(.blue)
+                        Spacer()
+                    }
+                    Spacer()
+                }
+                .allowsHitTesting(false)
+                
+                // Istruzioni
+                VStack {
+                    HStack {
+                        Text("Tocca sulla mappa per selezionare la posizione del parcheggio")
+                            .font(.caption)
+                            .padding()
+                            .background(.ultraThinMaterial)
+                            .cornerRadius(8)
+                        Spacer()
+                    }
+                    Spacer()
+                }
+                .padding()
+            }
+            .navigationTitle("Seleziona Parcheggio")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Annulla") {
+                        isPresented = false
+                    }
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Conferma") {
+                        if let coordinate = selectedCoordinate {
+                            locationManager.addParkingAtCoordinate(coordinate)
+                        }
+                        isPresented = false
+                    }
+                    .disabled(selectedCoordinate == nil)
+                }
+            }
+        }
+    }
+}
+
+
 struct CampusMapView: View {
+    
+    //Variabili gestione parcheggio
+    @State private var showParkingOptions = false
+    @State private var showManualParkingSelection = false
+    
     @State private var showSearchSheet = false
     @StateObject private var adManager = AdManager.shared
     
@@ -110,6 +312,30 @@ struct CampusMapView: View {
                 Map(position: $locationManager.cameraPosition, bounds: locationManager.cameraBounds, scope: mapScope) {
                     
                     UserAnnotation()
+                    
+                    // Marker del parcheggio
+                    if let parking = locationManager.parkingSpot {
+                        Annotation("Auto parcheggiata", coordinate: parking.coordinate) {
+                            VStack {
+                                Image(systemName: "car.fill")
+                                    .font(.title2)
+                                    .foregroundColor(.white)
+                                    .padding(8)
+                                    .background(Circle().fill(.blue))
+                                    .overlay(Circle().stroke(.white, lineWidth: 2))
+                                    .shadow(radius: 3)
+                                
+                                if let address = parking.address, !address.isEmpty {
+                                    Text(address)
+                                        .font(.caption2)
+                                        .padding(4)
+                                        .background(.ultraThinMaterial)
+                                        .cornerRadius(4)
+                                }
+                            }
+                        }
+                        .annotationTitles(.hidden)
+                    }
                     
                     MapPolygon(coordinates: edificioECoordinates)
                         .foregroundStyle(.blue.opacity(0.3))
@@ -546,6 +772,9 @@ struct CampusMapView: View {
            .fullScreenCover(isPresented: $adManager.isPresentingAd) {
                AdFullscreenView(manager: adManager)
            }
+           .fullScreenCover(isPresented: $showManualParkingSelection) {
+                          ParkingSelectionView(isPresented: $showManualParkingSelection, locationManager: locationManager)
+            }
 
             VStack {
                 Spacer()
@@ -556,7 +785,7 @@ struct CampusMapView: View {
                         .frame(maxWidth: .infinity)
                         .layoutPriority(0.05)
                     
-                    // Barra di ricerca 80%
+                    // Barra di ricerca 65%
                     Button {
                         showSearchSheet.toggle()
                     } label: {
@@ -573,12 +802,30 @@ struct CampusMapView: View {
                         .cornerRadius(15)
                     }
                     .frame(maxWidth: .infinity)
-                    .layoutPriority(0.8)
+                    .layoutPriority(0.65)
                     
                     // Spacer 5% tra i due pulsanti
                     Spacer()
                         .frame(maxWidth: .infinity)
-                        .layoutPriority(0.05)
+                        .layoutPriority(0.03)
+                    
+                    // Tasto parcheggio 12%
+                   Button(action: {
+                       showParkingOptions = true
+                   }) {
+                       Image(systemName: locationManager.parkingSpot != nil ? "car.fill" : "car")
+                           .foregroundColor(locationManager.parkingSpot != nil ? .blue : .primary)
+                           .padding(11)
+                           .background(.ultraThinMaterial)
+                           .cornerRadius(15)
+                   }
+                   .frame(maxWidth: .infinity)
+                   .layoutPriority(0.12)
+                   
+                   // Spacer 3% tra i pulsanti
+                   Spacer()
+                       .frame(maxWidth: .infinity)
+                       .layoutPriority(0.03)
                     
                     // Tasto missioni 10%
                     Button(action: {
@@ -593,10 +840,10 @@ struct CampusMapView: View {
                     .frame(maxWidth: .infinity)
                     .layoutPriority(0.1)
                     
-                    // Spacer 5% dal bordo destro
+                    // Spacer 2% dal bordo destro
                     Spacer()
                         .frame(maxWidth: .infinity)
-                        .layoutPriority(0.05)
+                        .layoutPriority(0.02)
                 }
                 .padding(.horizontal, 15)
             }
@@ -610,6 +857,40 @@ struct CampusMapView: View {
                 SearchView()
                     .presentationDetents([.medium, .large])
                     .presentationDragIndicator(.visible)
+            }
+            .actionSheet(isPresented: $showParkingOptions) {
+                if locationManager.parkingSpot != nil {
+                    return ActionSheet(
+                        title: Text("Parcheggio"),
+                        message: Text("Hai già salvato una posizione di parcheggio"),
+                        buttons: [
+                            .default(Text("Aggiorna posizione GPS")) {
+                                locationManager.addParkingAtCurrentLocation()
+                            },
+                            .default(Text("Scegli manualmente")) {
+                                showManualParkingSelection = true
+                            },
+                            .destructive(Text("Rimuovi parcheggio")) {
+                                locationManager.removeParkingSpot()
+                            },
+                            .cancel(Text("Annulla"))
+                        ]
+                    )
+                } else {
+                    return ActionSheet(
+                        title: Text("Aggiungi Parcheggio"),
+                        message: Text("Come vuoi salvare la posizione della tua auto?"),
+                        buttons: [
+                            .default(Text("Posizione attuale (GPS)")) {
+                                locationManager.addParkingAtCurrentLocation()
+                            },
+                            .default(Text("Scegli manualmente")) {
+                                showManualParkingSelection = true
+                            },
+                            .cancel(Text("Annulla"))
+                        ]
+                    )
+                }
             }
         }
         .mapScope(mapScope)
