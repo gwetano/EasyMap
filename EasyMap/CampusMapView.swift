@@ -62,6 +62,15 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
+    func centerOnCoordinate(_ coordinate: CLLocationCoordinate2D) {
+        DispatchQueue.main.async {
+            self.cameraPosition = .camera(
+                MapCamera(centerCoordinate: coordinate,
+                          distance: 200, heading: 0, pitch: 0)
+            )
+        }
+    }
+    
     func setMissioniManager(_ manager: MissioniGPSManager) {
         self.missioniManager = manager
     }
@@ -80,7 +89,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         saveParkingSpot()
         
         // Reverse geocoding per ottenere l'indirizzo (opzionale)
-        reverseGeocodeLocation(location.coordinate)
+        // reverseGeocodeLocation(location.coordinate)
     }
     
     func addParkingAtCoordinate(_ coordinate: CLLocationCoordinate2D) {
@@ -94,7 +103,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         saveParkingSpot()
         
         // Reverse geocoding per ottenere l'indirizzo (opzionale)
-        reverseGeocodeLocation(coordinate)
+        //reverseGeocodeLocation(coordinate)
     }
     
     func removeParkingSpot() {
@@ -102,7 +111,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         UserDefaults.standard.removeObject(forKey: "ParkingSpot")
     }
     
-    private func reverseGeocodeLocation(_ coordinate: CLLocationCoordinate2D) {
+   /* private func reverseGeocodeLocation(_ coordinate: CLLocationCoordinate2D) {
         let geocoder = CLGeocoder()
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         
@@ -122,7 +131,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 }
             }
         }
-    }
+    }*/
     
     private func saveParkingSpot() {
         guard let parking = parkingSpot else { return }
@@ -178,117 +187,47 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         missioniManager?.locationManager(manager, didChangeAuthorization: status)
     }
-}
-
-// Vista per la selezione manuale del parcheggio
-struct ParkingSelectionView: View {
-    @Binding var isPresented: Bool
-    @ObservedObject var locationManager: LocationManager
-    @State private var tempCameraPosition: MapCameraPosition
-    @State private var selectedCoordinate: CLLocationCoordinate2D?
-    @Namespace private var mapScope
     
-    init(isPresented: Binding<Bool>, locationManager: LocationManager) {
-        self._isPresented = isPresented
-        self.locationManager = locationManager
-        
-        // Inizializza la camera position per la vista di selezione
-        let initialPosition = MapCameraPosition.camera(
-            MapCamera(
-                centerCoordinate: CLLocationCoordinate2D(latitude: 40.772705, longitude: 14.791365),
-                distance: 1000,
-                heading: 0,
-                pitch: 0
+    // Attiva/disattiva modalità satellite centrata sull'utente
+    func setSatelliteMode(_ enabled: Bool) {
+        if enabled {
+            centerOnUserLocation()
+            // Qui usi il nuovo MapKit: stile 2D satellitare
+            cameraPosition = .automatic
+        } else {
+            // Ritorna alla vista standard UNISA
+            cameraPosition = .camera(
+                MapCamera(centerCoordinate: unisaCoordinate,
+                          distance: 780, heading: 132, pitch: 70)
             )
-        )
-        self._tempCameraPosition = State(initialValue: initialPosition)
-    }
-    
-    var body: some View {
-        NavigationView {
-            ZStack {
-                MapReader { reader in
-                    Map(position: $tempCameraPosition, scope: mapScope) {
-                        UserAnnotation()
-                        
-                        // Mostra il marker temporaneo se selezionato
-                        if let coordinate = selectedCoordinate {
-                            Annotation("Parcheggio", coordinate: coordinate) {
-                                Image(systemName: "car.fill")
-                                    .foregroundColor(.blue)
-                                    .padding(8)
-                                    .background(Circle().fill(.white))
-                                    .overlay(Circle().stroke(.blue, lineWidth: 2))
-                                    .shadow(radius: 3)
-                            }
-                        }
-                    }
-                    .mapStyle(.imagery(elevation: .flat))
-                    .onTapGesture { screenCoordinate in
-                        if let coordinate = reader.convert(screenCoordinate, from: .local) {
-                            selectedCoordinate = coordinate
-                        }
-                    }
-                }
-                .mapScope(mapScope)
-                
-                // Crosshair al centro per indicare la posizione
-                VStack {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        Image(systemName: "plus")
-                            .font(.title2)
-                            .foregroundColor(.blue)
-                        Spacer()
-                    }
-                    Spacer()
-                }
-                .allowsHitTesting(false)
-                
-                // Istruzioni
-                VStack {
-                    HStack {
-                        Text("Tocca sulla mappa per selezionare la posizione del parcheggio")
-                            .font(.caption)
-                            .padding()
-                            .background(.ultraThinMaterial)
-                            .cornerRadius(8)
-                        Spacer()
-                    }
-                    Spacer()
-                }
-                .padding()
-            }
-            .navigationTitle("Seleziona Parcheggio")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Annulla") {
-                        isPresented = false
-                    }
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Conferma") {
-                        if let coordinate = selectedCoordinate {
-                            locationManager.addParkingAtCoordinate(coordinate)
-                        }
-                        isPresented = false
-                    }
-                    .disabled(selectedCoordinate == nil)
-                }
-            }
         }
     }
+
+    // Aggiungi un parcheggio generico a una coordinata
+    func addParking(at coordinate: CLLocationCoordinate2D) {
+        let parking = ParkingSpot(
+            coordinate: coordinate,
+            timestamp: Date(),
+            address: nil
+        )
+        
+        self.parkingSpot = parking
+        saveParkingSpot()
+        // reverseGeocodeLocation(coordinate)
+    }
+    
+    func getCurrentCoordinate() -> CLLocationCoordinate2D? {
+        manager.location?.coordinate
+    }
+    
 }
 
 
 struct CampusMapView: View {
     
-    //Variabili gestione parcheggio
-    @State private var showParkingOptions = false
-    @State private var showManualParkingSelection = false
+    @State private var parcheggioMode = false
+    @State private var isManualSelectionActive = false
+    @State private var pendingParking: CLLocationCoordinate2D? = nil
     
     @State private var showSearchSheet = false
     @StateObject private var adManager = AdManager.shared
@@ -313,28 +252,11 @@ struct CampusMapView: View {
                     
                     UserAnnotation()
                     
-                    // Marker del parcheggio
+                    // Marker del parcheggio Confermato
                     if let parking = locationManager.parkingSpot {
-                        Annotation("Auto parcheggiata", coordinate: parking.coordinate) {
-                            VStack {
-                                Image(systemName: "car.fill")
-                                    .font(.title2)
-                                    .foregroundColor(.white)
-                                    .padding(8)
-                                    .background(Circle().fill(.blue))
-                                    .overlay(Circle().stroke(.white, lineWidth: 2))
-                                    .shadow(radius: 3)
-                                
-                                if let address = parking.address, !address.isEmpty {
-                                    Text(address)
-                                        .font(.caption2)
-                                        .padding(4)
-                                        .background(.ultraThinMaterial)
-                                        .cornerRadius(4)
-                                }
-                            }
-                        }
-                        .annotationTitles(.hidden)
+                        Marker(
+                            "Parcheggio",systemImage: "car.fill",coordinate: parking.coordinate
+                        ).tint(.blue)
                     }
                     
                     MapPolygon(coordinates: edificioECoordinates)
@@ -728,11 +650,23 @@ struct CampusMapView: View {
                             .scaleEffect(0.8)
                     }
                     .annotationTitles(.hidden)
+                    
+                    //Marker per parcheggio in Attesa
+                    if let pending = pendingParking {
+                        Marker(
+                            "Parcheggio in Attesa",systemImage: "car.fill",coordinate: pending
+                        ).tint(.orange)
+                    }
                 }
                 .mapStyle(.imagery(elevation: .realistic))
                 .onTapGesture { screenCoordinate in
                     if let coordinate = reader.convert(screenCoordinate, from: .local) {
-                        handleTap(at: coordinate)
+                        if parcheggioMode, isManualSelectionActive {
+                            // salvo temporaneamente il punto selezionato
+                            pendingParking = coordinate
+                        } else {
+                            handleTap(at: coordinate)
+                        }
                     }
                 }
             }
@@ -751,6 +685,89 @@ struct CampusMapView: View {
                         .cornerRadius(15)
                 }
                 .padding(.trailing , 11)
+            }
+            .overlay(alignment: .bottom) {
+                if parcheggioMode {
+                    VStack {
+                        Spacer()
+                        VStack(spacing: 12) {
+                            HStack(spacing: 12) {
+                                Button {
+                                    if let current = locationManager.getCurrentCoordinate() {
+                                        pendingParking = current
+                                    }
+                                } label: {
+                                    Label("GPS", systemImage: "location.fill")
+                                        .padding(10)
+                                        .frame(minWidth: 80)
+                                        .background(.ultraThinMaterial)
+                                        .cornerRadius(12)
+                                        .foregroundColor(.primary)
+                                }
+
+                                Button {
+                                    isManualSelectionActive = true
+                                } label: {
+                                    Label("Manuale", systemImage: "hand.point.up.left.fill")
+                                        .padding(10)
+                                        .frame(minWidth: 80)
+                                        .background(.ultraThinMaterial)
+                                        .cornerRadius(12)
+                                        .foregroundColor(.primary)
+                                }
+
+                                Button {
+                                    locationManager.removeParkingSpot()
+                                    pendingParking = nil
+                                    isManualSelectionActive = false
+                                    parcheggioMode = false
+                                } label: {
+                                    Label("Elimina", systemImage: "trash")
+                                        .frame(maxWidth: .infinity)
+                                        .padding(10)
+                                        .background(.ultraThinMaterial)
+                                        .cornerRadius(12)
+                                        .foregroundStyle(.red)
+                                } //Disalitano il tasto Elimina se non viene selezionato il parcheggio
+                                .disabled(locationManager.parkingSpot == nil && pendingParking == nil)
+                                .foregroundColor(locationManager.parkingSpot == nil && pendingParking == nil ? .gray : .red)
+                                .opacity(locationManager.parkingSpot == nil && pendingParking == nil ? 0.5 : 1.0)
+                            }
+                            
+                            //Bottone Conferma, visibile solo se c’è un parcheggio in attesa
+                            if let pending = pendingParking {
+                                Button {
+                                    locationManager.addParkingAtCoordinate(pending)
+                                    pendingParking = nil
+                                    isManualSelectionActive = false
+                                    parcheggioMode = false
+                                } label: {
+                                    Label("Conferma", systemImage: "checkmark")
+                                        .padding(10)
+                                        .frame(maxWidth: .infinity)
+                                        .background(.ultraThinMaterial)
+                                        .cornerRadius(12)
+                                }
+                                .transition(.opacity.combined(with: .move(edge: .bottom)))
+                            } else if locationManager.parkingSpot != nil {
+                                // Conferma solo per "visionare" un parcheggio già salvato
+                                Button {
+                                    parcheggioMode = false
+                                } label: {
+                                    Label("Indietro", systemImage: "arrow.left")
+                                        .padding(10)
+                                        .frame(maxWidth: .infinity)
+                                        .background(.ultraThinMaterial)
+                                        .cornerRadius(12)
+                                }
+                                .transition(.opacity.combined(with: .move(edge: .bottom)))
+                            }
+                            
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 100) // posizione sopra la barra di ricerca
+                    }
+                }
             }
             .mapControls {
                 MapCompass(scope: mapScope)
@@ -772,124 +789,100 @@ struct CampusMapView: View {
            .fullScreenCover(isPresented: $adManager.isPresentingAd) {
                AdFullscreenView(manager: adManager)
            }
-           .fullScreenCover(isPresented: $showManualParkingSelection) {
-                          ParkingSelectionView(isPresented: $showManualParkingSelection, locationManager: locationManager)
-            }
-
-            VStack {
-                Spacer()
-                
-                HStack(spacing: 0) {
-                    // Spacer 5% dal bordo sinistro
+            if !parcheggioMode {
+                VStack {
                     Spacer()
-                        .frame(maxWidth: .infinity)
-                        .layoutPriority(0.05)
                     
-                    // Barra di ricerca 65%
-                    Button {
-                        showSearchSheet.toggle()
-                    } label: {
-                        HStack {
-                            Image(systemName: "magnifyingglass")
-                                .foregroundColor(.primary)
-                            Text("Cerca aula…")
-                                .foregroundColor(.primary)
-                                .font(.subheadline)
-                            Spacer()
-                        }
-                        .padding(11)
-                        .background(.ultraThinMaterial)
-                        .cornerRadius(15)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .layoutPriority(0.65)
-                    
-                    // Spacer 5% tra i due pulsanti
-                    Spacer()
-                        .frame(maxWidth: .infinity)
-                        .layoutPriority(0.03)
-                    
-                    // Tasto parcheggio 12%
-                   Button(action: {
-                       showParkingOptions = true
-                   }) {
-                       Image(systemName: locationManager.parkingSpot != nil ? "car.fill" : "car")
-                           .foregroundColor(locationManager.parkingSpot != nil ? .blue : .primary)
-                           .padding(11)
-                           .background(.ultraThinMaterial)
-                           .cornerRadius(15)
-                   }
-                   .frame(maxWidth: .infinity)
-                   .layoutPriority(0.12)
-                   
-                   // Spacer 3% tra i pulsanti
-                   Spacer()
-                       .frame(maxWidth: .infinity)
-                       .layoutPriority(0.03)
-                    
-                    // Tasto missioni 10%
-                    Button(action: {
-                        mostraMissioni = true
-                    }) {
-                        Image(systemName: "flag.checkered")
-                            .foregroundColor(.primary)
+                    HStack(spacing: 0) {
+                        // Spacer 5% dal bordo sinistro
+                        Spacer()
+                            .frame(maxWidth: .infinity)
+                            .layoutPriority(0.05)
+                        
+                        // Barra di ricerca 65%
+                        Button {
+                            showSearchSheet.toggle()
+                        } label: {
+                            HStack {
+                                Image(systemName: "magnifyingglass")
+                                    .foregroundColor(.primary)
+                                Text("Cerca aula…")
+                                    .foregroundColor(.primary)
+                                    .font(.subheadline)
+                                Spacer()
+                            }
                             .padding(11)
                             .background(.ultraThinMaterial)
                             .cornerRadius(15)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .layoutPriority(0.1)
-                    
-                    // Spacer 2% dal bordo destro
-                    Spacer()
+                        }
                         .frame(maxWidth: .infinity)
-                        .layoutPriority(0.02)
+                        .layoutPriority(0.65)
+                        
+                        // Spacer 5% tra i due pulsanti
+                        Spacer()
+                            .frame(maxWidth: .infinity)
+                            .layoutPriority(0.03)
+                        
+                        // Tasto parcheggio 12%
+                       Button(action: {
+                       parcheggioMode.toggle()
+                           if parcheggioMode {
+                               if let parking = locationManager.parkingSpot {
+                                   //Zoom sul marker se il parcheggio è impostato
+                                   locationManager.centerOnCoordinate(parking.coordinate)
+                               } else {
+                                   // Zoom sull'utente se il parcheggio non è impostato
+                                   locationManager.centerOnUserLocation()
+                               }
+                           } else {
+                               // torna a standard
+                               locationManager.setSatelliteMode(false)
+                           }
+                       }) {
+                           Image(systemName: locationManager.parkingSpot != nil ? "car.fill" : "car")
+                               .foregroundColor(locationManager.parkingSpot != nil ? .blue : .primary)
+                               .padding(11)
+                               .background(.ultraThinMaterial)
+                               .cornerRadius(15)
+                       }
+                       .frame(maxWidth: .infinity)
+                       .layoutPriority(0.12)
+                       
+                       // Spacer 3% tra i pulsanti
+                       Spacer()
+                           .frame(maxWidth: .infinity)
+                           .layoutPriority(0.03)
+                        
+                        // Tasto missioni 10%
+                        Button(action: {
+                            mostraMissioni = true
+                        }) {
+                            Image(systemName: "flag.checkered")
+                                .foregroundColor(.primary)
+                                .padding(11)
+                                .background(.ultraThinMaterial)
+                                .cornerRadius(15)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .layoutPriority(0.1)
+                        
+                        // Spacer 2% dal bordo destro
+                        Spacer()
+                            .frame(maxWidth: .infinity)
+                            .layoutPriority(0.02)
+                    }
+                    .padding(.horizontal, 15)
                 }
-                .padding(.horizontal, 15)
-            }
-            .fullScreenCover(isPresented: $mostraBacheca) {
-                BachecaTikTokView(store: store)
-            }
-            .fullScreenCover(isPresented: $mostraMissioni) {
-                MissioniView()
-            }
-            .sheet(isPresented: $showSearchSheet) {
-                SearchView()
-                    .presentationDetents([.medium, .large])
-                    .presentationDragIndicator(.visible)
-            }
-            .actionSheet(isPresented: $showParkingOptions) {
-                if locationManager.parkingSpot != nil {
-                    return ActionSheet(
-                        title: Text("Parcheggio"),
-                        message: Text("Hai già salvato una posizione di parcheggio"),
-                        buttons: [
-                            .default(Text("Aggiorna posizione GPS")) {
-                                locationManager.addParkingAtCurrentLocation()
-                            },
-                            .default(Text("Scegli manualmente")) {
-                                showManualParkingSelection = true
-                            },
-                            .destructive(Text("Rimuovi parcheggio")) {
-                                locationManager.removeParkingSpot()
-                            },
-                            .cancel(Text("Annulla"))
-                        ]
-                    )
-                } else {
-                    return ActionSheet(
-                        title: Text("Aggiungi Parcheggio"),
-                        message: Text("Come vuoi salvare la posizione della tua auto?"),
-                        buttons: [
-                            .default(Text("Posizione attuale (GPS)")) {
-                                locationManager.addParkingAtCurrentLocation()
-                            },
-                            .default(Text("Scegli manualmente")) {
-                                showManualParkingSelection = true
-                            },
-                            .cancel(Text("Annulla"))
-                        ]
-                    )
+                .fullScreenCover(isPresented: $mostraBacheca) {
+                    BachecaTikTokView(store: store)
+                }
+                .fullScreenCover(isPresented: $mostraMissioni) {
+                    MissioniView()
+                }
+                .sheet(isPresented: $showSearchSheet) {
+                    SearchView()
+                        .presentationDetents([.medium, .large])
+                        .presentationDragIndicator(.visible)
                 }
             }
         }
