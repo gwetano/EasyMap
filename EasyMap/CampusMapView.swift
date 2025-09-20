@@ -111,28 +111,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         UserDefaults.standard.removeObject(forKey: "ParkingSpot")
     }
     
-   /* private func reverseGeocodeLocation(_ coordinate: CLLocationCoordinate2D) {
-        let geocoder = CLGeocoder()
-        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        
-        geocoder.reverseGeocodeLocation(location) { [weak self] placemarks, error in
-            if let placemark = placemarks?.first,
-               let address = placemark.name {
-                DispatchQueue.main.async {
-                    if var currentParking = self?.parkingSpot {
-                        let updatedParking = ParkingSpot(
-                            coordinate: currentParking.coordinate,
-                            timestamp: currentParking.timestamp,
-                            address: address
-                        )
-                        self?.parkingSpot = updatedParking
-                        self?.saveParkingSpot()
-                    }
-                }
-            }
-        }
-    }*/
-    
     private func saveParkingSpot() {
         guard let parking = parkingSpot else { return }
         
