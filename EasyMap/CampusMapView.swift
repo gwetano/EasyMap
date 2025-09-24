@@ -170,7 +170,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     func setSatelliteMode(_ enabled: Bool) {
         if enabled {
             centerOnUserLocation()
-            // Qui usi il nuovo MapKit: stile 2D satellitare
+            //  stile 2D satellitare
             cameraPosition = .automatic
         } else {
             // Ritorna alla vista standard UNISA

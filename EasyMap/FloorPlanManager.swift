@@ -123,11 +123,11 @@ class BuildingDataManager: ObservableObject {
             return createBuildingC()
         case "B":
             return createBuildingB()
+        case "B1":
+            return createBuildingB1()
 /*
         case "F":
             return createBuildingF()
-        case "B1":
-            return createBuildingB1()
         case "B2":
             return createBuildingB2()*/
         default:
@@ -269,6 +269,113 @@ class BuildingDataManager: ObservableObject {
         return Building(
             name: "B",
             floors: [floor0])
+    }
+    
+    private func createBuildingB1() -> Building {
+        let floorm1 = Floor(
+            number: -1,
+            name: "Sottoscala",
+            imageName: "edificio_b1_piano_-1",
+            rooms: [
+                RoomImage(
+                    name: "Aula 1",
+                    position: CGPoint(x: 0.6363, y: 0.5452),
+                    size: CGSize(width: 0.2752, height: 0.2605),
+                    description: "Aula",
+                    buildingName: "B1"
+                )
+            ]
+        )
+        
+        let floor0 = Floor(
+            number: 0,
+            name: "Piano Terra",
+            imageName: "edificio_b1_piano_0",
+            rooms: [
+                RoomImage(
+                    name: "Aula 2",
+                    position: CGPoint(x: 0.6401, y: 0.6411),
+                    size: CGSize(width: 0.2877, height: 0.2781),
+                    description: "Aula",
+                    buildingName: "B1"
+                ),
+                RoomImage(
+                    name: "Aula 3",
+                    position: CGPoint(x: 0.3384, y: 0.5802),
+                    size: CGSize(width: 0.1563, height: 0.1550),
+                    description: "Aula",
+                    buildingName: "B1"
+                ),
+                RoomImage(
+                    name: "Aula 4",
+                    position: CGPoint(x: 0.5809, y: 0.3308),
+                    size: CGSize(width: 0.1706, height: 0.1609),
+                    description: "Aula",
+                    buildingName: "B1"
+                ),
+                RoomImage(
+                    name: "Aula 5",
+                    position: CGPoint(x: 0.3419, y: 0.3296),
+                    size: CGSize(width: 0.1633, height: 0.1635),
+                    description: "Aula",
+                    buildingName: "B1"
+                )
+            ]
+        )
+        
+        let floor1 = Floor(
+            number: 1,
+            name: "Primo Piano",
+            imageName: "edificio_b1_piano_1",
+            rooms: [
+                RoomImage(
+                    name: "Aula A",
+                    position: CGPoint(x: 0.2895, y: 0.3327),
+                    size: CGSize(width: 0.1867, height: 0.2179),
+                    description: "Aula",
+                    buildingName: "B1"
+                ),
+                RoomImage(
+                    name: "Aula Scocozza",
+                    position: CGPoint(x: 0.3071, y: 0.4855),
+                    size: CGSize(width: 0.2192, height: 0.0651),
+                    description: "Aula",
+                    buildingName: "B1"
+                ),
+                RoomImage(
+                    name: "Aula 21",
+                    position: CGPoint(x: 0.2902, y: 0.5782),
+                    size: CGSize(width: 0.1853, height: 0.1049),
+                    description: "Aula",
+                    buildingName: "B1"
+                ),
+                RoomImage(
+                    name: "Aula Scarano",
+                    position: CGPoint(x: 0.2895, y: 0.6953),
+                    size: CGSize(width: 0.1840, height: 0.1094),
+                    description: "Aula",
+                    buildingName: "B1"
+                ),
+                RoomImage(
+                    name: "Aula 19",
+                    position: CGPoint(x: 0.6337, y: 0.2795),
+                    size: CGSize(width: 0.1848, height: 0.1059),
+                    description: "Aula",
+                    buildingName: "B1"
+                ),
+                RoomImage(
+                    name: "Aula 20",
+                    position: CGPoint(x: 0.6340, y: 0.3906),
+                    size: CGSize(width: 0.1874, height: 0.0982),
+                    description: "Aula",
+                    buildingName: "B1"
+                )
+            ]
+        )
+        
+        return Building(
+            name: "B1",
+            floors: [floorm1,floor0,floor1])
     }
     
     private func createBuildingC() -> Building {
