@@ -7,8 +7,7 @@ struct SearchView: View {
     @State private var selectedRoomName: String? = nil
     @State private var recentSearches: [String] = []
     @State private var showingEmptyRooms: Bool = false
-    @State private var selectedBuildingFilter: String? = nil // Nuovo stato per il filtro
-
+    @State private var selectedBuildingFilter: String? = nil
     let edificiValidi: Set<String> = [
         "E", "E1", "E2", "D", "D1", "D2", "D3", "C", "C1", "C2", "B", "B1", "B2", "F", "F1", "F2", "F3"
     ]
@@ -24,7 +23,7 @@ struct SearchView: View {
         return normalized1.contains(normalized2) || normalized2.contains(normalized1)
     }
     
-    // Funzione per trovare il piano di un'aula
+   
     private func getFloorForRoom(_ roomName: String, _ buildingName: String) -> String? {
         if let building = BuildingDataManager.shared.getBuilding(named: buildingName) {
             for floor in building.floors {
@@ -81,17 +80,15 @@ struct SearchView: View {
         }
     }
     
-    // Computed property per le aule vuote con filtro per edificio
+   
     var emptyRooms: [Aula] {
         guard let giornata = giornata else { return [] }
         
         var combined: [Aula] = []
         
-        // Aggiungi aule dal JSON
+      
         combined.append(contentsOf: giornata.aule)
-        
-        // Aggiungi aule dai building data
-        let buildings = ["E", "E1", "E2","B","C","C1","C2","D","D1","D2","D3","F1","F2","F3"]
+         let buildings = ["E", "E1", "E2","B","C","C1","C2","D","D1","D2","D3","F1","F2","F3"]
         for buildingName in buildings {
             if let building = BuildingDataManager.shared.getBuilding(named: buildingName) {
                 for floor in building.floors {
@@ -116,23 +113,23 @@ struct SearchView: View {
             }
         }
         
-        // Filtra aule vuote, valide e per edificio selezionato
+       
         var filtered = combined.filter { aula in
             guard edificiValidi.contains(aula.edificio) else { return false }
             
-            // Filtra per edificio se selezionato
+           
             if let selectedBuilding = selectedBuildingFilter {
                 guard aula.edificio == selectedBuilding else { return false }
             }
             
-            // Includi solo aule con dati disponibili e non occupate
+            
             return hasAvailableData(aula) && !isRoomOccupied(aula)
         }
         
         return filtered.sorted { $0.edificio < $1.edificio || ($0.edificio == $1.edificio && $0.nome < $1.nome) }
     }
     
-    // Funzione helper per controllare se un'aula è occupata
+   
     private func isRoomOccupied(_ aula: Aula) -> Bool {
         guard let giornata = giornata else { return false }
         
@@ -142,14 +139,14 @@ struct SearchView: View {
         }) {
             return jsonAula.isOccupiedNow()
         }
-        return false // Se non è nel JSON, assumiamo sia libera
+        return false
     }
     
-    // Funzione helper per controllare se i dati di un'aula sono disponibili
+  
     private func hasAvailableData(_ aula: Aula) -> Bool {
         guard let giornata = giornata else { return false }
         
-        // Se l'aula è presente nel JSON, allora i dati sono disponibili
+       
         return giornata.aule.contains { jsonAula in
             jsonAula.nome.caseInsensitiveCompare(aula.nome) == .orderedSame &&
             jsonAula.edificio.caseInsensitiveCompare(aula.edificio) == .orderedSame
@@ -164,12 +161,12 @@ struct SearchView: View {
                         .padding()
                 } else {
                     List {
-                        // Pulsante per aule vuote - mostra sempre quando i dati sono caricati
+                        
                         if !showingEmptyRooms {
                             Section {
                                 Button {
                                     showingEmptyRooms = true
-                                    searchText = "" // Pulisci la ricerca quando mostri aule vuote
+                                    searchText = "" 
                                 } label: {
                                     HStack {
                                         Image(systemName: "checkmark.circle.fill")
@@ -190,13 +187,13 @@ struct SearchView: View {
                             }
                         }
                         
-                        // Mostra aule vuote se attivato
+                       
                         if showingEmptyRooms {
-                            // Filtri per edificio
+                            
                             Section {
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     HStack(spacing: 8) {
-                                        // Pulsante "Tutti"
+                                        
                                         Button("Tutti") {
                                             selectedBuildingFilter = nil
                                         }
@@ -210,7 +207,7 @@ struct SearchView: View {
                                         )
                                         .cornerRadius(16)
                                         
-                                        // Pulsanti per ogni edificio
+                                        
                                         ForEach(Array(edificiValidi).sorted(), id: \.self) { edificio in
                                             Button(edificio) {
                                                 selectedBuildingFilter = edificio
@@ -271,7 +268,7 @@ struct SearchView: View {
                                                     .font(.subheadline)
                                                     .foregroundColor(.secondary)
                                                 
-                                                // Mostra il piano se disponibile
+                                               
                                                 if let piano = getFloorForRoom(aula.nome, aula.edificio) {
                                                     Text("• Piano: \(piano)")
                                                         .font(.subheadline)
@@ -293,7 +290,7 @@ struct SearchView: View {
                             }
                         }
                         
-                        // Ricerche recenti (solo se non stiamo mostrando aule vuote)
+                      
                         if !showingEmptyRooms && searchText.isEmpty && !recentSearches.isEmpty {
                             Section(header: Text("Ricerche recenti").font(.headline)) {
                                 ForEach(recentSearches, id: \.self) { query in
@@ -317,7 +314,7 @@ struct SearchView: View {
                             }
                         }
 
-                        // Risultati della ricerca (solo se non stiamo mostrando aule vuote)
+                       
                         if !showingEmptyRooms && !filteredAule.isEmpty {
                             Section(header: Text("Risultati").font(.headline)) {
                                 ForEach(filteredAule, id: \.nome) { aula in
@@ -335,7 +332,7 @@ struct SearchView: View {
                                                 .font(.subheadline)
                                                 .foregroundColor(.secondary)
                                             
-                                            // Mostra il piano se disponibile
+                                            
                                             if let piano = getFloorForRoom(aula.nome, aula.edificio) {
                                                 Text("• Piano: \(piano)")
                                                     .font(.subheadline)
@@ -365,7 +362,7 @@ struct SearchView: View {
             }
             .searchable(text: $searchText, prompt: "Cerca aula…")
             .onChange(of: searchText) { _, newValue in
-                // Se l'utente inizia a digitare, nascondi la lista aule vuote
+                
                 if !newValue.isEmpty && showingEmptyRooms {
                     showingEmptyRooms = false
                 }
@@ -393,7 +390,7 @@ struct SearchView: View {
         loadRecents()
         selectedRoomName = aula.nome
         selectedBuildingName = aula.edificio
-        // Nascondi la lista aule vuote quando selezioni un'aula
+       
         showingEmptyRooms = false
     }
 
