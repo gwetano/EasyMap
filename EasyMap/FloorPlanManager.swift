@@ -125,14 +125,280 @@ class BuildingDataManager: ObservableObject {
             return createBuildingB()
         case "B1":
             return createBuildingB1()
-/*
         case "F":
             return createBuildingF()
+/*
         case "B2":
             return createBuildingB2()*/
         default:
             return nil
         }
+    }
+    
+    private func createBuildingF() -> Building {
+            let floor1 = Floor(
+                number: 0,
+                name: "Primo piano",
+                imageName: "edificio_f_piano_1",
+                rooms: [
+                    RoomImage(
+                        name: "Bar",
+                        position: CGPoint(x: 0.8698, y: 0.3357),
+                        size: CGSize(width: 0.0557, height: 0.0688),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio Grafene e Nano Cubi",
+                        position: CGPoint(x: 0.8102, y: 0.3686),
+                        size: CGSize(width: 0.0281, height: 0.1344),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "MedCambio Lab",
+                        position: CGPoint(x: 0.7799, y: 0.3678),
+                        size: CGSize(width: 0.0281, height: 0.1359),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Lab GLS - Geofisica e Sismologia",
+                        position: CGPoint(x: 0.7806, y: 0.5475),
+                        size: CGSize(width: 0.0267, height: 0.1172),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio Chimica Generale",
+                        position: CGPoint(x: 0.7371, y: 0.3678),
+                        size: CGSize(width: 0.0186, height: 0.1359),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio Chimica Biorganica",
+                        position: CGPoint(x: 0.7369, y: 0.5451),
+                        size: CGSize(width: 0.0181, height: 0.1188),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratiorio Agrichem",
+                        position: CGPoint(x: 0.7174, y: 0.5459),
+                        size: CGSize(width: 0.0163, height: 0.1172),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio Molecole Naturali Bioattive",
+                        position: CGPoint(x: 0.7174, y: 0.3678),
+                        size: CGSize(width: 0.0163, height: 0.1359),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio Protemos",
+                        position: CGPoint(x: 0.6977, y: 0.5475),
+                        size: CGSize(width: 0.0186, height: 0.1172),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio Impianti e Processi",
+                        position: CGPoint(x: 0.6982, y: 0.3693),
+                        size: CGSize(width: 0.0177, height: 0.1359),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio Biochimica e Biologia Cellulare",
+                        position: CGPoint(x: 0.6579, y: 0.3686),
+                        size: CGSize(width: 0.0174, height: 0.1364),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "TreeLab e Entomologia Agraria",
+                        position: CGPoint(x: 0.6597, y: 0.5481),
+                        size: CGSize(width: 0.0189, height: 0.1226),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio Biochimica Cellulare e Nutrizionale",
+                        position: CGPoint(x: 0.6389, y: 0.3679),
+                        size: CGSize(width: 0.0156, height: 0.1351),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratiori Mogeci e Clinica",
+                        position: CGPoint(x: 0.6394, y: 0.5494),
+                        size: CGSize(width: 0.0167, height: 0.1226),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Lab Strumentazioni 3 - Servizi Generali e Tecnici",
+                        position: CGPoint(x: 0.6193, y: 0.5494),
+                        size: CGSize(width: 0.0185, height: 0.1226),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Sterilab 4",
+                        position: CGPoint(x: 0.6193, y: 0.3673),
+                        size: CGSize(width: 0.0185, height: 0.1364),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio 42 Biologia Vegetale",
+                        position: CGPoint(x: 0.5810, y: 0.3686),
+                        size: CGSize(width: 0.0225, height: 0.1364),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio Didattico Bio Molecole",
+                        position: CGPoint(x: 0.5685, y: 0.5481),
+                        size: CGSize(width: 0.0424, height: 0.1226),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio 41",
+                        position: CGPoint(x: 0.5370, y: 0.5325),
+                        size: CGSize(width: 0.0156, height: 0.0888),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio 44 Microbiologia",
+                        position: CGPoint(x: 0.5370, y: 0.5325),
+                        size: CGSize(width: 0.0156, height: 0.0888),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio Chimica-Bio",
+                        position: CGPoint(x: 0.5597, y: 0.3686),
+                        size: CGSize(width: 0.0174, height: 0.1364),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio Sintesi Organica 63",
+                        position: CGPoint(x: 0.4947, y: 0.5519),
+                        size: CGSize(width: 0.0290, height: 0.1201),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio 62 Metodologia di Sintesi",
+                        position: CGPoint(x: 0.4647, y: 0.5531),
+                        size: CGSize(width: 0.0290, height: 0.1226),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio 36 Sostante Naturali e Sintesi Organica",
+                        position: CGPoint(x: 0.4944, y: 0.3717),
+                        size: CGSize(width: 0.0290, height: 0.1351),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio 37 Sintesi Asimmetrica",
+                        position: CGPoint(x: 0.4643, y: 0.3723),
+                        size: CGSize(width: 0.0290, height: 0.1364),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Minerva Cartoleria",
+                        position: CGPoint(x: 0.4378, y: 0.3736),
+                        size: CGSize(width: 0.0210, height: 0.1364),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Aula Studio",
+                        position: CGPoint(x: 0.3976, y: 0.3404),
+                        size: CGSize(width: 0.0544, height: 0.0701),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio di Spettrofotometria",
+                        position: CGPoint(x: 0.3328, y: 0.3736),
+                        size: CGSize(width: 0.0272, height: 0.1414),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio 39 Chimica Supremolecolare",
+                        position: CGPoint(x: 0.3040, y: 0.3748),
+                        size: CGSize(width: 0.0283, height: 0.1389),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio 61 Fisiologia Biologia Applicata e Genetica",
+                        position: CGPoint(x: 0.3176, y: 0.5556),
+                        size: CGSize(width: 0.0569, height: 0.1251),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio 40 Chimica Biologia",
+                        position: CGPoint(x: 0.2542, y: 0.3748),
+                        size: CGSize(width: 0.0265, height: 0.1389),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio Ecologia 60",
+                        position: CGPoint(x: 0.2596, y: 0.5563),
+                        size: CGSize(width: 0.0192, height: 0.1239),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio 59 Chimica Analitica",
+                        position: CGPoint(x: 0.2406, y: 0.5556),
+                        size: CGSize(width: 0.0160, height: 0.1226),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Laboratorio 58 Chimica Fisica",
+                        position: CGPoint(x: 0.2221, y: 0.5563),
+                        size: CGSize(width: 0.0181, height: 0.1214),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Lab 41 Chimica Organica Strumentale",
+                        position: CGPoint(x: 0.2328, y: 0.3736),
+                        size: CGSize(width: 0.0127, height: 0.1364),
+                        description: "",
+                        buildingName: "F"
+                    ),
+                    RoomImage(
+                        name: "Lab 42 Colture Cell",
+                        position: CGPoint(x: 0.2161, y: 0.4086),
+                        size: CGSize(width: 0.0083, height: 0.0663),
+                        description: "",
+                        buildingName: "F"
+                    )
+                ]
+            )
+        
+        return Building(
+            name: "F",
+            floors: [floor1])
     }
     
     private func createBuildingB() -> Building {
@@ -1606,10 +1872,10 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "Aula Studio",
+                    name: "Aula Studio - De Candia",
                     position: CGPoint(x: 0.461, y: 0.6328),
                     size: CGSize(width: 0.067, height: 0.073),
-                    description: "De Candida - orario: 09:00-13:00 - 15:00-18:00",
+                    description: "De Candida - orario: 09:00-13:30 - 15:00-18:30",
                     buildingName: "E"
                 ),
                 RoomImage(
@@ -1789,10 +2055,10 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "Easy 1",
+                    name: "Aula Studio - EasyPc 1",
                     position: CGPoint(x: 0.461, y: 0.6605),
                     size: CGSize(width: 0.067, height: 0.031),
-                    description: "Aula Studio - orario: 09:00-13:00 15:00-18:00",
+                    description: "Aula Studio - orario: 09:00-13:30 15:00-18:30",
                     buildingName: "E"
                 ),
                 RoomImage(
@@ -1953,7 +2219,7 @@ class BuildingDataManager: ObservableObject {
                     name: "Aula Studio 130",
                     position: CGPoint(x: 0.353, y: 0.498),
                     size: CGSize(width: 0.0313, height: 0.098),
-                    description: "Aula Studio - orario: 09:00-13:00 15:00-18:00",
+                    description: "Aula Studio - orario: 09:00-13:30 15:00-18:30",
                     buildingName: "E"
                 ),
                 RoomImage(
@@ -2132,10 +2398,10 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "Easy 2",
+                    name: "Aula Studio - Easy 2",
                     position: CGPoint(x: 0.045, y: 0.498),
                     size: CGSize(width: 0.0125, height: 0.195),
-                    description: "Aula studio - orario: 09:00-13:00 15:00-18:00",
+                    description: "Aula studio - orario: 09:00-13:30 15:00-18:30",
                     buildingName: "E"
                 ),
                 RoomImage(

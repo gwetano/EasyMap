@@ -22,7 +22,7 @@ struct FloorPlanImageView: View {
     @State private var imageWidth: CGFloat = 0
     
     // Lista di edifici che necessitano dello slider
-    private let buildingsWithHorizontalSlider = ["E", "D", "C", "B"]
+    private let buildingsWithHorizontalSlider = ["E", "D", "C", "B","F"]
     
     private let minScale: CGFloat = 1.0
     private let maxScale: CGFloat = 5.0
