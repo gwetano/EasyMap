@@ -14,19 +14,9 @@ struct MensaPDFView: View {
     @State private var isLoading = true
     @State private var loadedURL: URL?
     @State private var errorMessage: String?
-
-    var url: URL? {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "it_IT")
-        formatter.dateFormat = "E"
-        let giorno = formatter.string(from: Date()).capitalized
-
-        let isAfter3PM = Calendar.current.component(.hour, from: Date()) >= 15
-        let tipo = isAfter3PM ? "cena" : "pranzo"
-        let urlString = "https://giotto.pythonanywhere.com/menu_\(tipo)_\(giorno).pdf"
-        return URL(string: urlString)
-    }
-
+    
+    // La vecchia logica dell'URL è stata spostata e migliorata in getMenuURL()
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -42,7 +32,7 @@ struct MensaPDFView: View {
                             }
                         }
                 }
-
+                
                 if isLoading {
                     VStack(spacing: 20) {
                         ProgressView()
@@ -93,9 +83,70 @@ struct MensaPDFView: View {
         }
     }
     
+    // NUOVA LOGICA PER CALCOLARE L'URL CORRETTO
+    private func getMenuURL() -> URL? {
+        let calendar = Calendar(identifier: .iso8601)
+        
+        // --- IMPOSTAZIONI DI RIFERIMENTO ---
+        // Stesso riferimento usato nello script Python
+        guard let referenceDate = calendar.date(from: DateComponents(year: 2025, month: 10, day: 13)) else { return nil }
+        let referenceWeekMenu = 3
+        
+        // --- CALCOLO ATTUALE ---
+        let today = Date()
+        
+        // Troviamo il lunedì della settimana corrente e di quella di riferimento
+        guard let currentMonday = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today)),
+              let referenceMonday = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: referenceDate))
+        else { return nil }
+
+        // Calcoliamo le settimane trascorse
+        guard let weeksPassed = calendar.dateComponents([.weekOfYear], from: referenceMonday, to: currentMonday).weekOfYear else { return nil }
+        
+        // Calcoliamo la settimana del menu (ciclo 1-4)
+        let menuWeek = ((referenceWeekMenu - 1 + weeksPassed) % 4 + 4) % 4 + 1
+
+        // Determiniamo il giorno e il tipo di pasto
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "it_IT")
+        formatter.dateFormat = "E" // Es: "Lun", "Mar", etc.
+        let dayAbbreviation = formatter.string(from: today).capitalized
+        
+        // Sabato e Domenica non hanno menu
+        if dayAbbreviation == "Sab" || dayAbbreviation == "Dom" {
+            errorMessage = "Nessun menu disponibile per oggi."
+            return nil
+        }
+        
+        let isDinner = calendar.component(.hour, from: today) >= 15
+        
+        // --- COSTRUZIONE DEL NOME FILE ---
+        // Questa parte replica la struttura dei nomi file originali
+        var fileName = ""
+        if isDinner {
+            // I nomi per la cena hanno una struttura diversa per le settimane 1/2 e 3/4
+            if menuWeek == 1 || menuWeek == 2 {
+                fileName = "\(menuWeek)aCena\(dayAbbreviation).pdf"
+            } else {
+                // Notare l'inversione Giorno/Cena per le settimane 3 e 4
+                fileName = "\(menuWeek)a\(dayAbbreviation)Cena.pdf"
+            }
+        } else {
+            // Pranzo ha una struttura consistente
+            fileName = "\(menuWeek)aPra\(dayAbbreviation).pdf"
+        }
+        
+        let urlString = "https://giotto.pythonanywhere.com/\(fileName)"
+        return URL(string: urlString)
+    }
+    
     private func loadMenu() {
-        guard let targetURL = url else {
-            errorMessage = "URL non valido"
+        // La logica di caricamento ora usa la nuova funzione
+        guard let targetURL = getMenuURL() else {
+            // L'errorMessage potrebbe essere già stato impostato da getMenuURL
+            if errorMessage == nil {
+                errorMessage = "URL non valido o menu non disponibile."
+            }
             isLoading = false
             return
         }
@@ -112,7 +163,12 @@ struct MensaPDFView: View {
         
         Task {
             do {
-                let (data, _) = try await URLSession.shared.data(from: targetURL)
+                let (data, response) = try await URLSession.shared.data(from: targetURL)
+                
+                // Controlliamo se il server ha risposto con un errore (es. 404 Not Found)
+                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+                    throw URLError(.badServerResponse)
+                }
                 
                 let savedURL = try savePDFToDevice(data: data, originalURL: targetURL)
                 
@@ -123,7 +179,7 @@ struct MensaPDFView: View {
                 }
             } catch {
                 await MainActor.run {
-                    errorMessage = "Impossibile scaricare il menu: \(error.localizedDescription)"
+                    errorMessage = "Il menu di oggi non è ancora stato caricato o non è disponibile."
                     isLoading = false
                     print("Errore nel download del PDF: \(error)")
                 }
@@ -131,6 +187,7 @@ struct MensaPDFView: View {
         }
     }
     
+    // Le funzioni di caching qui sotto non necessitano di alcuna modifica
     private func getCachedPDFURL(for url: URL) -> URL? {
         let fileName = generatePDFFileName(for: url)
         let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]

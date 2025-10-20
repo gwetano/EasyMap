@@ -137,7 +137,7 @@ class BuildingDataManager: ObservableObject {
     
     private func createBuildingF() -> Building {
             let floor1 = Floor(
-                number: 0,
+                number: 1,
                 name: "Primo piano",
                 imageName: "edificio_f_piano_1",
                 rooms: [
@@ -396,9 +396,269 @@ class BuildingDataManager: ObservableObject {
                 ]
             )
         
+        let floor2 = Floor(
+            number: 2,
+            name: "Secondo Piano",
+            imageName: "edificio_f_piano_2",
+            rooms: [
+                RoomImage(
+                    name: "Aula S7",
+                    position: CGPoint(x: 0.9637, y: 0.5262),
+                    size: CGSize(width: 0.0287, height: 0.0747),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Aula S6",
+                    position: CGPoint(x: 0.9486, y: 0.3648),
+                    size: CGSize(width: 0.0576, height: 0.1534),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Associazione Studenti Scienze",
+                    position: CGPoint(x: 0.9075, y: 0.3641),
+                    size: CGSize(width: 0.0199, height: 0.1529),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Aula Studio",
+                    position: CGPoint(x: 0.8663, y: 0.3263),
+                    size: CGSize(width: 0.0575, height: 0.0783),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Aula S4",
+                    position: CGPoint(x: 0.8053, y: 0.3650),
+                    size: CGSize(width: 0.0284, height: 0.1520),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Aula S1",
+                    position: CGPoint(x: 0.7750, y: 0.3634),
+                    size: CGSize(width: 0.0284, height: 0.1534),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Aula S3",
+                    position: CGPoint(x: 0.8058, y: 0.5713),
+                    size: CGSize(width: 0.0275, height: 0.1618),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Aula S2",
+                    position: CGPoint(x: 0.7759, y: 0.5701),
+                    size: CGSize(width: 0.0270, height: 0.1632),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Laboratorio di Esperienze Meccaniche",
+                    position: CGPoint(x: 0.7268, y: 0.3636),
+                    size: CGSize(width: 0.0282, height: 0.1493),
+                    description: "Laboratorio 12",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Laboratorio di Circuiti e sensori",
+                    position: CGPoint(x: 0.7262, y: 0.5703),
+                    size: CGSize(width: 0.0282, height: 0.1601),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Laboratorio di Circuiti lineari a bassa e alta frequenza",
+                    position: CGPoint(x: 0.6956, y: 0.5700),
+                    size: CGSize(width: 0.0293, height: 0.1608),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Laboratorio di Ottica e Termologia",
+                    position: CGPoint(x: 0.6979, y: 0.3629),
+                    size: CGSize(width: 0.0258, height: 0.1520),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Laboratorio di Fisica Terrestre",
+                    position: CGPoint(x: 0.6465, y: 0.3633),
+                    size: CGSize(width: 0.0265, height: 0.1513),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Laboratorio di Cibernetica Astrofisica Fisicanucleare",
+                    position: CGPoint(x: 0.6159, y: 0.3616),
+                    size: CGSize(width: 0.0288, height: 0.1520),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Laboratorio di Fisica Computazionale",
+                    position: CGPoint(x: 0.6162, y: 0.5703),
+                    size: CGSize(width: 0.0286, height: 0.1628),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Laboratorio Didattico BioEcologico",
+                    position: CGPoint(x: 0.5675, y: 0.3623),
+                    size: CGSize(width: 0.0295, height: 0.1506),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Laboratorio Tecniche Biofisiche",
+                    position: CGPoint(x: 0.5666, y: 0.5710),
+                    size: CGSize(width: 0.0269, height: 0.1614),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Laboratorio Agronomia e Coltivazioni",
+                    position: CGPoint(x: 0.5355, y: 0.5700),
+                    size: CGSize(width: 0.0299, height: 0.1608),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Laboratorio Bio-Morfologico",
+                    position: CGPoint(x: 0.5357, y: 0.3609),
+                    size: CGSize(width: 0.0295, height: 0.1547),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Laboratorio di Sistemi Globali Giochi e Sicurezza",
+                    position: CGPoint(x: 0.4863, y: 0.5698),
+                    size: CGSize(width: 0.0309, height: 0.1557),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Advanced Research on CDP And Security",
+                    position: CGPoint(x: 0.4869, y: 0.3645),
+                    size: CGSize(width: 0.0289, height: 0.1609),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Security and Cripthography",
+                    position: CGPoint(x: 0.4565, y: 0.3615),
+                    size: CGSize(width: 0.0266, height: 0.1535),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Laboratori Di Matematica e Fisica",
+                    position: CGPoint(x: 0.4564, y: 0.5717),
+                    size: CGSize(width: 0.0272, height: 0.1638),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Liberamente",
+                    position: CGPoint(x: 0.4306, y: 0.3623),
+                    size: CGSize(width: 0.0211, height: 0.1535),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Aula Studio",
+                    position: CGPoint(x: 0.3797, y: 0.3267),
+                    size: CGSize(width: 0.0762, height: 0.0764),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Associazione Coscienze",
+                    position: CGPoint(x: 0.3801, y: 0.6190),
+                    size: CGSize(width: 0.0303, height: 0.0646),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Sala Riunioni",
+                    position: CGPoint(x: 0.3255, y: 0.5478),
+                    size: CGSize(width: 0.0260, height: 0.1146),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Isis Lab 2",
+                    position: CGPoint(x: 0.3270, y: 0.3615),
+                    size: CGSize(width: 0.0248, height: 0.1506),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Isis Lab 1",
+                    position: CGPoint(x: 0.2983, y: 0.3630),
+                    size: CGSize(width: 0.0268, height: 0.1491),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Adavanced Networking Technology",
+                    position: CGPoint(x: 0.2974, y: 0.5478),
+                    size: CGSize(width: 0.0266, height: 0.1175),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "IOT Lab",
+                    position: CGPoint(x: 0.2354, y: 0.5691),
+                    size: CGSize(width: 0.0551, height: 0.1587),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Centro di Calcolo",
+                    position: CGPoint(x: 0.2423, y: 0.3623),
+                    size: CGSize(width: 0.0429, height: 0.1521),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Fisica Ingegneria",
+                    position: CGPoint(x: 0.1558, y: 0.5654),
+                    size: CGSize(width: 0.0551, height: 0.1543),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Laboratorio Chimica Computazionale Dottorandi",
+                    position: CGPoint(x: 0.0936, y: 0.5680),
+                    size: CGSize(width: 0.0274, height: 0.1609),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Aula 32",
+                    position: CGPoint(x: 0.0655, y: 0.5650),
+                    size: CGSize(width: 0.0264, height: 0.1565),
+                    description: "",
+                    buildingName: "F"
+                ),
+                RoomImage(
+                    name: "Aula 33 - Multimediale",
+                    position: CGPoint(x: 0.0793, y: 0.3604),
+                    size: CGSize(width: 0.0553, height: 0.1543),
+                    description: "",
+                    buildingName: "F"
+                )
+            ]
+        )
+        
         return Building(
             name: "F",
-            floors: [floor1])
+            floors: [floor1,floor2])
     }
     
     private func createBuildingB() -> Building {
@@ -2635,71 +2895,71 @@ class BuildingDataManager: ObservableObject {
             rooms: [
                 RoomImage(
                     name: "LAB CASA",
-                    position: CGPoint(x: 0.3894, y: 0.2293),
-                    size: CGSize(width: 0.1415, height: 0.1540),
+                    position: CGPoint(x: 0.3899, y: 0.2691),
+                    size: CGSize(width: 0.1291, height: 0.1482),
                     description: "Context Area Security Analytics",
                     buildingName: "F2"
                 ),
                 RoomImage(
                     name: "Laboratorio di Matematica",
-                    position: CGPoint(x: 0.5086, y: 0.2701),
-                    size: CGSize(width: 0.0853, height: 0.2375),
+                    position: CGPoint(x: 0.5030, y: 0.3050),
+                    size: CGSize(width: 0.0810, height: 0.2196),
                     description: "Laboratorio di Matematica",
                     buildingName: "F2"
                 ),
                 RoomImage(
                     name: "L12",
-                    position: CGPoint(x: 0.6355, y: 0.2475),
-                    size: CGSize(width: 0.1480, height: 0.1940),
+                    position: CGPoint(x: 0.6198, y: 0.2832),
+                    size: CGSize(width: 0.1405, height: 0.1771),
                     description: "Laboratorio 12",
                     buildingName: "F2"
                 ),
                 RoomImage(
                     name: "Laboratorio L11",
-                    position: CGPoint(x: 0.8039, y: 0.2695),
-                    size: CGSize(width: 0.1722, height: 0.2385),
+                    position: CGPoint(x: 0.7756, y: 0.3048),
+                    size: CGSize(width: 0.1601, height: 0.2192),
                     description: "Laboratorio 11",
                     buildingName: "F2"
                 ),
                 RoomImage(
                     name: "CG Lab",
-                    position: CGPoint(x: 0.7672, y: 0.4367),
-                    size: CGSize(width: 0.2392, height: 0.0777),
+                    position: CGPoint(x: 0.7423, y: 0.4607),
+                    size: CGSize(width: 0.2233, height: 0.0714),
                     description: "Nessuna Descrizione",
                     buildingName: "F2"
                 ),
                 RoomImage(
                     name: "Lab GIS",
-                    position: CGPoint(x: 0.7695, y: 0.5760),
-                    size: CGSize(width: 0.2406, height: 0.1845),
+                    position: CGPoint(x: 0.7448, y: 0.5895),
+                    size: CGSize(width: 0.2219, height: 0.1682),
                     description: "Nessuna Descrizione",
                     buildingName: "F2"
                 ),
                 RoomImage(
                     name: "Laboratorio Sammet",
-                    position: CGPoint(x: 0.7211, y: 0.7913),
-                    size: CGSize(width: 0.3416, height: 0.2349),
+                    position: CGPoint(x: 0.6963, y: 0.7901),
+                    size: CGSize(width: 0.3164, height: 0.2191),
                     description: "Nessuna Descrizione",
                     buildingName: "F2"
                 ),
                 RoomImage(
                     name: "Laboratorio Hopper",
-                    position: CGPoint(x: 0.3034, y: 0.7949),
-                    size: CGSize(width: 0.3394, height: 0.2277),
+                    position: CGPoint(x: 0.3084, y: 0.7924),
+                    size: CGSize(width: 0.3124, height: 0.2128),
                     description: "Nessuna Descrizione",
                     buildingName: "F2"
                 ),
                 RoomImage(
                     name: "CORSIA",
-                    position: CGPoint(x: 0.2510, y: 0.6273),
-                    size: CGSize(width: 0.2358, height: 0.0915),
+                    position: CGPoint(x: 0.2633, y: 0.6378),
+                    size: CGSize(width: 0.2156, height: 0.0832),
                     description: "Consorzio Di Ricerca Sistemi ad Agenti",
                     buildingName: "F2"
                 ),
                 RoomImage(
                     name: "SESE Lab",
-                    position: CGPoint(x: 0.2128, y: 0.4149),
-                    size: CGSize(width: 0.1558, height: 0.1337),
+                    position: CGPoint(x: 0.2280, y: 0.4387),
+                    size: CGSize(width: 0.1468, height: 0.1224),
                     description: "Nessuna Descrizione",
                     buildingName: "F2"
                 )

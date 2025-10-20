@@ -69,7 +69,7 @@ struct FloorPlanImageView: View {
                                         if scale >= labelThreshold {
                                             Text(room.name)
                                                 .font(.system(size: 8 / scale))
-                                                .foregroundColor(.primary)
+                                                .foregroundColor(.black)
                                                 .padding(2)
                                                 .background(Color.white.opacity(0.4))
                                         }

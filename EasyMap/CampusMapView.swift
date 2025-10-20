@@ -727,7 +727,7 @@ struct CampusMapView: View {
                                         .cornerRadius(12)
                                 }
                                 .transition(.opacity.combined(with: .move(edge: .bottom)))
-                            } else if locationManager.parkingSpot != nil {
+                            } else {
                                 // Conferma solo per "visionare" un parcheggio già salvato
                                 Button {
                                     parcheggioMode = false
