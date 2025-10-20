@@ -686,12 +686,22 @@ struct CampusMapView: View {
                                 Button {
                                     isManualSelectionActive = true
                                 } label: {
-                                    Label("Manuale", systemImage: "hand.point.up.left.fill")
-                                        .padding(10)
-                                        .frame(minWidth: 80)
-                                        .background(.ultraThinMaterial)
-                                        .cornerRadius(12)
-                                        .foregroundColor(.primary)
+                                    if isManualSelectionActive == true {
+                                        Label("Manuale", systemImage: "hand.point.up.left.fill")
+                                            .padding(10)
+                                            .frame(minWidth: 80)
+                                            .background(.blue)
+                                            .cornerRadius(12)
+                                            .foregroundColor(.primary)
+                                    }
+                                    else {
+                                        Label("Manuale", systemImage: "hand.point.up.left.fill")
+                                            .padding(10)
+                                            .frame(minWidth: 80)
+                                            .background(.ultraThinMaterial)
+                                            .cornerRadius(12)
+                                            .foregroundColor(.primary)
+                                    }
                                 }
 
                                 Button {
