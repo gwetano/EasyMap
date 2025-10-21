@@ -674,6 +674,7 @@ struct CampusMapView: View {
                                     if let current = locationManager.getCurrentCoordinate() {
                                         pendingParking = current
                                     }
+                                    isManualSelectionActive = false
                                 } label: {
                                     Label("GPS", systemImage: "location.fill")
                                         .padding(10)
@@ -741,6 +742,7 @@ struct CampusMapView: View {
                                 // Conferma solo per "visionare" un parcheggio già salvato
                                 Button {
                                     parcheggioMode = false
+                                    isManualSelectionActive = false
                                 } label: {
                                     Label("Indietro", systemImage: "arrow.left")
                                         .padding(10)

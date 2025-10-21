@@ -49,6 +49,12 @@ class RoomStatusManager: ObservableObject {
             if aula.nome == room.name && aula.edificio == room.buildingName {
                 return aula.isOccupiedNow() ? .red : .green
             }
+            if room.name.lowercased().contains("aula studio".lowercased()){
+                return .brown
+            }
+            if room.name.lowercased().contains("studenti ingegneria".lowercased()){
+                return .purple
+            }
         }
         
         return .yellow
@@ -1448,14 +1454,49 @@ class BuildingDataManager: ObservableObject {
                     name: "Laboratorio Sperimentazione",
                     position: CGPoint(x: 0.3197, y: 0.6927),
                     size: CGSize(width: 0.0491, height: 0.1098),
-                    description: "Aula",
+                    description: "",
                     buildingName: "D"
                 ),
                 RoomImage(
                     name: "Ufficio Amministrativo",
                     position: CGPoint(x: 0.3064, y: 0.3657),
                     size: CGSize(width: 0.0224, height: 0.0989),
-                    description: "Aula",
+                    description: "",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Laboratorio G",
+                    position: CGPoint(x: 0.1930, y: 0.3822),
+                    size: CGSize(width: 0.1046, height: 0.1303),
+                    description: "",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Laboratorio I",
+                    position: CGPoint(x: 0.2162, y: 0.5237),
+                    size: CGSize(width: 0.0598, height: 0.1271),
+                    description: "",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Laboratorio L",
+                    position: CGPoint(x: 0.1620, y: 0.5229),
+                    size: CGSize(width: 0.0411, height: 0.1319),
+                    description: "",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Laboratorio M",
+                    position: CGPoint(x: 0.1915, y: 0.6926),
+                    size: CGSize(width: 0.1106, height: 0.1110),
+                    description: "",
+                    buildingName: "D"
+                ),
+                RoomImage(
+                    name: "Laboratorio N",
+                    position: CGPoint(x: 0.1175, y: 0.5012),
+                    size: CGSize(width: 0.0404, height: 0.1721),
+                    description: "",
                     buildingName: "D"
                 )
             ]
@@ -2195,7 +2236,7 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "SI",
+                    name: "SI - Studenti Ingegneria",
                     position: CGPoint(x: 0.773, y: 0.605),
                     size: CGSize(width: 0.025, height: 0.145),
                     description: "Sede Studenti Ingegneria",
