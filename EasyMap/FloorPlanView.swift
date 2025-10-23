@@ -71,7 +71,7 @@ struct FloorPlanImageView: View {
                                                 .font(.system(size: 8 / scale))
                                                 .foregroundColor(.black)
                                                 .padding(2)
-                                                .background(Color.white.opacity(0.4))
+                                                .background(Color.white.opacity(0.6))
                                         }
                                     }
                                 }

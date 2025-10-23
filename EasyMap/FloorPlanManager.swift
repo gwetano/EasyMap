@@ -8,12 +8,31 @@
 import SwiftUI
 
 struct RoomImage: Identifiable {
-    let id = UUID()
+    let id: UUID
     let name: String
     let position: CGPoint
     let size: CGSize
     let description: String?
     let buildingName: String
+    let logoName: String? // <-- LA TUA MODIFICA GIUSTA
+
+    // Aggiungi questo init per comodità
+    init(id: UUID = UUID(),
+         name: String,
+         position: CGPoint,
+         size: CGSize,
+         description: String?,
+         buildingName: String,
+         logoName: String? = nil) { // Valore di default
+        
+        self.id = id
+        self.name = name
+        self.position = position
+        self.size = size
+        self.description = description
+        self.buildingName = buildingName
+        self.logoName = logoName
+    }
 }
 
 struct Floor: Identifiable {
@@ -52,8 +71,13 @@ class RoomStatusManager: ObservableObject {
             if room.name.lowercased().contains("aula studio".lowercased()){
                 return .brown
             }
-            if room.name.lowercased().contains("studenti ingegneria".lowercased()){
-                return .purple
+            if room.name.lowercased().contains("studenti ingegneria".lowercased()) ||
+                room.name.lowercased().contains("associazione futura".lowercased()){
+                return .white
+            }
+
+            if room.description?.lowercased().contains("cartoleria".lowercased()) ?? false{
+                return .orange
             }
         }
         
@@ -326,7 +350,7 @@ class BuildingDataManager: ObservableObject {
                         name: "Minerva Cartoleria",
                         position: CGPoint(x: 0.4378, y: 0.3736),
                         size: CGSize(width: 0.0210, height: 0.1364),
-                        description: "",
+                        description: "cartoleria",
                         buildingName: "F"
                     ),
                     RoomImage(
@@ -963,7 +987,8 @@ class BuildingDataManager: ObservableObject {
                     position: CGPoint(x: 0.1557, y: 0.6334),
                     size: CGSize(width: 0.0239, height: 0.1283),
                     description: "",
-                    buildingName: "C"
+                    buildingName: "C",
+                    logoName: "futura_logo_p"
                 ),
                 RoomImage(
                     name: "Aula 10",
@@ -1116,7 +1141,7 @@ class BuildingDataManager: ObservableObject {
                     name: "Cartoleria CUSL",
                     position: CGPoint(x: 0.7783, y: 0.6298),
                     size: CGSize(width: 0.0245, height: 0.1402),
-                    description: "",
+                    description: "cartoleria",
                     buildingName: "C"
                 ),
                 RoomImage(
@@ -2106,7 +2131,7 @@ class BuildingDataManager: ObservableObject {
                     name: "CUES",
                     position: CGPoint(x: 0.4136, y: 0.39),
                     size: CGSize(width: 0.0235, height: 0.14),
-                    description: "Cooperativa universitaria - cartolibreria",
+                    description: "cartoleria",
                     buildingName: "E"
                 ),
                 RoomImage(
@@ -2236,11 +2261,12 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "E"
                 ),
                 RoomImage(
-                    name: "SI - Studenti Ingegneria",
+                    name: "Studenti Ingegneria",
                     position: CGPoint(x: 0.773, y: 0.605),
                     size: CGSize(width: 0.025, height: 0.145),
                     description: "Sede Studenti Ingegneria",
-                    buildingName: "E"
+                    buildingName: "E",
+                    logoName: "si_logo_p"
                 ),
                 RoomImage(
                     name: "Lab 9",
