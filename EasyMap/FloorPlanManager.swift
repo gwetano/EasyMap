@@ -72,7 +72,11 @@ class RoomStatusManager: ObservableObject {
                 return .brown
             }
             if room.name.lowercased().contains("studenti ingegneria".lowercased()) ||
-                room.name.lowercased().contains("associazione futura".lowercased()){
+                room.name.lowercased().contains("associazione futura".lowercased()) ||
+                room.name.lowercased().contains("forma mentis".lowercased()) ||
+                room.name.lowercased().contains("associazione liberamente".lowercased()) ||
+                room.name.lowercased().contains("associazione coscienze".lowercased()) ||
+                room.name.lowercased().contains("associazione studenti scienze".lowercased()) {
                 return .white
             }
 
@@ -593,7 +597,7 @@ class BuildingDataManager: ObservableObject {
                     buildingName: "F"
                 ),
                 RoomImage(
-                    name: "Liberamente",
+                    name: "Associazione Liberamente",
                     position: CGPoint(x: 0.4306, y: 0.3623),
                     size: CGSize(width: 0.0211, height: 0.1535),
                     description: "",
