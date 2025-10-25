@@ -660,9 +660,9 @@ struct RoomDetailView: View {
                                     }
                                 }
                             }
-                            .blur(radius: daily.isUnlockedToday ? 0 : 20)
-                            .allowsHitTesting(daily.isUnlockedToday)
-
+                            //.blur(radius: daily.isUnlockedToday ? 0 : 20)
+                            //.allowsHitTesting(daily.isUnlockedToday)
+/*
                             if !daily.isUnlockedToday {
                                 VStack(spacing: 12) {
                                     Image(systemName: "lock.fill")
@@ -696,11 +696,9 @@ struct RoomDetailView: View {
                                 .padding()
                                 .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
                                 .padding()
-                            }
+                            }*/
                         }
                     }
-
-                    
                     Spacer(minLength: 20)
                 }
                 .padding(.vertical)
@@ -709,7 +707,7 @@ struct RoomDetailView: View {
         }
         .task {
             await roomStatusManager.loadData()
-        }
+        }/*
         .fullScreenCover(isPresented: $shouldShowRewardedAd) {
             RewardedAdFullscreenView(manager: adManager) {
                 shouldShowRewardedAd = false
@@ -717,8 +715,9 @@ struct RoomDetailView: View {
         }
         .onAppear {
             daily.refresh()
-        }
+        }*/
     }
+        
     
     private func getCapacityText() -> String {
         if let aula = roomStatusManager.getAula(for: room) {

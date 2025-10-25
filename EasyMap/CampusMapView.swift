@@ -915,6 +915,8 @@ struct CampusMapView: View {
         } else if isPointInPolygon(point: coordinate, polygon: edificioB2Coordinates) {
             selectedBuilding = "B2"
         } else if isPointInPolygon(point: coordinate, polygon: edificioQ2Coordinates) {
+            mostraPDFMensa = true
+            /*
             let showAd = Bool.random()
             if showAd {
                 adManager.requestAd {
@@ -922,18 +924,24 @@ struct CampusMapView: View {
                 }
             } else {
                 mostraPDFMensa = true
-            }
+            }*/
         }else if isPointInPolygon(point: coordinate, polygon: bibliotecaScientificaCoordinates){
             if let url = URL(string: "https://www.biblioteche.unisa.it/chiedi-al-bibliotecario?richiesta=3") {
+                        openURL(url)
+/*
                         adManager.requestAd {
                             openURL(url)
                         }
+ */
                     }
         }else if isPointInPolygon(point: coordinate, polygon: bibliotecaUmanisticaCoordinates){
             if let url = URL(string: "https://www.biblioteche.unisa.it/chiedi-al-bibliotecario?richiesta=3") {
+                    openURL(url)
+                /*
                 adManager.requestAd {
                     openURL(url)
                 }
+                */
             }
         }
     }
